@@ -1,5 +1,5 @@
 -- <pre>
--- @name Card name
+-- @name Name
 -- @description Get the localized name of a card, set or character.
 -- @see {{Card name}}
 -- @author [[User:Becasita]]
@@ -15,7 +15,6 @@ local Name = {};
 ----------------
 local DATA    = require( 'Module:Data' );
 local UTIL    = require( 'Module:Util' );
-local getArgs = require( 'Module:Arguments' ).getArgs;
 
 ---------------------
 -- Utility functions:
@@ -59,7 +58,7 @@ local function processArgs( v, ln )
 		return { UTIL.trim( v ), UTIL.trim( ln ) };
 	end
 
-	return getArgs( v, {
+	return require( 'Module:Arguments' ).getArgs( v, {
 		trim         = true,
 		removeBlanks = true,
 		parentOnly   = true
