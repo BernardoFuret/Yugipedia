@@ -106,7 +106,7 @@ end
 
 -- @name factory
 -- @description Decides which kind of file to instantiate.
-function File.factory( entry, data )
+function File.factory( entry, info )
 	local standard, releases, options = splitEntry( entry );
 
 	local countStd = UTIL.count( standard );
@@ -118,16 +118,16 @@ function File.factory( entry, data )
 	if countStd == 0 and countRel == 0 and countOpt == 0 then
 		-- Not enough info to even try to build. TODO: barricade to delete this.
 		return nil;
-	elseif data.type == 'Anime' then
+	elseif info.type == 'Anime' then
 		Module = 'Anime'; 
-	elseif data.type == 'Manga' then
+	elseif info.type == 'Manga' then
 		Module = 'Manga'; 
-	elseif data.type == 'Video games' then
+	elseif info.type == 'Video games' then
 		Module = 'VG';
-	elseif data.type == 'Other' then
+	elseif info.type == 'Other' then
 		Module = ''; -- TODO
 	else
-		-- No data.type; defaults to the card game entries:
+		-- No info.type; defaults to the card game entries:
 		if countStd < 2 and countRel > 0 then
 			Module = 'NoNumberNoSet'; --Mirror Force and OEPD from the arc-v (assumes there's no edition, even for DT ones (they don't exist)).
 		else
@@ -135,7 +135,7 @@ function File.factory( entry, data )
 		end
 	end
 
-	return require( 'Module:Card gallery/File/' .. Module ).new( standard, releases, options, data );
+	return require( 'Module:Card gallery/File/' .. Module ).new( standard, releases, options, info );
 end
 
 ----------

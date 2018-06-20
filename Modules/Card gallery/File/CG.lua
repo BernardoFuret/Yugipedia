@@ -26,7 +26,7 @@ File.__index = File;
 File.counter = 0;
 
 -- @name new          -> File constructor.
--- @attr DATA         -> External data (the «_D» from other modules).
+-- @attr INFO         -> External module info (the «INFO» from other modules).
 -- @attr flags        -> Control flags:
 -- -- exists    => denotes if a file is to be printed.
 -- -- noEdition => if it is a Japanese or Chinese print; thus, no edition (except DT ones).
@@ -46,13 +46,13 @@ File.counter = 0;
 -- @attr alt          -> The alt value.
 -- @attr extension    -> The file extension.
 -- @attr description  -> A short file description.
-function File.new( std, rel, opt, data )
+function File.new( std, rel, opt, info )
 	-- @attr _standard -> Contains the trimmed input args for the standard input {enum-like}.
 	-- @attr _releases -> Contains the trimmed input args for the releases (OP|GC|CT|RP) {enum-like}.
 	-- @attr _options  -> Contains the trimmed input args for the options {map-like}.
 	File.counter    = File.counter + 1;
 	local fileData  = {};
-	fileData.DATA   = data;
+	fileData.INFO   = info;
 	fileData.errors = {};
 	fileData.flags  = {
 		exists    = true,
@@ -134,7 +134,7 @@ end
 -- @name initRegion
 -- @description Sets the «rg» attribute.
 function File:initRg()
-	self.rg = self.DATA.rg:upper();
+	self.rg = self.INFO.rg:upper();
 	self.flags.noEdition = self.rg == 'JP' or self.rg == 'JA' or self.rg == 'TC';
 
 	return self;
@@ -173,7 +173,7 @@ function File:initSet()
 
 	self.set   = set;
 	self.setEn = getName( set ) or set;
-	self.setLn = getName( set, self.DATA.language );
+	self.setLn = getName( set, self.INFO.language );
 
 	return self;
 end
