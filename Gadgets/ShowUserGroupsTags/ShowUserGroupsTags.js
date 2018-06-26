@@ -57,6 +57,6 @@
 	}
 
 	// Log:
-	console.log( 'ShowUserGroupsTags last updated at', LAST_LOG );
+	console.log( '[Gadget] ShowUserGroupsTags last updated at', LAST_LOG );
 
 } )( window.jQuery, window.mediaWiki, window.console );
