@@ -39,16 +39,6 @@
 	$button.click( function( e ) {
 		e.preventDefault();
 
-		var notifyOptions = {
-			setType: function( type ) {
-				this.type = type;
-				return this;
-			},
-			title: 'Null edit',
-			tag: 'null_edit',
-			autoHide: !mw.config.get( 'debug' )
-		};
-
 		var notifyOptions = function( type ) {
 			//return type && (options.type = type), options;
 			return {
@@ -56,7 +46,7 @@
 				tag: 'null_edit',
 				type: type,
 				autoHide: !mw.config.get( 'debug' )
-			}
+			};
 		};
 		
 		mw.notify( 'Null editing...', notifyOptions( 'progress' ) );
