@@ -1,0 +1,10 @@
+#null-edit-spinner {
+	position: fixed;
+	z-index: 999;
+	margin-left: 7.5em;
+	margin-top: 5em;
+}
+
+/*.mw-notification-type-progress { background-color:  }*/
+.mw-notification-type-success { background-color: lightgreen }
+.mw-notification-type-fail { background-color: orangered }
