@@ -42,7 +42,7 @@
 							$( '#firstHeading' ).append(
 								$( '<span>', {
 									id: 'user-group-tag-' + validGroup,
-									class: 'user-group-tag',
+									'class': 'user-group-tag',
 									text: validGroup
 								} )
 							);
