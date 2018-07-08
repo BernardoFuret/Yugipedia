@@ -28,11 +28,14 @@
 
 	// Add button:
 	if ( $( '#ca-view' ).hasClass( 'selected' ) ) {
-		$( '#p-cactions' )
-			.removeClass( 'emptyPortlet' )
-			.find( '.menu' )
-				.find( 'ul' )
-					.append( $button );
+		// Wait for the module to load, just to be sure nothing breaks:
+		mw.loader.using( 'mediawiki.api' ).done( function() {
+			$( '#p-cactions' )
+				.removeClass( 'emptyPortlet' )
+				.find( '.menu' )
+					.find( 'ul' )
+						.append( $button );
+		} );
 	}
 
 	// Click event:
