@@ -1,17 +1,21 @@
 -- <pre>
--- @name Database
--- @description Serves as database for the other modules.
+-- @name Data/data
+-- @description Serves as a database for other modules.
 -- NEVER INTERACT DIRECTLY WITH THIS MODULE. USE [[Module:Data]].
 
--- @name rg
--- @description Region indexes. Main map.
-local rg = {
+------------------------
+-- Normalization tables:
+------------------------
+local N = {};
+
+-- @description
+N.region = {
 	-- Worldwide English (EN):
 	['en'] = 'en', ['ew'] = 'en', ['we'] = 'en', ['ww'] = 'en',
 	['english'] = 'en', ['worldwide'] = 'en',
 	['worldwideenglish'] = 'en', ['englishworldwide'] = 'en',
 
-	-- North American English (NA): (filter 'north')
+	-- North American English (NA):
 	['na'] = 'na', ['american'] = 'na', ['americanenglish'] = 'na',
 
 	-- European English (EU):
@@ -55,365 +59,381 @@ local rg = {
 	['kr'] = 'kr', ['ko'] = 'kr', ['k'] = 'kr', ['korean'] = 'kr',
 };
 
--- @name region
--- @description Region names.
-local region = {
-	['en'] = 'Worldwide English',
-	['na'] = 'North American English',
-	['eu'] = 'European English',
-	['au'] = 'Australian English', ['oc'] = 'Oceanic English', -- TODO: check this.
-	['fr'] = 'French',  ['fc'] = 'French-Canadian',
-	['de'] = 'German',
-	['it'] = 'Italian',
-	['pt'] = 'Portuguese',
-	['es'] = 'Spanish', ['sp'] = 'Spanish',
-	['jp'] = 'Japanese',
-	['ja'] = 'Japanese-Asian',
-	['ae'] = 'Asian-English',
-	['tc'] = 'Chinese', ['zh'] = 'Chinese',
-	['ko'] = 'Korean',  ['kr'] = 'Korean',
-};
-
--- @name ln
--- @description Language indexes.
-local ln = {
+-- @description
+N.language = {
 	['en'] = 'en',
-	['na'] = 'en',
-	['eu'] = 'en',
+	['na'] = 'en', ['eu'] = 'en',
 	['au'] = 'en', ['oc'] = 'en',
 	['fr'] = 'fr', ['fc'] = 'fr',
 	['de'] = 'de',
 	['it'] = 'it',
 	['pt'] = 'pt',
-	['es'] = 'es', ['sp'] = 'es',
+	['sp'] = 'es',
 	['jp'] = 'ja', ['ja'] = 'ja',
 	['ae'] = 'en',
-	['tc'] = 'zh', ['zh'] = 'zh',
-	['ko'] = 'ko', ['kr'] = 'ko',
+	['tc'] = 'zh',
+	['kr'] = 'ko',
 };
 
--- @name language
--- @description Language names.
-local language = {
-	['en'] = 'English',
-	['fr'] = 'French',
-	['de'] = 'German',
-	['it'] = 'Italian',
-	['pt'] = 'Portuguese',
-	['es'] = 'Spanish',
-	['ja'] = 'Japanese',
-	['zh'] = 'Chinese',
-	['ko'] = 'Korean',
+-- @description
+N.medium = {
+	['tcg'] = 'tcg', ['trading'] = 'tcg',
+	['en']  = 'tcg',
+	['na']  = 'tcg', ['eu'] = 'tcg',
+	['au']  = 'tcg', ['oc'] = 'tcg',
+	['fr']  = 'tcg', ['fc'] = 'tcg',
+	['de']  = 'tcg',
+	['it']  = 'tcg',
+	['pt']  = 'tcg',
+	['sp']  = 'tcg',
+	['ocg'] = 'ocg', ['official'] = 'ocg',
+	['jp']  = 'ocg', ['ja'] = 'ocg',
+	['ae']  = 'ocg',
+	['tc']  = 'ocg',
+	['kr']  = 'ocg',
 };
 
--- @name ed
--- @description Edition abbreviations.
-local ed = {
+-- @description
+N.edition = {
 	['1e'] = '1e', ['1'] = '1e', ['first']     = '1e', ['1st'] = '1e',
 	['ue'] = 'ue', ['u'] = 'ue', ['unlimited'] = 'ue',
 	['le'] = 'le', ['l'] = 'le', ['limited']   = 'le',
 	['dt'] = 'dt',            ['duelterminal'] = 'dt',
 };
 
--- @name edition
--- @description Edition names.
-local edition = {
-	['1e'] = '1st Edition',
-	['ue'] = 'Unlimited Edition',
-	['le'] = 'Limited Edition',
-	['dt'] = 'Duel Terminal',
-};
-
--- @name rel
--- @description Release abbreviations.
-local rel = {
-	['op'] = 'op', ['proxy']   = 'op', ['officialproxy'] = 'op',
-	['gc'] = 'gc', ['giant']   = 'gc', ['giantcard']     = 'gc',
-	['ct'] = 'ct', ['topper']  = 'ct', ['casetopper']    = 'ct',
+N.release = {
+	['op'] = 'op', ['proxy']   = 'op',
+	['gc'] = 'gc', ['giant']   = 'gc',
+	['ct'] = 'ct', ['topper']  = 'ct',
 	['rp'] = 'rp', ['replica'] = 'rp',
 };
 
--- @name release
--- @description Release names.
-local release = {
-	['op'] = 'Official Proxy',
-	['gc'] = 'Giant Card',
-	['ct'] = 'Case Topper',
-	['rp'] = 'Replica',
+-- @description
+N.rarity = {
+	-- Stadard non-foils:
+	['c']    = 'c',      ['common']          = 'c',  ['n'] = 'c',
+	['nr']   = 'nr',     ['normal']          = 'nr',
+	['sp']   = 'sp',     ['shortprint']      = 'sp',
+	['ssp']  = 'ssp',    ['supershortprint'] = 'ssp',
+	['r']    = 'r',      ['rare']            = 'r',
+
+	-- Stadard foils:
+	['sr']   = 'sr',     ['super']       = 'sr',
+	['ur']   = 'ur',     ['ultra']       = 'ur',
+	['utr']  = 'utr',    ['ultimate']    = 'utr',
+	['gr']   = 'gr',     ['ghost']       = 'gr',
+	['hgr']  = 'hgr',    ['holographic'] = 'hgr',
+
+	-- Secrets:
+	['scr']   = 'scr',   ['secret']      = 'scr',
+	['pscr']  = 'pscr',  ['prismatic']   = 'pscr', ['prismaticsecret'] = 'pscr',
+	['uscr']  = 'uscr',  ['ultrasecret'] = 'uscr',
+	['scur']  = 'scur',  ['secretultra'] = 'scur',
+	['20scr'] = '20scr', ['20thsecret']  = '20scr',
+	['escr']  = 'escr',  ['extrasecret'] = 'escr',
+
+	-- Precious:
+	['gur']   = 'gur',   ['gold']           = 'gur', ['goldultra'] = 'gur',
+	['gscr']  = 'gscr',  ['goldsecret']     = 'gscr',
+	['ggr']   = 'ggr',   ['ghostgold']      = 'ggr',
+	['pir']   = 'pir',   ['platinum']       = 'pir',
+	['piscr'] = 'piscr', ['platinumsecret'] = 'piscr',
+
+	-- Millennium:
+	['mlr']   = 'mlr',   ['millennium']      = 'mlr',
+	['mlsr']  = 'mlsr',  ['millenniumsuper'] = 'mlsr',
+	['mlur']  = 'mlur',  ['millenniumultra'] = 'mlur',
+	['mlscr'] = 'mlscr', ['millenniumultra'] = 'mlur',
+	['mlgr']  = 'mlgr',  ['millenniumgold']  = 'mlgr', -- Why not MLGUR?
+
+	-- Parallel:
+	['npr']   = 'npr',   ['normalparallel']      = 'npr',
+	['spr']   = 'spr',   ['superparallel']       = 'spr',
+	['upr']   = 'upr',   ['ultraparallel']       = 'upr',
+	['scpr']  = 'scpr',  ['secretparallel']      = 'scpr',
+	['escpr'] = 'escpr', ['extrasecretparallel'] = 'escpr',
+	['hgpr']  = 'hgpr' , ['holographicparallel'] = 'hgpr',
+
+	-- Duel terminal: (Why not removing the "parallel rare" part?)
+	['dnpr']  = 'dnpr',  ['duelterminalnormalparallel']     = 'dnpr', -- Duel Terminal Common
+	['dnrpr'] = 'dnrpr', ['duelterminalnormalrareparallel'] = 'dnrpr',
+	['drpr']  = 'drpr',  ['duelterminalrareparallel']       = 'drpr',
+	['dspr']  = 'dspr',  ['duelterminalsuperparallel']      = 'dspr',
+	['dupr']  = 'dupr',  ['duelterminalultraparallel']      = 'dupr',
+	['dscpr'] = 'dscpr', ['duelterminalsecretparallel']     = 'dscpr',
+
+	-- Kaiba's:
+	['kcc']  = 'kcc',  ['kaibacorporationcommon'] = 'kcc',
+	['kcn']  = 'kcc',  ['kaibacorporationnormal'] = 'kcc',  -- Yes, they are the same
+	['kcr']  = 'kcr',  ['kaibacorporation']       = 'kcr',
+	['kcsr'] = 'kcsr', ['kaibacorporationsuper']  = 'kcsr', ['kcs'] = 'kcsr',
+	['kcur'] = 'kcur', ['kaibacorporationultra']  = 'kcur', ['kcu'] = 'kcur',
+
+	-- Other:
+	['hfr'] = 'hfr', ['holofoil']    = 'hfr',
+	['sfr'] = 'sfr', ['starfoil']    = 'sfr',
+	['msr'] = 'msr', ['mosaic']      = 'msr',
+	['shr'] = 'shr', ['shatterfoil'] = 'shr',
+	['cr']  = 'cr',  ['collectors']  = 'cr',
 };
 
--- @name amRel
--- @description Anime and manga release abbreviations.
-local amRel = {
+---------------
+-- Anime stuff:
+---------------
+N.anime = {};
+
+N.anime.release = {
 	['nc'] = 'nc', ['noncard'] = 'nc',
 	['ca'] = 'ca', ['cardart'] = 'ca', ['art'] = 'ca',
 };
 
--- @name amRelease
--- @description Anime and manga release names.
-local amRelease = {
-	['nc'] = 'Non-card',
-	['ca'] = 'Card art',
+N.anime.series = {
+	-- Shorts:
+	['toei'] = 'toei', -- TODO: TOEI = Yu-Gi-Oh! (Toei anime) and Yu-Gi-Oh! The Movie
+	['dm']   = 'dm', ['duelmonsters'] = 'dm',
+	['gx']   = 'gx',
+	['5d']   = '5d', ['5ds']    = '5d',
+	['zx']   = 'zx', ['zexal']  = 'zx',
+	['av']   = 'av', ['arcv']   = 'av', 
+	['vr']   = 'vr', ['vrains'] = 'vr',
+
+	-- Movies:
+	['mov']  = 'mov',  ['pyramidoflight'] = 'mov', ['moviepyramidoflight'] = 'mov',  ['pol']  = 'mov',
+	['mov2'] = 'mov2', ['3dbondsbeyondtime'] = 'mov2', ['bondsbeyondtime'] = 'mov2', ['bbt']  = 'mov2',
+	['mov3'] = 'mov3', ['darksideofdimensions'] = 'mov3',                            ['dsod'] = 'mov3',
 };
 
--- @name r
--- @description Rarity abbreviations.
--- TODO
-local r = {
-	-- Stadard non-foils:
-	['c']    = 'C',      ['common']          = 'C',  ['n'] = 'C',
-	['nr']   = 'NR',     ['normal']          = 'NR',
-	['sp']   = 'SP',     ['shortprint']      = 'SP',
-	['ssp']  = 'SSP',    ['supershortprint'] = 'SSP',
-	['r']    = 'R',      ['rare']            = 'R',
-
-	-- Stadard foils:
-	['sr']   = 'SR',     ['super']       = 'SR',
-	['ur']   = 'UR',     ['ultra']       = 'UR',
-	['utr']  = 'UtR',    ['ultimate']    = 'UtR',
-	['gr']   = 'GR',     ['ghost']       = 'GR',
-	['hgr']  = 'HGR',    ['holographic'] = 'HGR',
-
-	-- Secrets:
-	['scr']   = 'ScR',   ['secret']      = 'ScR',
-	['pscr']  = 'PScR',  ['prismatic']   = 'PScR', ['prismaticsecret'] = 'PScR',
-	['uscr']  = 'UScR',  ['ultrasecret'] = 'UScR',
-	['scur']  = 'ScUR',  ['secretultra'] = 'ScUR',
-	['20scr'] = '20ScR', ['20thsecret']  = '20ScR',
-	['escr']  = 'EScR',  ['extrasecret'] = 'EScR',
-
-	-- Precious:
-	['gur']   = 'GUR',   ['gold']           = 'GUR', ['goldultra'] = 'GUR',
-	['gscr']  = 'GScR',  ['goldsecret']     = 'GScR',
-	['ggr']   = 'GGR',   ['ghostgold']      = 'GGR',
-	['pir']   = 'PIR',   ['platinum']       = 'PIR',
-	['piscr'] = 'PIScR', ['platinumsecret'] = 'PIScR',
-
-	-- Millennium:
-	['mlr']   = 'MLR',   ['millennium']      = 'MLR',
-	['mlsr']  = 'MLSR',  ['millenniumsuper'] = 'MLSR',
-	['mlur']  = 'MLUR',  ['millenniumultra'] = 'MLUR',
-	['mlscr'] = 'MLScR', ['millenniumultra'] = 'MLUR',
-	['mlgr']  = 'MLGR',  ['millenniumgold']  = 'MLGR', -- Why not MLGUR?
-
-	-- Parallel:
-	['npr']   = 'NPR',   ['normalparallel']      = 'NPR',
-	['spr']   = 'SPR',   ['superparallel']       = 'SPR',
-	['upr']   = 'UPR',   ['ultraparallel']       = 'UPR',
-	['scpr']  = 'ScPR',  ['secretparallel']      = 'ScPR',
-	['escpr'] = 'EScPR', ['extrasecretparallel'] = 'EScPR',
-	['hgpr']  = 'HGPR' , ['holographicparallel'] = 'HGPR',
-
-	-- Duel terminal: (Why not removing the "parallel rare" part?)
-	['dnpr']  = 'DNPR',  ['duelterminalnormalparallel']     = 'DNPR', -- Duel Terminal Common
-	['dnrpr'] = 'DNRPR', ['duelterminalnormalrareparallel'] = 'DNRPR',
-	['drpr']  = 'DRPR',  ['duelterminalrareparallel']       = 'DRPR',
-	['dspr']  = 'DSPR',  ['duelterminalsuperparallel']      = 'DSPR',
-	['dupr']  = 'DUPR',  ['duelterminalultraparallel']      = 'DUPR',
-	['dscpr'] = 'DScPR', ['duelterminalsecretparallel']     = 'DScPR',
-
-	-- Kaiba's:
-	['kcc']  = 'KCC',  ['kaibacorporationcommon'] = 'KCC',
-	['kcn']  = 'KCC',  ['kaibacorporationnormal'] = 'KCC',  -- Yes, they are the same
-	['kcr']  = 'KCR',  ['kaibacorporation']       = 'KCR',
-	['kcsr'] = 'KCSR', ['kaibacorporationsuper']  = 'KCSR', ['kcs'] = 'KCSR',
-	['kcur'] = 'KCUR', ['kaibacorporationultra']  = 'KCUR', ['kcu'] = 'KCUR',
-
-	-- Other:
-	['hfr'] = 'HFR', ['holofoil']    = 'HFR',
-	['sfr'] = 'SFR', ['starfoil']    = 'SFR',
-	['msr'] = 'MSR', ['mosaic']      = 'MSR',
-	['shr'] = 'SHR', ['shatterfoil'] = 'SHR',
-	['cr']  = 'CR',  ['collectors']  = 'CR',
-};
-
--- @name rarity
--- @description Rarity names.
-local rarity = {
-	-- Stadard non-foils:
-	['C']    = 'Common',
-	['NR']   = 'Normal Rare',
-	['SP']   = 'Short Print',
-	['SSP']  = 'Super Short Print',
-	['R']    = 'Rare',
-
-	-- Stadard foils:
-	['SR']   = 'Super Rare',
-	['UR']   = 'Ultra Rare',
-	['UtR']  = 'Ultimate Rare',
-	['GR']   = 'Ghost Rare',
-	['HGR']  = 'Holographic Rare',
-
-	-- Secrets:
-	['ScR']   = 'Secret Rare',
-	['PScR']  = 'Prismatic Secret Rare ',
-	['UScR']  = 'Ultra Secret Rare',
-	['ScUR']  = 'Secret Ultra Rare',
-	['EScR']  = 'Extra Secret Rare',
-	['20ScR'] = '20th Secret Rare',
-
-	-- Precious:
-	['GUR']   = 'Gold Rare',
-	['GScR']  = 'Gold Secret Rare',
-	['GGR']   = 'Ghost/Gold Rare',
-	['PIR']   = 'Platinum Rare',
-	['PIScR'] = 'Platinum Secret Rare',
-
-	-- Millennium:
-	['MLR']   = 'Millennium Rare',
-	['MLSR']  = 'Millennium Super Rare',
-	['MLUR']  = 'Millennium Ultra Rare',
-	['MLScR'] = 'Millennium Secret Rare',
-	['MLGR']  = 'Millennium Gold Rare',
-
-	-- Parallel:
-	['NPR']   = 'Normal Parallel Rare',
-	['SPR']   = 'Super Parallel Rare',
-	['UPR']   = 'Ultra Parallel Rare',
-	['ScPR']  = 'Secret Parallel Rare',
-	['EScPR'] = 'Extra Secret Parallel Rare',
-	['HGPR']  = 'Holographic Parallel Rare',
-
-	-- Duel terminal:
-	['DNPR']  = 'Duel Terminal Normal Parallel Rare',
-	['DNRPR'] = 'Duel Terminal Normal Rare Parallel Rare',
-	['DRPR']  = 'Duel Terminal Rare Parallel Rare',
-	['DSPR']  = 'Duel Terminal Super Parallel Rare',
-	['DUPR']  = 'Duel Terminal Ultra Parallel Rare',
-	['DScPR'] = 'Duel Terminal Secret Parallel Rare',
-
-	-- Kaiba's:
-	['KCC']  = 'Kaiba Corporation Common',
-	['KCR']  = 'Kaiba Corporation Rare',
-	['KCSR'] = 'Kaiba Corporation Super Rare',
-	['KCUR'] = 'Kaiba Corporation Ultra Rare',
-
-	-- Other:
-	['HFR'] = 'Holofoil Rare',
-	['SFR'] = 'Starfoil Rare',
-	['MSR'] = 'Mosaic Rare',
-	['SHR'] = 'Shatterfoil Rare',
-	['CR']  = 'Collectors Rare',
-};
-
--- @name s
--- @description Series code.
-local ser = {
-	anime = {
-		-- Shorts:
-		['toei'] = 'toei', -- TODO: TOEI = Yu-Gi-Oh! (Toei anime) and Yu-Gi-Oh! The Movie
-		['dm']   = 'dm', ['duelmonsters'] = 'dm',
-		['gx']   = 'gx',
-		['5d']   = '5d', ['5ds']    = '5d',
-		['zx']   = 'zx', ['zexal']  = 'zx',
-		['av']   = 'av', ['arcv']   = 'av', 
-		['vr']   = 'vr', ['vrains'] = 'vr',
-
-		-- Movies:
-		['mov']  = 'mov',  ['pyramidoflight'] = 'mov', ['moviepyramidoflight'] = 'mov',  ['pol']  = 'mov',
-		['mov2'] = 'mov2', ['3dbondsbeyondtime'] = 'mov2', ['bondsbeyondtime'] = 'mov2', ['bbt']  = 'mov2',
-		['mov3'] = 'mov3', ['darksideofdimensions'] = 'mov3',                            ['dsod'] = 'mov3',
-	},
-
-	manga = {
-		-- Manga:
-		['r']  = 'r',
-		['dz'] = 'dz', ['dteam'] = 'dz', ['dteamzexal'] = 'dz',
-		-- TODO
-	}
-};
-
--- @name series
--- @description Series name.
-local series = {
-	anime = {
-		-- Shorts:
-		['toei'] = {
-			page  = 'Yu-Gi-Oh! (Toei anime)',
-			label = 'Yu-Gi-Oh! (Toei)',
-		},
-		['dm'] = {
-			page  = 'Yu-Gi-Oh! (anime)',
-			label = 'Yu-Gi-Oh!',
-		},
-		['gx'] = {
-			page  = "Yu-Gi-Oh! GX",
-			label = "Yu-Gi-Oh! GX"
-		},
-		['5d'] = {
-			page  = "Yu-Gi-Oh! 5D's",
-			label = "Yu-Gi-Oh! 5D's"
-		},
-		['zx'] = {
-			page  = 'Yu-Gi-Oh! ZEXAL',
-			label = 'Yu-Gi-Oh! ZEXAL',
-		},
-		['av'] = {
-			page  = 'Yu-Gi-Oh! ARC-V',
-			label = 'Yu-Gi-Oh! ARC-V',
-		},
-		['vr'] = {
-			page  = 'Yu-Gi-Oh! VRAINS',
-			label = 'Yu-Gi-Oh! VRAINS',
-		},
-
-		-- Movies:
-		['mov']  = {
-			page  = 'Yu-Gi-Oh! The Movie: Pyramid of Light',
-			label = 'Yu-Gi-Oh! The Movie: Pyramid of Light',
-		},
-		['mov2'] = {
-			page  = 'Yu-Gi-Oh! 3D Bonds Beyond Time',
-			label = 'Yu-Gi-Oh! 3D Bonds Beyond Time',
-		},
-		['mov3'] = {
-			page  = 'Yu-Gi-Oh! The Dark Side of Dimensions',
-			label = 'Yu-Gi-Oh! The Dark Side of Dimensions',
-		},
-	},
-
-	manga = {}
-};
-
-local CardGallery = {
-	parameters = {
-		[ 1 ]     = true,
-		['1']     = true,
-		['type']  = true,
-		['title'] = true,
-	},
-	
-	types = {
-		['anime'] = 'Anime',
-		['manga'] = 'Manga',
-		['game']  = 'Video games', ['vg'] = 'Video games',
-		['other'] = 'Other',
-	}
-};
-
-----------------
--- Return table:
-----------------
+--------------------
+-- Public interface:
+--------------------
+--[=[Doc
+@exports
+<ul>
+	<li>region</li>
+	<li>language</li>
+	<li>medium</li>
+	<li>edition</li>
+	<li>release</li>
+	<li>rarity</li>
+	<li>
+		anime
+		<ul>
+			<li>release</li>
+			<li>series</li>
+		</ul>
+	</li>
+	<li>
+		templates
+		<ul>
+			<li>[[Template:Card gallery|]]</li>
+		</ul>
+	</li>
+</ul>
+]=]
 return {
-	-- Globals:
-	['rg']        = rg,
-	['region']    = region,
-	['ln']        = ln,
-	['language']  = language,
-	['ed']        = ed,
-	['edition']   = edition,
-	['rel']       = rel,
-	['release']   = release,
-	['amRel']     = amRel,
-	['amRelease'] = amRelease,
-	['r']         = r,
-	['rarity']    = rarity,
+	['normalize'] = N,
+	
+	['region'] = {
+		['en'] = { index = 'EN', full = 'Worldwide English'      },
+		['na'] = { index = 'NA', full = 'North American English' },
+		['eu'] = { index = 'EU', full = 'European English'       },
+		['au'] = { index = 'AU', full = 'Australian English'     },
+		['oc'] = { index = 'OC', full = 'Oceanic English'        },
+		['fr'] = { index = 'FR', full = 'French'                 },
+		['fc'] = { index = 'FC', full = 'French-Canadian'        },
+		['de'] = { index = 'DE', full = 'German'                 },
+		['it'] = { index = 'IT', full = 'Italian'                },
+		['pt'] = { index = 'PT', full = 'Portuguese'             },
+		['sp'] = { index = 'SP', full = 'Spanish'                },
+		['jp'] = { index = 'JP', full = 'Japanese'               },
+		['ja'] = { index = 'JA', full = 'Japanese-Asian'         },
+		['ae'] = { index = 'AE', full = 'Asian-English'          },
+		['tc'] = { index = 'TC', full = 'Chinese'                },
+		['kr'] = { index = 'KR', full = 'Korean'                 },
+	},
 
-	-- Series:
-	['ser']    = ser,
-	['series'] = series,
+	['language'] = {
+		['en'] = { index = 'en', full = 'English'    },
+		['fr'] = { index = 'fr', full = 'French'     },
+		['de'] = { index = 'de', full = 'German'     },
+		['it'] = { index = 'it', full = 'Italian'    },
+		['pt'] = { index = 'pt', full = 'Portuguese' },
+		['es'] = { index = 'es', full = 'Spanish'    },
+		['ja'] = { index = 'ja', full = 'Japanese'   },
+		['zh'] = { index = 'zh', full = 'Chinese'    },
+		['ko'] = { index = 'ko', full = 'Korean'     },
+	},
 
-	-- Templates:
-	['Card gallery'] = CardGallery,
+	['medium'] = {
+		['tcg'] = { abbr = 'TCG', full = 'Yu-Gi-Oh! Trading Card Game'  },
+		['ocg'] = { abbr = 'OCG', full = 'Yu-Gi-Oh! Official Card Game' },
+	},
+
+	['edition'] = {
+		['1e'] = { abbr = '1E', full = '1st Edition'       },
+		['ue'] = { abbr = 'UE', full = 'Unlimited Edition' },
+		['le'] = { abbr = 'LE', full = 'Limited Edition'   },
+		['dt'] = { abbr = 'DT', full = 'Duel Terminal'     },
+	},
+
+	['release'] = {
+		['op'] = { abbr = 'OP', full = 'Official Proxy' },
+		['gc'] = { abbr = 'GC', full = 'Giant Card'     },
+		['ct'] = { abbr = 'CT', full = 'Case Topper'    },
+		['rp'] = { abbr = 'RP', full = 'Replica'        },
+	},
+
+	['rarity'] = {
+		-- Stadard non-foils:
+		['c']   = { abbr = 'C',   full = 'Common'            },
+		['nr']  = { abbr = 'NR',  full = 'Normal Rare'       },
+		['sp']  = { abbr = 'SP',  full = 'Short Print'       },
+		['ssp'] = { abbr = 'SSP', full = 'Super Short Print' },
+		['r']   = { abbr = 'R',   full = 'Rare'              },
+
+		-- Stadard foils:
+		['sr']  = { abbr = 'SR',  full = 'Super Rare'       },
+		['ur']  = { abbr = 'UR',  full = 'Ultra Rare'       },
+		['utr'] = { abbr = 'UtR', full = 'Ultimate Rare'    },
+		['gr']  = { abbr = 'GR',  full = 'Ghost Rare'       },
+		['hgr'] = { abbr = 'HGR', full = 'Holographic Rare' },
+
+		-- Secrets:
+		['scr']   = { abbr = 'ScR',   full = 'Secret Rare'           },
+		['pscr']  = { abbr = 'PScR',  full = 'Prismatic Secret Rare' },
+		['uscr']  = { abbr = 'UScR',  full = 'Ultra Secret Rare'     },
+		['scur']  = { abbr = 'ScUR',  full = 'Secret Ultra Rare'     },
+		['escr']  = { abbr = 'EScR',  full = 'Extra Secret Rare'     },
+		['20scr'] = { abbr = '20ScR', full = '20th Secret Rare'      },
+
+		-- Precious:
+		['gur']   = { abbr = 'GUR',   full = 'Gold Rare'            },
+		['gscr']  = { abbr = 'GScR',  full = 'Gold Secret Rare'     },
+		['ggr']   = { abbr = 'GGR',   full = 'Ghost/Gold Rare'      },
+		['pir']   = { abbr = 'PIR',   full = 'Platinum Rare'        },
+		['piscr'] = { abbr = 'PIScR', full = 'Platinum Secret Rare' },
+
+		-- Millennium:
+		['mlr']   = { abbr = 'MLR',   full = 'Millennium Rare'        },
+		['mlsr']  = { abbr = 'MLSR',  full = 'Millennium Super Rare'  },
+		['mlur']  = { abbr = 'MLUR',  full = 'Millennium Ultra Rare'  },
+		['mlscr'] = { abbr = 'MLScR', full = 'Millennium Secret Rare' },
+		['mlgr']  = { abbr = 'MLGR',  full = 'Millennium Gold Rare'   },
+
+		-- Parallel:
+		['npr']   = { abbr = 'NPR',   full = 'Normal Parallel Rare'       },
+		['spr']   = { abbr = 'SPR',   full = 'Super Parallel Rare'        },
+		['upr']   = { abbr = 'UPR',   full = 'Ultra Parallel Rare'        },
+		['scpr']  = { abbr = 'ScPR',  full = 'Secret Parallel Rare'       },
+		['escpr'] = { abbr = 'EScPR', full = 'Extra Secret Parallel Rare' },
+		['hgpr']  = { abbr = 'HGPR',  full = 'Holographic Parallel Rare'  },
+
+		-- Duel terminal:
+		['dnpr']  = { abbr = 'DNPR',  full = 'Duel Terminal Normal Parallel Rare'      },
+		['dnrpr'] = { abbr = 'DNRPR', full = 'Duel Terminal Normal Rare Parallel Rare' },
+		['drpr']  = { abbr = 'DRPR',  full = 'Duel Terminal Rare Parallel Rare'        },
+		['dspr']  = { abbr = 'DSPR',  full = 'Duel Terminal Super Parallel Rare'       },
+		['dupr']  = { abbr = 'DUPR',  full = 'Duel Terminal Ultra Parallel Rare'       },
+		['dscpr'] = { abbr = 'DScPR', full = 'Duel Terminal Secret Parallel Rare'      },
+
+		-- Kaiba's:
+		['kcc']  = { abbr = 'KCC',  full = 'Kaiba Corporation Common'     },
+		['kcr']  = { abbr = 'KCR',  full = 'Kaiba Corporation Rare'       },
+		['kcsr'] = { abbr = 'KCSR', full = 'Kaiba Corporation Super Rare' },
+		['kcur'] = { abbr = 'KCUR', full = 'Kaiba Corporation Ultra Rare' },
+
+		-- Other:
+		['hfr'] = { abbr = 'HFR', full = 'Holofoil Rare'    },
+		['sfr'] = { abbr = 'SFR', full = 'Starfoil Rare'    },
+		['msr'] = { abbr = 'MSR', full = 'Mosaic Rare'      },
+		['shr'] = { abbr = 'SHR', full = 'Shatterfoil Rare' },
+		['cr']  = { abbr = 'CR',  full = 'Collectors Rare'  },
+	},
+
+	---------------
+	-- Anime stuff:
+	---------------
+	['anime'] = {
+		['release'] = {
+			['nc'] = { abbr = 'NC', full = 'Non-card' },
+			['ca'] = { abbr = 'CA', full = 'Card art' },
+		},
+
+		['series'] = {
+			-- Shorts:
+			['toei'] = {
+				abbr  = 'TOEI',
+				page  = 'Yu-Gi-Oh! (Toei anime)',
+				label = 'Yu-Gi-Oh! (Toei)',
+			},
+			['dm'] = {
+				abbr  = 'DM',
+				page  = 'Yu-Gi-Oh! (anime)',
+				label = 'Yu-Gi-Oh!',
+			},
+			['gx'] = {
+				abbr  = 'GX',
+				page  = 'Yu-Gi-Oh! GX',
+				label = 'Yu-Gi-Oh! GX',
+			},
+			['5d'] = {
+				abbr  = '5D',
+				page  = "Yu-Gi-Oh! 5D's",
+				label = "Yu-Gi-Oh! 5D's",
+			},
+			['zx'] = {
+				abbr  = 'ZX',
+				page  = 'Yu-Gi-Oh! ZEXAL',
+				label = 'Yu-Gi-Oh! ZEXAL',
+			},
+			['av'] = {
+				abbr  = 'AV',
+				page  = 'Yu-Gi-Oh! ARC-V',
+				label = 'Yu-Gi-Oh! ARC-V',
+			},
+			['vr'] = {
+				abbr  = 'VR',
+				page  = 'Yu-Gi-Oh! VRAINS',
+				label = 'Yu-Gi-Oh! VRAINS',
+			},
+
+			-- Movies:
+			['mov'] = {
+				abbr  = 'MOV',
+				page  = 'Yu-Gi-Oh! The Movie: Pyramid of Light',
+				label = 'Yu-Gi-Oh! The Movie: Pyramid of Light',
+			},
+			['mov2'] = {
+				abbr  = 'MOV2',
+				page  = 'Yu-Gi-Oh! 3D Bonds Beyond Time',
+				label = 'Yu-Gi-Oh! 3D Bonds Beyond Time',
+			},
+			['mov3'] = {
+				abbr  = 'MOV3',
+				page  = 'Yu-Gi-Oh! The Dark Side of Dimensions',
+				label = 'Yu-Gi-Oh! The Dark Side of Dimensions',
+			},
+		},
+	},
+
+	-------------------
+	-- Templates stuff:
+	-------------------
+	['templates'] = {
+		['Card gallery'] = {
+			parameters = {
+				[ 1 ]     = true,
+				['1']     = true,
+				['type']  = true,
+				['title'] = true,
+			},
+			
+			types = {
+				['anime'] = 'Anime',
+				['manga'] = 'Manga',
+				['game']  = 'Video games', ['vg'] = 'Video games',
+				['other'] = 'Other',
+			}
+		}
+	},
 };
-
