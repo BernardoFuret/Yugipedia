@@ -4,171 +4,205 @@
 -- @author [[User:Becasita]]
 -- @contact [[User talk:Becasita]]
 
-----------------------
--- "Global" variables:
-----------------------
-local CardGallery = {}; -- Export variable.
-local INFO        = {}; -- Module info object.
-
 ----------------
 -- Load modules:
 ----------------
-local DATA    = require( 'Module:Data' );
-local UTIL    = require( 'Module:Util' );
-local getArgs = require( 'Module:Arguments' ).getArgs;
-local File    = require( 'Module:Card gallery/File' );
+local DATA = require( 'Module:Data' );
+local UTIL = require( 'Module:Util' );
+local File = require( 'Module:Card gallery/File' );
+
+--------------------
+-- Module variables:
+--------------------
+-- This can be seen as the ast:
+local CardGallery = UTIL.newInfoObject( 'Card gallery' );
+
+-- Parser state:
+local
+	PAGENAME,
+	NAMESPACE,
+	_frame,
+	_args,
+	_region,
+	_language,
+	_type,
+	_title,
+	_debug
+;
+local _files = {};
+
+-- Methods:
+function CardGallery:getRegion()
+	return _region;
+end
+
+function CardGallery:getLanguage()
+	return _language;
+end
+
+function CardGallery:getType()
+	return _type;
+end
 
 ---------------------
 -- Utility functions:
 ---------------------
 -- mw functions:
-local gsplit = mw.text.gsplit;
-local HTML   = mw.html.create;
-
--- @name _error
--- @description Generates an error and places it on the error table.
-local function _error( message, default, category )
-	INFO.errors.exists = true;
-	local err = HTML( 'div' ):css( 'padding-left', '1.6em' )
-		:tag( 'strong' ):addClass( 'error' )
-			:wikitext( ('Error: %s'):format( message ) )
-		:done()
-	:allDone();
-	local cat = category and ('[[Category:%s]]'):format( category ) or '';
-
-	table.insert(
-		INFO.errors, table.concat( {
-			tostring( err ), cat
-		} )
-	);
-
-	return default or '';
-end
+local HTML = mw.html.create;
 
 --------------------
 -- Module functions:
 --------------------
--- @name getInfo
+-- @name initInfo
 -- @description Handles generic info.
-local function getInfo()
-	-- Region and language:
-	INFO.rg = DATA.getRg( INFO.args[ 'region' ] ) or _error(
-		('Invalid «region»: %s!'):format( INFO.args[ 'region' ] or '(no region given)' ),
-		DATA.getRg( 'en' )
-	);
-	INFO.region   = DATA.getRegion( INFO.rg );
-	INFO.ln       = DATA.getLn( INFO.rg );
-	INFO.language = DATA.getLanguage( INFO.rg );
-
+local function initInfo()
 	-- Page:
 	local mwTitle  = mw.title.getCurrentTitle();
-	INFO.PAGENAME  = mwTitle.text;
-	INFO.NAMESPACE = mwTitle.nsText;
+	PAGENAME  = mwTitle.text;
+	NAMESPACE = mwTitle.nsText;
+
+	-- Region and language:
+	_region = DATA.getRegion( _args[ 'region' ] ) or CardGallery:error(
+		('Invalid «region»: %s!'):format( _args[ 'region' ] or '(no region given)' ),
+		DATA.getRegion( 'en' )
+	);
+	_language = DATA.getLanguage( _region.index );
 
 	-- Type of gallery:
-	INFO.type  = INFO.args[ 'type' ] and DATA.getCardGalleryType( INFO.args[ 'type' ] );
-	INFO.title = INFO.args[ 'title' ];
+	_type  = DATA.getCardGalleryType( _args[ 'type' ] );
+	_title = _args[ 'title' ];
+	_debug = _args[ 'debug' ];
 end
 
--- @name wrapInQuotes
--- @description Wraps «name» in proper quotation marks.
-local function wrapInQuotes( name )
-	if not UTIL.trim( name ) then
-		return '';  --  Return empty string.
+-- @name getFiles
+-- @description Assembles the file entries and prepares them to be parsed.
+local function initFiles()
+	if not _args[ 1 ] then
+		return CardGallery:error(
+			( _frame.args[ 1 ] and 'Empty' or 'No' ) .. 'input provided for the gallery!'
+		);
 	end
 
-	return (INFO.ln ~= 'ja' and INFO.ln ~= 'zh')
-		and table.concat( { '"', name, '"' } )
-		or  table.concat( { '「', name, '」' } )
-	;
-end
-
--- @name printErrors
--- @description Stringifies the errors table.
-local function printErrors()
-	local category = '[[Category:((Card gallery)) transclusion to be checked]]';
-
-	if not INFO.errors.exists then
-		return '';
-	end
-
-	table.insert( INFO.errors, category );
-
-	return table.concat( INFO.errors, '\n' );
-end
-
--- @name buildGallery
--- @description Builds the gallery.
-local function buildGallery()
-	if not INFO.args[ 1 ] then
-		return _error( 'Empty or no input provided for the gallery!', '' );
-	end
-
-	local galleryEntries = {};
-	for inputEntry in gsplit( INFO.args[ 1 ], '\n' ) do
-		local entry = UTIL.trim( inputEntry ) and File.factory( inputEntry, INFO );
+	for inputEntry in mw.text.gsplit( _args[ 1 ], '\n' ) do
+		local entry = UTIL.trim( inputEntry ) and File.factory( CardGallery, inputEntry );
 		if entry then
-			table.insert( galleryEntries, tostring( entry ) );
-			-- Extend INFO.errors with entry.errors:
-			for _, message in ipairs( entry.errors ) do
-				_error( message ); -- TODO: check this.
-			end
+			table.insert( _files, entry );
 		end
 	end
-
-	return table.concat( {
-		'<gallery heights="175px" position="center" captionalign="center">',
-		table.concat( galleryEntries, '\n' ),
-		'</gallery>'
-	}, '\n' );
 end
 
--- @name buildAll
--- @description Builds the full gallery section, ToC and container.
-local function buildAll( frame, gallery, errors )
-	local sectionHeader = (
-		(INFO.type or INFO.title) and '== %s - %s ==' or '== %s =='
+-- @description Builds the mediawiki section header.
+local function getMwSectionHeader()
+	return (
+		(_type or _title) and '== %s - %s ==' or '== %s =='
 	):format(
-		(INFO.type or INFO.title) or INFO.region, INFO.region
+		(_type or _title) or _region.full, _region.full
 	);
-	local toc = HTML( 'div' ):addClass( 'card-gallery-toc' )
-		:tag( 'ul' )
-		:done()
-	:allDone();
-	local container = HTML( 'div' ):addClass( 'card-galleries' )
-		:node( errors )
-		:newline()
-		:node( frame:preprocess( gallery ) )
-	:allDone();
+end
 
-	return table.concat( {
-		sectionHeader,
-		tostring( toc ),
-		tostring( container )
-	}, '\n' );
+-- @description Builds the ToC skeleton.
+local function getToC()
+	return tostring(
+		HTML( 'div' ):addClass( 'card-gallery__toc' )
+			:tag( 'ul' )
+			:done()
+		:allDone()
+	);
+end
+
+-- @description Builds the errors' log.
+local function getErrors()
+	return tostring(
+		HTML( 'div' )
+			:addClass( 'card-gallery__errors' )
+			:tag( 'ul' )
+				:node(
+					CardGallery:dumpErrors( function( err )
+						return tostring(
+							HTML( 'li' )
+								:tag( 'strong' )
+									:wikitext( err )
+								:done()
+							:allDone()
+						)
+					end )
+				)
+			:done()
+		:allDone()
+	);
+end
+
+-- @description Builds the gallery itself.
+local function getGallery()
+	local gallery = UTIL.newStringBuffer()
+		:addLine( '<gallery heights="175px" position="center" captionalign="center">' )
+	;
+	for _, file in ipairs( _files ) do
+		gallery:addLine( file:render() );
+	end
+	gallery:addLine( '</gallery>' );
+
+	return tostring(
+		HTML( 'div' )
+			:addClass( 'card-gallery__gallery' )
+			:node(
+				_debug and tostring(
+					HTML( 'pre' ):node( gallery:toString() ):done()
+				) or _frame:preprocess(
+					gallery:toString()
+				)
+			)
+		:allDone()
+	);
+end
+
+-- @description Aggregates the categories.
+local function getCategories()
+	return tostring(
+		HTML( 'div' )
+			:addClass( 'card-gallery__categories' )
+			:wikitext(
+				CardGallery:dumpCategories()
+			)
+		:allDone()
+	);
+end
+
+local function render()
+	local buffer = UTIL.newStringBuffer()
+		:addLine( '<div id="card-gallery--' .. _region.index .. '" class="card-gallery">' )
+		:addLine( getMwSectionHeader() )
+		:addLine( getToC() )
+		:addLine( getErrors() )
+		:addLine( getGallery() )
+		:addLine( getCategories() )
+		:add( '</div>' )
+	;
+	
+	return buffer:toString();
 end
 
 -- @name main
--- @notes exportable 
 -- @description To be called through #invoke.
-function CardGallery.main( frame )
-	INFO.errors = {};
-	INFO.args   = getArgs( frame, {
+local function main( frame )
+	_frame = frame;
+	_args  = UTIL.getArgs( frame, {
 		trim         = true,
 		removeBlanks = true,
 		parentOnly   = true
 	} );
 
-	getInfo();
+	initInfo();
+	initFiles();
 
-	local gallery = buildGallery();
-	local errors  = printErrors();
-
-	return buildAll( frame, gallery, errors );
+	return render();
 end
 
 ----------
 -- Return:
 ----------
-return CardGallery;
+-- @exports 
+return {
+	['main'] = main
+};
 -- </pre>

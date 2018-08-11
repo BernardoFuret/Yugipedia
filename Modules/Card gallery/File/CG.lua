@@ -11,290 +11,278 @@
 ----------------
 -- Load modules:
 ----------------
-local DATA       = require( 'Module:Data' );
-local UTIL       = require( 'Module:Util' );
-local getName    = require( 'Module:Name' ).main;
-local getImgName = require( 'Module:Card image name' ).main;
+local DATA = require( 'Module:Data' );
+local UTIL = require( 'Module:Util' );
 
-local EXTERNAL; -- External module info (the «INFO» from other modules).
+-------------
+-- Constants:
+-------------
+local CARD_BACK = 'Back-EN.png';
+local OFFICIAL_PROXY = DATA.getRelease( 'OP' );
 
---------------
--- File class:
---------------
--- @name File
--- @classAttr counter -> [static] Counts the number of File instances.
-local File   = {};
-File.__index = File;
-File.counter = 0;
+---------------
+-- Helper vars:
+---------------
+-- These variables are only used by the init functions.
+-- Therefore, even though they are re-assigned every time
+-- a new instance is created (through `new()`), there's no
+-- problem, because their useful lifetime is only inside
+-- that function very function.
+-- This way, having them here kinda as static variables,
+-- supports encapsulation, since each instance of `File`
+-- doesn't need to have them.
+local _standard, _releases, _options;
 
--- @name new          -> File constructor.
--- @attr flags        -> Control flags:
--- -- exists    => denotes if a file is to be printed.
--- -- noEdition => if it is a Japanese or Chinese print; thus, no edition (except DT ones).
--- -- isOP      => if it is an Official Proxy.
--- @attr number       -> The card number.
--- @attr rg           -> The region index.
--- @attr set          -> The set name inputted.
--- @attr setEn        -> The English name for the set.
--- @attr setLn        -> The localized name for the set.
--- @attr setAbbr      -> The set abbreviation.
--- @attr rarity       -> The rarity name.
--- @attr r            -> The rarity abbreviation.
--- @attr edition      -> The full edition.
--- @attr ed           -> The edition abbreviation.
--- @attr releases     -> The card releases.
--- @attr rels         -> The card releases abbreviations (OP|GC|CT|RP).
--- @attr alt          -> The alt value.
--- @attr extension    -> The file extension.
--- @attr description  -> A short file description.
-function File.new( std, rel, opt, info )
-	EXTERNAL = info;
-	-- @attr _standard -> Contains the trimmed input args for the standard input {enum-like}.
-	-- @attr _releases -> Contains the trimmed input args for the releases (OP|GC|CT|RP) {enum-like}.
-	-- @attr _options  -> Contains the trimmed input args for the options {map-like}.
-	File.counter    = File.counter + 1;
-	local fileData  = {};
-	fileData.errors = {};
-	fileData.flags  = {
-		exists    = true,
-		noEdition = false,
-		isOP      = false
-	};
-	fileData._standard = std or {};
-	fileData._releases = rel or {};
-	fileData._options  = opt or {};
-
-	return setmetatable( fileData, File ):init();
-end
-
--- @name __tostring
--- @description [metamethod] Renders the File.
-function File:__tostring()
-	if not self.flags.exists then
-		return '';
-	end
-
-	-- Build file:
-	local file = {
-		getImgName(), self.setAbbr, self.rg
-	};
-	if self.r  then table.insert( file, self.r  ) end
-	if self.ed then table.insert( file, self.ed ) end
-	for _, rel in ipairs( self.rels ) do
-		table.insert( file, rel );
-	end
-	if self.flags.isOP then table.insert( file, 'OP' ) end
-	if self.alt then table.insert( file, self.alt ) end
-
-	-- Build caption: (this might get better implementation in the future)
-	local caption = {};
-	local temp1st = {};
-	if self.number then table.insert( temp1st, UTIL.link( self.number ) ) end
-	if self.rarity then
-		table.insert(
-			temp1st,
-			('(%s)'):format( UTIL.link( self.rarity, self.r ) )
-		);
-	end
-	if UTIL.count( temp1st ) ~= 0 then
-		table.insert( caption, table.concat( temp1st, ' ' ) );
-	end
-	if self.edition then table.insert( caption, UTIL.link( self.edition ) ) end
-	for _, release in ipairs( self.releases ) do
-		table.insert( caption, UTIL.link( release ) );
-	end
-	if self.flags.isOP then table.insert( caption, UTIL.link( 'Official Proxy' ) ) end
-	table.insert(
-		caption,
-		UTIL.italics(
-			UTIL.link(
-				self.set,
-				self.setEn:match( '%(2011%)' ) and self.setEn -- or self.setEn:match( '%(series%)' )
-			)
-		)
-	);
-	if self.description then table.insert( caption, self.description ) end
-
-	-- Stringify:
-	local fileString    = ('%s.%s'):format( table.concat( file, '-' ), self.extension );
-	local captionString = table.concat( caption, '<br />' );
-	
-	-- Return concatenation:
-	return ('%s | %s'):format( fileString, captionString );
-end
-
--- @name error
--- @description Generate consistent error messages.
-function File:error( parameter )
-	self.flags.exists = false;
-	table.insert( self.errors, ('No %s given for file input number %d!'):format( parameter, File.counter ) );
-
-	return self;
-end
-
--- @name initRegion
--- @description Sets the «rg» attribute.
-function File:initRg()
-	self.rg = EXTERNAL.rg:upper();
-	self.flags.noEdition = self.rg == 'JP' or self.rg == 'JA' or self.rg == 'TC';
-
-	return self;
+--------------------
+-- Helper functions:
+--------------------
+-- @description Boolean indicating if the file doesn't have an edition.
+local function hasNoEdition( t )
+	local rg = t.parent:getRegion().index;
+	return rg == 'JP' or rg == 'JA' or rg == 'TC';
 end
 
 -- @name initNumber
--- @description Sets the «number» and «setAbbr» attributes.
-function File:initNumber()
-	local cardNumber = self._standard[ 1 ];
+-- @description Sets the `number` and `setAbbr` attributes.
+local function initNumber( t )
+	local cardNumber = _standard[ 1 ];
 
 	if cardNumber == '' then
-		return self:error( 'set abbreviation' );
+		return t:error( 'set abbreviation' );
 	end
 
 	if cardNumber and cardNumber:match( '^%w-%-%w-$' ) then
 		-- Input like «TLM-EN012».
-		self.number  = cardNumber:upper();
-		self.setAbbr = self.number:match( '^(%w-)%-%w-$' );
+		t.number  = cardNumber:upper();
+		t.setAbbr = t.number:match( '^(%w-)%-%w-$' );
 	else
 		-- Input like «S1».
-		self.number  = nil;
-		self.setAbbr = cardNumber:upper();
+		t.number  = nil;
+		t.setAbbr = cardNumber:upper();
 	end
-
-	return self;
 end
 
 -- @name initSet
--- @description Sets the «set», «setEn» and «setLn» attributes.
-function File:initSet()
-	local set = self._standard[ 2 ];
+-- @description Sets the `set`, `setEn` and `setLn` attributes.
+local function initSet( t )
+	local set = _standard[ 2 ];
 
 	if set == '' then
-		return self:error( 'set name' );
+		return t:error( 'set name' );
 	end
 
-	self.set   = set;
-	self.setEn = getName( set ) or set;
-	self.setLn = getName( set, EXTERNAL.language );
-
-	return self;
+	t.set   = set;
+	t.setEn = UTIL.getName( set ) or set; --TODO: either UTIL.trim or... check later
+	t.setLn = UTIL.getName( set, t.parent:getLanguage().index );
 end
 
 -- @name initReleases
--- @description Sets the «releases» and «rels» attributes.
-function File:initReleases()
+-- @description Sets the `releases` attribute.
+local function initReleases( t )
 	local releasesAsKeys = {}; -- Unsorted; each release is a key, to prevent duplicates.
-
-	for _, value in ipairs( self._releases ) do
+	for _, value in ipairs( _releases ) do
 		local release = DATA.getRelease( value );
 		if release then
-			releasesAsKeys[ release ] = true;
+			releasesAsKeys[ release.full ] = release;
 		else
-			table.insert(
-				self.errors,
-				('Invalid release value %s given for file input number %d!'):format( value, File.counter )
+			t.parent:error(
+				('Invalid release value %s given for file input number %d!'):format( value, t.id )
 			);
 		end
 	end
 
 	local releases = {};
-
 	for releaseAsKey in pairs( releasesAsKeys ) do
 		table.insert( releases, releaseAsKey );
 	end
-
 	table.sort( releases ); 
 
-	self.releases = {};
-	self.rels     = {};
-
-	for _, release in ipairs( releases ) do
-		local rel = DATA.getRel( release ):upper();
-		self.flags.isOP = (
-			rel == 'OP'
+	t.releases = {};
+	for _, releaseFull in ipairs( releases ) do
+		t.flags.isOP = (
+			releaseFull == OFFICIAL_PROXY.full
 			or
-			table.insert( self.releases, release ) -- Insert the release name (this returns nil).
+			table.insert( t.releases, releasesAsKeys[ releaseFull ] )
 			or
-			table.insert( self.rels, rel ) -- Insert the release abbreviation (this returns nil).
-			or
-			self.flags.isOP
+			t.flags.isOP
 		);
 	end
-
-	return self;
 end
 
 -- @name initRarity
--- @description Sets the «rarity» and «r» attributes.
-function File:initRarity()
-	local rarity = not self.flags.isOP and self._standard[ 3 ];
+-- @description Sets the `rarity` attribute.
+local function initRarity( t )
+	local rarity = not t.flags.isOP and _standard[ 3 ];
 
-	if not self.flags.isOP and rarity == '' then
-		return self:error( 'rarity' );
+	if not t.flags.isOP and rarity == '' then
+		return t:error( 'rarity' );
 	end
 
-	self.rarity = DATA.getRarity( rarity );
-	self.r      = self.rarity and DATA.getR( self.rarity );
-
-	return self;
+	t.rarity = DATA.getRarity( rarity ); -- TODO: error in case there's no rarity found.
 end
 
 -- @name initEdtion
--- @description Sets the «edition» and «ed» attributes.
-function File:initEdition()
-	local edition = self._standard[ self.flags.isOP and 3 or 4 ];
+-- @description Sets the `edition` attribute.
+local function initEdition( t )
+	local edition = _standard[ t.flags.isOP and 3 or 4 ];
 
-	self.edition = DATA.getEdition( edition );
-	self.ed      = self.edition and DATA.getEd( self.edition ):upper();
+	t.edition = DATA.getEdition( edition );
 
-	if not self.flags.noEdition and not self.edition then
-		return self:error( 'edition' );
+	if not hasNoEdition( t ) and not t.edition then
+		return t:error( 'edition' );
 	end
-
-	return self;
 end
 
 -- @name initAlt
 -- @description Set the «alt» attribute.
-function File:initAlt()
+local function initAlt( t )
 	local index = 5;
-	if self.flags.isOP then index = index - 1 end
-	if not self.ed     then index = index - 1 end
+	if t.flags.isOP  then index = index - 1 end
+	if not t.edition then index = index - 1 end
 
-	self.alt = UTIL.trim( self._standard[ index ] );
-
-	return self;
+	t.alt = UTIL.trim( _standard[ index ] );
 end
 
 -- @name initOptions
--- @description Sets the file extension.
-function File:initOptions()
+-- @description Sets any possible options (`extension` and `description`).
+local function initOptions( t )
 	-- Extension:
-	local extension = self._options[ 'extension' ];
-	self.extension  = UTIL.isString( extension ) and extension:lower() or 'png';
+	local extension = _options[ 'extension' ];
+	t.extension  = UTIL.isString( extension ) and extension:lower() or 'png';
 
 	-- Description:
-	self.description = self._options[ 'description' ];
-
-	return self;
+	t.description = _options[ 'description' ];
 end
 
 -- @name init
 -- @description Initializes the attributes of the File instance.
-function File:init()
-	return self
-		:initRg()
-		:initNumber()
-		:initSet()
-		:initReleases()
-		:initRarity()
-		:initEdition()
-		:initAlt()
-		:initOptions()
+local function init( t )
+	initNumber( t );
+	initSet( t );
+	initReleases( t );
+	initRarity( t );
+	initEdition( t );
+	initAlt( t );
+	initOptions( t );
+	return t;
+end
+
+--------------
+-- File class:
+--------------
+-- @name File
+-- @attr counter -> [static] Counts the number of File instances.
+local File   = {};
+File.__index = File;
+File.counter = 0;
+
+-- @name new         -> File constructor.
+-- @attr flags       -> Control flags:
+-- -- hasErrors -> Denotes if a file has errors. Used when parsing the gathered content.
+-- -- isOP      -> If it is an Official Proxy.
+-- @attr number      -> The card number.
+-- @attr set         -> The set name inputted.
+-- @attr setEn       -> The English name for the set.
+-- @attr setLn       -> The localized name for the set.
+-- @attr setAbbr     -> The set abbreviation.
+-- @attr rarity      -> The rarity.
+-- @attr edition     -> The edition.
+-- @attr releases    -> The card releases.
+-- @attr alt         -> The alt value.
+-- @attr extension   -> The file extension.
+-- @attr description -> A short file description.
+function File.new( cardGallery, std, rel, opt )
+	_standard = std or {};
+	_releases = rel or {};
+	_options  = opt or {};
+
+	File.counter   = File.counter + 1;
+	local fileData = {
+		id     = File.counter;
+		parent = cardGallery;
+		flags  = {
+			hasErrors = false,
+			isOP      = nil,
+		},
+	};
+
+	return init( setmetatable( fileData, File ) );
+end
+
+-- @name error
+-- @description Generate consistent error messages.
+function File:error( parameter )
+	self.flags.hasErrors = true;
+	self.parent:error(
+		('No %s given for file input number %d!'):format( parameter, self.id )
+	)
+
+	return self;
+end
+
+-- @name render
+-- @description Renders the File by parsing the info gathered.
+function File:render()
+	if self.flags.hasErrors then
+		return ('%s | File #%d'):format( CARD_BACK, self.id );
+	end
+
+	-- Build file:
+	local file = UTIL.newStringBuffer()
+		:add( UTIL.getImgName() )
+		:add( self.setAbbr )
+		:add( self.parent:getRegion().index )
+		:add( self.rarity and self.rarity.abbr )
+		:add( self.edition and self.edition.abbr )
 	;
+
+	for _, release in ipairs( self.releases ) do
+		file:add( release.abbr );
+	end
+
+	file
+		:add( self.flags.isOP and OFFICIAL_PROXY.abbr )
+		:add( self.alt )
+		:flush( '-' )
+		:add( self.extension )
+		:flush( '.' )
+	;
+
+	-- Build caption:
+	local caption = UTIL.newStringBuffer()
+		:add( self.number and UTIL.link( self.number ) )
+		:add(
+			self.rarity and ('(%s)'):format(
+				UTIL.link( self.rarity.full, self.rarity.abbr )
+			)
+		)
+		:flush( ' ' )
+		:add( self.edition and UTIL.link( self.edition.full ) )
+
+	for _, release in ipairs( self.releases ) do
+		caption:add( UTIL.link( release.full ) );
+	end
+
+	caption
+		:add( self.flags.isOP and UTIL.link( OFFICIAL_PROXY.full ) )
+		:add(
+			UTIL.italic(
+				UTIL.link(
+					self.set,
+					self.setEn:match( '%(2011%)' ) and self.setEn -- or self.setEn:match( '%(series%)' )
+				)
+			)
+		)
+		:add( self.description )
+		:flush( '<br />' )
+	;
+	
+	return ('%s | %s'):format( file:toString(), caption:toString() );
 end
 
 ----------
 -- Return:
 ----------
+-- @exports The `File` class.
 return File;
 -- </pre>

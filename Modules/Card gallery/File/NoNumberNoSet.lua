@@ -7,178 +7,178 @@
 ----------------
 -- Load modules:
 ----------------
-local DATA       = require( 'Module:Data' );
-local UTIL       = require( 'Module:Util' );
-local getImgName = require( 'Module:Card image name' ).main;
+local DATA = require( 'Module:Data' );
+local UTIL = require( 'Module:Util' );
 
-local EXTERNAL; -- External module info (the «INFO» from other modules).
+-------------
+-- Constants:
+-------------
+local CARD_BACK = 'Back-EN.png';
+local OFFICIAL_PROXY = DATA.getRelease( 'OP' );
 
---------------
--- File class:
---------------
--- @name File
--- @classAttr counter -> [static] Counts the number of File instances.
-local File   = {};
-File.__index = File;
-File.counter = 0;
+---------------
+-- Helper vars:
+---------------
+-- These variables are only used by the init functions.
+-- Therefore, even though they are re-assigned every time
+-- a new instance is created (through `new()`), there's no
+-- problem, because their useful lifetime is only inside
+-- that function very function.
+-- This way, having them here kinda as static variables,
+-- supports encapsulation, since each instance of `File`
+-- doesn't need to have them.
+local _standard, _releases, _options;
 
--- @name new          -> File constructor.
--- @attr flags        -> Control flags:
--- -- exists    => denotes if a file is to be printed.
--- -- isOP      => if it is an Official Proxy.
--- @attr rg           -> The region index.
--- @attr releases     -> The card releases.
--- @attr rels         -> The card releases abbreviations (OP|GC|CT|RP).
--- @attr alt          -> The alt value.
--- @attr extension    -> The file extension.
--- @attr description  -> A short file description.
-function File.new( std, rel, opt, info )
-	EXTERNAL = info;
-	-- @attr _standard -> Contains the trimmed input args for the standard input {enum-like}.
-	-- @attr _releases -> Contains the trimmed input arg for the releases (OP|GC|CT|RP) {enum-like}.
-	-- @attr _options  -> Contains the trimmed input args for the options {map-like}.
-	File.counter    = File.counter + 1;
-	local fileData  = {};
-	fileData.errors = {};
-	fileData.flags  = {
-		exists    = true,
-		isOP      = false
-	};
-	fileData._standard = std or {};
-	fileData._releases = rel or {};
-	fileData._options  = opt or {};
-
-	return setmetatable( fileData, File ):init();
-end
-
--- @name __tostring
--- @description [metamethod] Renders the File.
-function File:__tostring()
-	if not self.flags.exists then
-		return '';
-	end
-
-	-- Build file:
-	local file = {
-		getImgName(), self.rg
-	};
-	for _, rel in ipairs( self.rels ) do
-		table.insert( file, rel );
-	end
-	if self.flags.isOP then table.insert( file, 'OP' ) end
-	if self.alt then table.insert( file, self.alt ) end
-
-	-- Build caption:
-	local caption = {};
-	for _, release in ipairs( self.releases ) do
-		table.insert( caption, UTIL.link( release ) );
-	end
-	if self.flags.isOP then table.insert( caption, UTIL.link( 'Official Proxy' ) ) end
-	if self.description then table.insert( caption, self.description ) end
-
-	-- Stringify:
-	local fileString    = ('%s.%s'):format( table.concat( file, '-' ), self.extension );
-	local captionString = table.concat( caption, '<br />' );
-	
-	-- Return concatenation:
-	return ('%s | %s'):format( fileString, captionString );
-end
-
--- @name error
--- @description Generate consistent error messages.
-function File:error( parameter )
-	self.flags.exists = false;
-	table.insert( self.errors, ('No %s given for file input number %d!'):format( parameter, File.counter ) );
-
-	return self;
-end
-
--- @name initRegion
--- @description Sets the «rg» attribute.
-function File:initRg()
-	self.rg = EXTERNAL.rg:upper();
-
-	return self;
-end
-
+--------------------
+-- Helper functions:
+--------------------
 -- @name initReleases
--- @description Sets the «releases» and «rels» attributes.
-function File:initReleases()
+-- @description Sets the `releases` attribute.
+local function initReleases( t )
 	local releasesAsKeys = {}; -- Unsorted; each release is a key, to prevent duplicates.
-
-	for _, value in ipairs( self._releases ) do
+	for _, value in ipairs( _releases ) do
 		local release = DATA.getRelease( value );
 		if release then
-			releasesAsKeys[ release ] = true;
+			releasesAsKeys[ release.full ] = release;
 		else
-			table.insert(
-				self.errors,
-				('Invalid release value %s given for file input number %d!'):format( value, File.counter )
+			t:error(
+				('Invalid release value %s given for file input number %d!'):format( value, t.id )
 			);
 		end
 	end
 
 	local releases = {};
-
 	for releaseAsKey in pairs( releasesAsKeys ) do
 		table.insert( releases, releaseAsKey );
 	end
-
 	table.sort( releases ); 
 
-	self.releases = {};
-	self.rels     = {};
-
-	for _, release in ipairs( releases ) do
-		local rel = DATA.getRel( release ):upper();
-		self.flags.isOP = (
-			rel == 'OP'
+	t.releases = {};
+	for _, releaseFull in ipairs( releases ) do
+		t.flags.isOP = (
+			releaseFull == OFFICIAL_PROXY.full
 			or
-			table.insert( self.releases, release ) -- Insert the release name (this returns nil).
+			table.insert( t.releases, releasesAsKeys[ releaseFull ] )
 			or
-			table.insert( self.rels, rel ) -- Insert the release abbreviation (this returns nil).
-			or
-			self.flags.isOP
+			t.flags.isOP
 		);
 	end
-
-	return self;
 end
 
 -- @name initAlt
--- @description Set the «alt» attribute.
-function File:initAlt()
-	self.alt = UTIL.trim( self._standard[ 1 ] );
-
-	return self;
+-- @description Set the `alt` attribute.
+local function initAlt( t )
+	t.alt = UTIL.trim( _standard[ 1 ] );
 end
 
 -- @name initOptions
--- @description Sets the file extension.
-function File:initOptions()
+-- @description Sets any possible options (`extension` and `description`).
+local function initOptions( t )
 	-- Extension:
-	local extension = self._options[ 'extension' ];
-	self.extension  = UTIL.isString( extension ) and extension:lower() or 'png';
+	local extension = _options[ 'extension' ];
+	t.extension     = UTIL.isString( extension ) and extension:lower() or 'png';
 
 	-- Description:
-	self.description = self._options[ 'description' ];
-
-	return self;
+	t.description = _options[ 'description' ];
 end
 
 -- @name init
 -- @description Initializes the attributes of the File instance.
-function File:init()
-	return self
-		:initRg()
-		:initReleases()
-		:initAlt()
-		:initOptions()
+local function init( t )
+	initReleases( t );
+	initAlt( t );
+	initOptions( t );
+	return t;
+end
+
+--------------
+-- File class:
+--------------
+-- @name File
+-- @attr counter -> [static] Counts the number of File instances.
+local File   = {};
+File.__index = File;
+File.counter = 0;
+
+-- @name new         -> File constructor.
+-- @attr flags       -> Control flags:
+-- -- hasErrors -> Senotes if a file has errors. Used when parsing the gathered content.
+-- -- isOP      -> If it is an Official Proxy.
+-- @attr releases    -> The card releases.
+-- @attr alt         -> The alt value.
+-- @attr extension   -> The file extension.
+-- @attr description -> A short file description.
+function File.new( cardGallery, std, rel, opt )
+	_standard = std or {};
+	_releases = rel or {};
+	_options  = opt or {};
+
+	File.counter   = File.counter + 1;
+	local fileData = {
+		id     = File.counter;
+		parent = cardGallery;
+		flags  = {
+			hasErrors = false,
+			isOP      = nil,
+		},
+	};
+
+	return init( setmetatable( fileData, File ) );
+end
+
+-- @name error
+-- @description Generate consistent error messages.
+function File:error( message )
+	self.flags.hasErrors = true;
+	self.parent:error( message );
+
+	return self;
+end
+
+-- @name render
+-- @description Renders the File by parsing the info gathered.
+function File:render()
+	if self.flags.hasErrors then
+		return ('%s | File #%d'):format( CARD_BACK, self.id );
+	end
+
+	-- Build file:
+	local file = UTIL.newStringBuffer()
+		:add( UTIL.getImgName() )
+		:add( self.parent:getRegion().index )
 	;
+
+	for _, release in ipairs( self.releases ) do
+		file:add( release.abbr );
+	end
+
+	file
+		:add( self.flags.isOP and OFFICIAL_PROXY.abbr )
+		:add( self.alt )
+		:flush( '-' )
+		:add( self.extension )
+		:flush( '.' )
+	;
+	
+	-- Build caption:
+	local caption = UTIL.newStringBuffer();
+	
+	for _, release in ipairs( self.releases ) do
+		caption:add( UTIL.link( release.full ) );
+	end
+
+	caption
+		:add( self.flags.isOP and UTIL.link( OFFICIAL_PROXY.full ) )
+		:add( self.description )
+		:flush( '<br />' )
+	;
+	
+	return ('%s | %s'):format( file:toString(), caption:toString() );
 end
 
 ----------
 -- Return:
 ----------
+-- @exports The `File` class.
 return File;
 -- </pre>

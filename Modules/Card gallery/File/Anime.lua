@@ -12,161 +12,164 @@
 -- <Series>; <alt> :: <NonCard> // <option1>::<value1>; <optionN>::<valueN>
 -- »
 
+-------------
+-- Constants:
+-------------
+local ANIME_CARD_BACK = 'Back-Anime-DM.png';
+
 ----------------
 -- Load modules:
 ----------------
-local DATA       = require( 'Module:Data' );
-local UTIL       = require( 'Module:Util' );
-local getImgName = require( 'Module:Card image name' ).main;
+local DATA = require( 'Module:Data' );
+local UTIL = require( 'Module:Util' );
 
-local EXTERNAL; -- External module info (the «INFO» from other modules).
+---------------
+-- Helper vars:
+---------------
+-- These variables are only used by the init functions.
+-- Therefore, even though they are re-assigned every time
+-- a new instance is created (through `new()`), there's no
+-- problem, because their useful lifetime is only inside
+-- that function very function.
+-- This way, having them here kinda as static variables,
+-- supports encapsulation, since each instance of `File`
+-- doesn't need to have them.
+local _standard, _release, _options;
+
+--------------------
+-- Helper functions:
+--------------------
+-- @name initSeries
+-- @description Sets the `series`.
+local function initSeries( t )
+	local series = _standard[ 1 ];
+
+	if series == '' then
+		return t:error( 'series' );
+	end
+
+	t.series = DATA.getAnimeSeries( series );
+end
+
+-- @name initRelease
+-- @description Sets the `release` attribute.
+local function initRelease( t )
+	local release = _release[ 1 ];
+
+	t.release = DATA.getAnimeRelease( release );
+end
+
+-- @name initAlt
+-- @description Set the `alt` attribute.
+local function initAlt( t )
+	t.alt = UTIL.trim( _standard[ 2 ] );
+end
+
+-- @name initOptions
+-- @description Sets any possible options (`extension` and `description`).
+local function initOptions( t )
+	-- Extension:
+	local extension = _options[ 'extension' ];
+	t.extension  = UTIL.isString( extension ) and extension:lower() or 'png';
+
+	-- Description:
+	t.description = _options[ 'description' ];
+end
+
+-- @name init
+-- @description Initializes the attributes of the File instance.
+local function init( t )
+	initSeries( t );
+	initRelease( t );
+	initAlt( t );
+	initOptions( t );
+	return t;
+end
 
 --------------
 -- File class:
 --------------
 -- @name File
--- @classAttr counter -> [static] Counts the number of File instances.
+-- @attr counter -> [static] Counts the number of File instances.
 local File   = {};
 File.__index = File;
 File.counter = 0;
 
--- @name new          -> File constructor.
--- @attr flags        -> Control flags:
--- -- exists    => denotes if a file is to be printed.
--- @attr rg           -> The region index.
--- @attr series       -> The series name.
--- @attr ser          -> The series code.
--- @attr release      -> Non card or card art.
--- @attr rel          -> NC or CA.
--- @attr alt          -> The alt value.
--- @attr extension    -> The file extension.
--- @attr description  -> A short file description.
-function File.new( std, rel, opt, info )
-	EXTERNAL = info;
-	-- @attr _standard -> Contains the trimmed input args for the standard input {enum-like}.
-	-- @attr _release  -> Contains the trimmed input arg for the release (OP|GC|CT|RP) {enum-like}.
-	-- @attr _options  -> Contains the trimmed input args for the options {map-like}.
-	File.counter    = File.counter + 1;
-	local fileData  = {};
-	fileData.errors = {};
-	fileData.flags  = {
-		exists = true,
+-- @name new         -> File constructor.
+-- @attr id          -> The file id.
+-- @attr flags       -> Control flags:
+-- -- hasErrors -> Denotes if a file has errors. Used when parsing the gathered content.
+-- @attr series      -> The series.
+-- @attr release     -> Non card or card art.
+-- @attr alt         -> The alt value.
+-- @attr extension   -> The file extension.
+-- @attr description -> A short file description.
+function File.new( cardGallery, std, rel, opt )
+	_standard = std or {};
+	_release  = rel or {};
+	_options  = opt or {};
+
+	File.counter   = File.counter + 1;
+	local fileData = {
+		id     = File.counter;
+		parent = cardGallery;
+		flags  = {
+			hasErrors = false,
+		},
 	};
-	fileData._standard = std or {};
-	fileData._release  = rel or {};
-	fileData._options  = opt or {};
 
-	return setmetatable( fileData, File ):init();
-end
-
--- @name __tostring
--- @description [metamethod] Renders the File.
-function File:__tostring()
-	if not self.flags.exists then
-		return '';
-	end
-
-	-- Build file:
-	local file = {
-		getImgName(), self.rg, 'Anime', self.ser:upper()
-	};
-	if self.rel then table.insert( file, self.rel:upper() ) end
-	if self.alt then table.insert( file, self.alt ) end
-
-	-- Build caption:
-	local caption = {
-		UTIL.italics( -- TODO: Don't italicize dab.
-			UTIL.link( self.series.page, self.series.label )
-		)
-	};
-	if self.description or self.release then table.insert( caption, self.description or self.release ) end
-
-	-- Stringify:
-	local fileString    = ('%s.%s'):format( table.concat( file, '-' ), self.extension );
-	local captionString = table.concat( caption, '<br />' );
-	
-	-- Return concatenation:
-	return ('%s | %s'):format( fileString, captionString );
+	return init( setmetatable( fileData, File ) );
 end
 
 -- @name error
 -- @description Generate consistent error messages.
 function File:error( parameter )
-	self.flags.exists = false;
-	table.insert( self.errors, ('No %s given for file input number %d!'):format( parameter, File.counter ) );
+	self.flags.hasErrors = true;
+	self.parent:error(
+		('No %s given for file input number %d!'):format( parameter, self.id )
+	)
 
 	return self;
 end
 
--- @name initRegion
--- @description Sets the «rg» attribute.
-function File:initRg()
-	self.rg = EXTERNAL.rg:upper();
-
-	return self;
-end
-
--- @name initSeries
--- @description Sets the «series» and «ser» attributes.
-function File:initSeries()
-	local series = self._standard[ 1 ];
-
-	if series == '' then
-		return self:error( 'series' );
+-- @name render
+-- @description Renders the File by parsing the info gathered.
+function File:render()
+	if self.flags.hasErrors then
+		return ('%s | File #%d'):format( ANIME_CARD_BACK, self.id );
 	end
 
-	self.series = DATA.getAnimeSeries( series );
-	self.ser    = DATA.getAnimeSer( series );
-
-	return self;
-end
-
--- @name initRelease
--- @description Sets the «release» and «rel» attributes.
-function File:initRelease()
-	local release = self._release[ 1 ];
-
-	self.release = DATA.getAnimeMangaRelease( release );
-	self.rel     = DATA.getAnimeMangaRel( release );
-
-	return self;
-end
-
--- @name initAlt
--- @description Set the «alt» attribute.
-function File:initAlt()
-	self.alt = UTIL.trim( self._standard[ 2 ] );
-
-	return self;
-end
-
--- @name initOptions
--- @description Sets the file extension.
-function File:initOptions()
-	-- Extension:
-	local extension = self._options[ 'extension' ];
-	self.extension  = UTIL.isString( extension ) and extension:lower() or 'png';
-
-	-- Description:
-	self.description = self._options[ 'description' ];
-
-	return self;
-end
-
--- @name init
--- @description Initializes the attributes of the File instance.
-function File:init()
-	return self
-		:initRg()
-		:initSeries()
-		:initRelease()
-		:initAlt()
-		:initOptions()
+	-- Build file:
+	local file = UTIL.newStringBuffer()
+		:add( UTIL.getImgName() )
+		:add( self.parent:getRegion().index )
+		:add( 'Anime' )
+		:add( self.series.abbr )
+		:add( self.release and self.release.abbr ) --(self.release or {}).abbr
+		:add( self.alt )
+		:flush( '-' )
+		:add( self.extension )
+		:flush( '.' )
 	;
+
+	-- Build caption:
+	local caption = UTIL.newStringBuffer()
+		:add(
+			UTIL.link(
+				self.series.page,
+				UTIL.italicNoDab( self.series.label )
+			)
+		)
+		:add( self.description or self.release and self.release.full )
+		:flush( '<br />' )
+	;
+
+	return ('%s | %s'):format( file:toString(), caption:toString() );
 end
 
 ----------
 -- Return:
 ----------
+-- @exports The `File` class.
 return File;
 -- </pre>

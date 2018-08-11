@@ -4,6 +4,8 @@
 -- @author [[User:Becasita]]
 -- @contact [[User talk:Becasita]]
 
+-- TODO: this could use some general cleanup, but low priority.
+
 -------------------
 -- Export variable:
 ------------------
@@ -106,7 +108,8 @@ end
 
 -- @name factory
 -- @description Decides which kind of file to instantiate.
-function File.factory( entry, info )
+function File.factory( cardGallery, entry )
+	local galleryType = cardGallery:getType();
 	local standard, releases, options = splitEntry( entry );
 
 	local countStd = UTIL.count( standard );
@@ -118,16 +121,16 @@ function File.factory( entry, info )
 	if countStd == 0 and countRel == 0 and countOpt == 0 then
 		-- Not enough info to even try to build. TODO: barricade to delete this.
 		return nil;
-	elseif info.type == 'Anime' then
+	elseif galleryType == 'Anime' then
 		Module = 'Anime'; 
-	elseif info.type == 'Manga' then
+	elseif galleryType == 'Manga' then
 		Module = 'Manga'; 
-	elseif info.type == 'Video games' then
+	elseif galleryType == 'Video games' then
 		Module = 'VG';
-	elseif info.type == 'Other' then
+	elseif galleryType == 'Other' then
 		Module = ''; -- TODO
 	else
-		-- No info.type; defaults to the card game entries:
+		-- No galleryType; defaults to the card game entries:
 		if countStd < 2 and countRel > 0 then
 			Module = 'NoNumberNoSet'; --Mirror Force and OEPD from the arc-v (assumes there's no edition, even for DT ones (they don't exist)).
 		else
@@ -135,7 +138,7 @@ function File.factory( entry, info )
 		end
 	end
 
-	return require( 'Module:Card gallery/File/' .. Module ).new( standard, releases, options, info );
+	return require( 'Module:Card gallery/File/' .. Module ).new( cardGallery, standard, releases, options );
 end
 
 ----------
