@@ -40,7 +40,7 @@ local function execute( page, language )
 	end
 	local query = mw.smw.ask( {
 		('[[%s]]'):format( page:gsub( '#', '' ) ),
-		('?%s name='):format( language ),
+		('?%s name='):format( language.full ),
 		limit     = 1,
 		mainlabel = '-'
 	} );
