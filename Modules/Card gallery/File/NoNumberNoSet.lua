@@ -13,7 +13,10 @@ local UTIL = require( 'Module:Util' );
 -------------
 -- Constants:
 -------------
-local CARD_BACK = 'Back-EN.png';
+local CARD_BACK_TCG  = 'Back-EN.png';
+local CARD_BACK_JP   = 'Back-JP.png';
+local CARD_BACK_AE   = 'Back-AE.png';
+local CARD_BACK_KR   = 'Back-KR.png';
 local OFFICIAL_PROXY = DATA.getRelease( 'OP' );
 
 ---------------
@@ -23,7 +26,7 @@ local OFFICIAL_PROXY = DATA.getRelease( 'OP' );
 -- Therefore, even though they are re-assigned every time
 -- a new instance is created (through `new()`), there's no
 -- problem, because their useful lifetime is only inside
--- that function very function.
+-- that very function.
 -- This way, having them here kinda as static variables,
 -- supports encapsulation, since each instance of `File`
 -- doesn't need to have them.
@@ -32,6 +35,19 @@ local _standard, _releases, _options;
 --------------------
 -- Helper functions:
 --------------------
+-- @description Decides what kind of card backing to present.
+local function getCardBack( rg )
+	return (
+		( rg == 'JP' or rg == 'JA' or rg == 'TC' ) and CARD_BACK_JP
+		or
+		rg == 'AE' and CARD_BACK_AE
+		or
+		rg == 'KR' and CARD_BACK_KR
+		or
+		CARD_BACK_TCG
+	);
+end
+
 -- @name initReleases
 -- @description Sets the `releases` attribute.
 local function initReleases( t )
@@ -139,7 +155,7 @@ end
 -- @description Renders the File by parsing the info gathered.
 function File:render()
 	if self.flags.hasErrors then
-		return ('%s | File #%d'):format( CARD_BACK, self.id );
+		return ('%s | File #%d'):format( getCardBack( self.parent:getRegion().index ), self.id );
 	end
 
 	-- Build file:
