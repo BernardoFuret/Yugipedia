@@ -30,7 +30,7 @@ local UTIL = require( 'Module:Util' );
 -- Therefore, even though they are re-assigned every time
 -- a new instance is created (through `new()`), there's no
 -- problem, because their useful lifetime is only inside
--- that function very function.
+-- that very function.
 -- This way, having them here kinda as static variables,
 -- supports encapsulation, since each instance of `File`
 -- doesn't need to have them.
@@ -42,13 +42,11 @@ local _standard, _release, _options;
 -- @name initSeries
 -- @description Sets the `series`.
 local function initSeries( t )
-	local series = _standard[ 1 ];
+	t.series = DATA.getAnimeSeries( _standard[ 1 ] );
 
-	if series == '' then
+	if not t.series then
 		return t:error( 'series' );
 	end
-
-	t.series = DATA.getAnimeSeries( series );
 end
 
 -- @name initRelease
@@ -126,7 +124,7 @@ end
 function File:error( parameter )
 	self.flags.hasErrors = true;
 	self.parent:error(
-		('No %s given for file input number %d!'):format( parameter, self.id )
+		('No %s found for file input number %d!'):format( parameter, self.id )
 	)
 
 	return self;
