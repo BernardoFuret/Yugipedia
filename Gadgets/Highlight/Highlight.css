@@ -1,0 +1,81 @@
+/**
+ * Highlight namespaces, certain pages and logs on
+ * [[Special:RecentChanges]] and [[Special:Contributions]].
+ * Based on https://runescape.wikia.com/wiki/MediaWiki:Gadget-ColorRC.css
+ */
+/* MediaWiki, JS and CSS pages - Light Blue. */
+.mw-special-Recentchanges .mw-changeslist-title[title^="MediaWiki:"]:first-of-type,
+.mw-special-Recentchanges .mw-changeslist-title[title$=".css"]:first-of-type,
+.mw-special-Recentchanges .mw-changeslist-title[title$=".js"]:first-of-type,
+.mw-special-Contributions .mw-contributions-title[title^="MediaWiki:"],
+.mw-special-Contributions .mw-contributions-title[title$=".css"],
+.mw-special-Contributions .mw-contributions-title[title$=".js"] {
+	background: #e6f9ff;
+	color: #058bb5;
+}
+/* Module and any Lua pages - Green. */
+.mw-special-Recentchanges .mw-changeslist-title[title^="Module:"]:first-of-type,
+.mw-special-Recentchanges .mw-changeslist-title[title$=".lua"]:first-of-type,
+.mw-special-Contributions .mw-contributions-title[title^="Module:"],
+.mw-special-Contributions .mw-contributions-title[title$=".lua"] {
+	background: #ecfbe0;
+	color: #63a727;
+}
+/* Template - Red. */
+.mw-special-Recentchanges .mw-changeslist-title[title^="Template:"]:first-of-type,
+.mw-special-Contributions .mw-contributions-title[title^="Template:"] {
+	background: #f7e0e0;
+	color: #ea322d;
+}
+/* File - Dark Blue. */
+.mw-special-Recentchanges .mw-changeslist-title[title^="File:"]:first-of-type,
+.mw-special-Contributions .mw-contributions-title[title^="File:"] {
+	background: #edeff7;
+	color: #3866d2;
+}
+/* Category - Dark Gray. */
+.mw-special-Recentchanges .mw-changeslist-title[title^="Category:"]:first-of-type,
+.mw-special-Contributions .mw-contributions-title[title^="Category:"] {
+	background: #e4dbcc;
+	color: #6d5a6a;
+}
+/* Yugipedia - Marine */
+.mw-special-Recentchanges .mw-changeslist-title[title^="Yugipedia:"]:first-of-type,
+.mw-special-Contributions .mw-contributions-title[title^="Yugipedia:"] {
+	background: #dcffed;
+	color: #00a590;
+}
+/* SMW stuff - Purple. */
+.mw-special-Recentchanges .mw-changeslist-title[title^="Transcript:"]:first-of-type,
+.mw-special-Recentchanges .mw-changeslist-title[title^="Property:"]:first-of-type,
+.mw-special-Recentchanges .mw-changeslist-title[title^="Type:"]:first-of-type,
+.mw-special-Recentchanges .mw-changeslist-title[title^="Form:"]:first-of-type,
+.mw-special-Recentchanges .mw-changeslist-title[title^="Concept:"]:first-of-type,
+.mw-special-Recentchanges .mw-changeslist-title[title^="Filter:"]:first-of-type,
+.mw-special-Contributions .mw-contributions-title[title^="Transcript:"],
+.mw-special-Contributions .mw-contributions-title[title^="Property:"],
+.mw-special-Contributions .mw-contributions-title[title^="Type:"],
+.mw-special-Contributions .mw-contributions-title[title^="Form:"],
+.mw-special-Contributions .mw-contributions-title[title^="Concept:"],
+.mw-special-Contributions .mw-contributions-title[title^="Filter:"] {
+	background: #efd9ff;
+	color: #af0bff;
+}
+/* Forum - Orange. */
+.mw-special-Recentchanges .mw-changeslist-title[title^="Forum:"]:first-of-type,
+.mw-special-Contributions .mw-contributions-title[title^="Forum:"] {
+	background: #ffe9c6;
+	color: #d46807;
+}
+/* Any talk page - Yellow. */
+.mw-special-Recentchanges .mw-changeslist-title[title^="Talk:"]:first-of-type,
+.mw-special-Recentchanges .mw-changeslist-title[title*=" talk:"]:first-of-type,
+.mw-special-Contributions .mw-contributions-title[title^="Talk:"],
+.mw-special-Contributions .mw-contributions-title[title*=" talk:"] {
+	background: #fff9d9;
+	color: #d49e00;
+}
+/* Logs - Red (only text). */
+.mw-changeslist-line-inner a[title^="Special:Log"] {
+	color: red;
+}
