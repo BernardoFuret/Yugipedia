@@ -12,11 +12,11 @@
 }
 /* For bots: */;
 #user-group-tag__bot {
-    color: purple;
-    border-color: purple;
+	color: purple;
+	border-color: purple;
 }
 /* For admins: */;
 #user-group-tag__mover {
-    color: red;
-    border-color: red;
+	color: red;
+	border-color: red;
 }
