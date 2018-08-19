@@ -16,7 +16,7 @@
 	border-color: purple;
 }
 /* For admins: */
-#user-group-tag__mover {
+#user-group-tag__sysop {
 	color: red;
 	border-color: red;
 }
