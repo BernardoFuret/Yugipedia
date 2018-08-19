@@ -3,9 +3,10 @@
 }
 .user-group-tag {
 	font-size: small;
+	background: #f1f1f1;
 	color: gray;
 	border: solid 1px gray;
 	border-radius: 15%;
 	margin: 0 .5em;
-	padding: .1em;
+	padding: 0 .25em;
 }
