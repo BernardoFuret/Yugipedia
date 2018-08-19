@@ -10,12 +10,12 @@
 	margin: 0 .5em;
 	padding: 0 .25em;
 }
-/* For bots: */;
+/* For bots: */
 #user-group-tag__bot {
 	color: purple;
 	border-color: purple;
 }
-/* For admins: */;
+/* For admins: */
 #user-group-tag__mover {
 	color: red;
 	border-color: red;
