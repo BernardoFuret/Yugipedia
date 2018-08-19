@@ -3,63 +3,75 @@
  * @author Becasita
  * @contact [[User talk:Becasita]]
  */
-( function _showUserGroupsTags( $, mw, console ) {
+( function _gadgetShowUserGroupsTags( $, mw, console ) {
 	"use strict";
 
 	var LAST_LOG = '~~~~~';
 
-	// Get config vars:
-	var config = mw.config.get( [
-		'wgNamespaceNumber',
-		'wgPageName'
-	] );
+	var ShowUserGroupsTags = {
+		GROUPS: {
+			bot: 'Bot',
+			bureaucrat: 'Bcrat',
+			mover: 'Mover',
+			//sysadmin: '',
+			sysop: 'Admin'
+		},
 
-	// Check if on the "User" or "User talk" namespace:
-	if ( config.wgNamespaceNumber === 2 || config.wgNamespaceNumber === 3 ) {
+		config: mw.config.get( [
+			'wgNamespaceNumber',
+			'wgTitle'
+		] ),
 
-		// Make an api call for user groups:
-		mw.loader.using( 'mediawiki.api' ).done( function() {
+		$container: $( '<div>', {
+			id: 'user-group-tags'
+		} ),
+
+		addTag: function( group ) {
+			ShowUserGroupsTags.$container.append(
+				$( '<span>', {
+					id: 'user-group-tag__' + group,
+					'class': 'user-group-tag',
+					text: ShowUserGroupsTags.GROUPS[ group ]
+				} )
+			);
+		},
+
+		addTags: function( data ) {
+			( data.query.users[ 0 ].groups || [] ).forEach( function( group ) {
+				if ( ShowUserGroupsTags.GROUPS[ group ] ) {
+					ShowUserGroupsTags.addTag( group );
+				}
+			} );
+		},
+
+		fail: function() {
+			mw.log( '[Gadget] ShowUserGroupsTags - Failed to get user groups.', arguments );
+		},
+
+		execute: function() {
 			new mw.Api()
 				.get( {
 					action: 'query',
 					list: 'users',
-					ususers: config.wgPageName.replace( /^user((_| )talk)?:/im, '' ),
+					ususers: ShowUserGroupsTags.config.wgTitle,
 					usprop: 'groups'
 				} )
-				.done( function( data ) {
-					// Valid groups to display:
-					var validGroups = {
-						bureaucrat: 'BCRAT',
-						sysop: 'ADMIN'
-					};
-
-					try {
-						// Iterate over all groups:
-						data.query.users[ 0 ].groups.forEach( function( group, index ) {
-							// Check if it's worth showing a tag for this group:
-							var validGroup = validGroups[ group ];
-
-							if ( validGroup ) {
-								$( '#firstHeading' ).append(
-									$( '<span>', {
-										id: 'user-group-tag-' + validGroup,
-										'class': 'user-group-tag',
-										text: validGroup
-									} )
-								);
-							}
-						} );
-					} catch ( e ) {
-						console.warn( 'Caught error @_showUserGroupsTags():', e );
-					}
-				} )
-				.fail( console.error )
+				.done( ShowUserGroupsTags.addTags )
+				.fail( ShowUserGroupsTags.fail )
 			;
-		} );
+		},
 
-	}
+		init: function() {
+			if ( ~[ 2, 3 ].indexOf( ShowUserGroupsTags.config.wgNamespaceNumber ) ) {
+				$( '#firstHeading' ).append( ShowUserGroupsTags.$container );
 
-	// Log:
+				mw.loader.using( 'mediawiki.api' ).done( ShowUserGroupsTags.execute );
+			}
+		}
+	};
+
+	$( ShowUserGroupsTags.init );
+
 	console.log( '[Gadget] ShowUserGroupsTags last updated at', LAST_LOG );
 
 } )( window.jQuery, window.mediaWiki, window.console );

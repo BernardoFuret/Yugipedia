@@ -1,8 +1,11 @@
+#user-group-tags {
+	float: right;
+}
 .user-group-tag {
 	font-size: small;
 	color: gray;
 	border: solid 1px gray;
 	border-radius: 15%;
-	margin: .5em;
-	padding: .1em
+	margin: 0 .5em;
+	padding: .1em;
 }
