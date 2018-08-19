@@ -3,95 +3,113 @@
  * @author Becasita
  * @contact [[User talk:Becasita]]
  */
-( function _nullEditButton( window, $, mw, console ) {
+( function _gadgetNullEditButton( window, $, mw, console ) {
 	"use strict";
 
 	var LAST_LOG = '~~~~~';
 
 	var $content = $( '#bodyContent' );
 
-	var $button = $( '<li>', {
-		id: 'ca-null',
-		html: $( '<a>', {
-			href: '#',
-			title: 'Null edit this page',
-			text: 'Null edit'
-		} )
-	} );
-
-	var disabledClass = 'is-disabled';
-
-	var $spinner = $( '<span>', {
-		id: 'null-edit-spinner',
-		'class': 'smw-overlay-spinner large inline'
-	} );
-
-	// Add button:
-	if ( $( '#ca-view' ).hasClass( 'selected' ) ) {
-		// Wait for the module to load, just to be sure nothing breaks:
-		mw.loader.using( 'mediawiki.api' ).done( function() {
-			$( '#p-cactions' )
-				.removeClass( 'emptyPortlet' )
-				.find( '.menu' )
-					.find( 'ul' )
-						.append( $button );
+	function notify( message, type ) {
+		return mw.notify( message, {
+			title: 'Null edit',
+			tag: 'null_edit',
+			type: type,
+			autoHide: !mw.config.get( 'debug' )
 		} );
 	}
 
-	// Click event:
-	$button.click( function( e ) {
-		e.preventDefault();
+	var NullEditButton = {
+		config: $.extend( mw.config.get( [ 'wgPageName' ] ), {
+			token: mw.user.tokens.get( 'editToken' )
+		} ),
 
-		var notifyOptions = function( type ) {
-			//return type && (options.type = type), options;
-			return {
-				title: 'Null edit',
-				tag: 'null_edit',
-				type: type,
-				autoHide: !mw.config.get( 'debug' )
-			};
-		};
-		
-		mw.notify( 'Null editing...', notifyOptions( 'progress' ) );
+		disabledClass: 'is-disabled',
 
-		$content
-			.addClass( disabledClass )
-			.parent()
-				.prepend( $spinner );			
+		$button: $( '<li>', {
+			id: 'ca-null',
+			html: $( '<a>', {
+				href: '#',
+				title: 'Null edit this page',
+				text: 'Null edit'
+			} ),
+			click: function( e ) {
+				e.preventDefault();
+				notify( 'Waiting for mediawiki.api module to load.', 'fail' );
+			}
+		} ),
 
-		new mw.Api()
-			.post( {
-				action: 'edit',
-				title: mw.config.get( 'wgPageName' ),
-				token: mw.user.tokens.get( 'editToken' ),
-				summary: 'Something bad happened! This was supposed to be a null edit!',
-				prependtext: ''
-			} )
-			.done( function() {
-				$content.load( window.location.href + ' #bodyContent > *', function( response, status, jqXHR ) {
-					if ( jqXHR.status !== 200 ) {
-						throw new Error( 'Error loading content after successful null edit!' );
-					}
+		$spinner: $( '<span>', {
+			id: 'null-edit-spinner',
+			'class': 'smw-overlay-spinner large inline'
+		} ),
 
-					// Cleanup page appearance:
-					$content.removeClass( disabledClass );
-					$spinner.remove();
-					mw.notify( 'Null edit success!', notifyOptions( 'success' ) );
-				} );
-			} )
-			.fail( function() {
+		loadContent: function() {
+			$content.load( window.location.href + ' #bodyContent > *', function( response, status, jqXHR ) {
+				if ( jqXHR.status !== 200 ) {
+					throw new Error( 'Error loading content after successful null edit!' );
+				}
+
 				// Cleanup page appearance:
-				$content.removeClass( disabledClass );
-				$spinner.remove();
-				mw.notify( 'Null edit fail!', notifyOptions( 'fail' ) );
-				mw.log( arguments ); // TODO
-			} )
-			.always( function() {
-				mw.log( '[Gadget] NullEditButton - Null edit concluded.' );
+				$content.removeClass( NullEditButton.disabledClass );
+				NullEditButton.$spinner.remove();
+				mw.hook( 'wikipage.content' ).fire( $content );
+				notify( 'Null edit success!', 'success' );
 			} );
-	} );
+		},
 
-	// Log:
+		fail: function() {
+			// Cleanup page appearance:
+			$content.removeClass( NullEditButton.disabledClass );
+			NullEditButton.$spinner.remove();
+			notify( 'Null edit fail!', 'fail' );
+			mw.log( '[Gadget] NullEditButton - Null edit fail.', arguments );
+		},
+
+		nullEdit: function( e ) {
+			e.preventDefault();
+
+			notify( 'Null editing...', 'progress' );
+
+			$content
+				.addClass( NullEditButton.disabledClass )
+				.parent()
+					.prepend( NullEditButton.$spinner )
+			;
+
+			new mw.Api()
+				.post( {
+					action: 'edit',
+					title: NullEditButton.config.wgPageName,
+					token: NullEditButton.config.token,
+					summary: 'Something bad happened! This was supposed to be a null edit!',
+					prependtext: ''
+				} )
+				.done( NullEditButton.loadContent )
+				.fail( NullEditButton.fail )
+			;
+		},
+
+		init: function() {
+			if ( $( '#ca-view' ).hasClass( 'selected' ) ) {
+				$( '#p-cactions' )
+					.removeClass( 'emptyPortlet' )
+					.find( '.menu' )
+						.find( 'ul' )
+							.append( NullEditButton.$button )
+				;
+
+				// Wait for the mw API module to load, just to be sure nothing breaks:
+				mw.loader.using( 'mediawiki.api' ).done( function() {
+					mw.log( '[Gadget] NullEditButton - mediawiki.api loaded.' );
+					NullEditButton.$button.off( 'click' ).click( NullEditButton.nullEdit );
+				} );
+			}
+		}
+	};
+
+	$( NullEditButton.init );
+
 	console.log( '[Gadget] NullEditButton last updated at', LAST_LOG );
-	
+
 } )( window, window.jQuery, window.mediaWiki, window.console );

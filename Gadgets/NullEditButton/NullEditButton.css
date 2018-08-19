@@ -5,6 +5,6 @@
 	margin-top: 5em;
 }
 
-/*.mw-notification-type-progress { background-color:  }*/
+/*.mw-notification-type-progress { background-color: ; }*/
 .mw-notification-type-success { background-color: lightgreen !important; }
-.mw-notification-type-fail { background-color: orangered !important; }
+.mw-notification-type-fail { background-color: #ff6b6b !important; }
