@@ -1,51 +1,63 @@
 /**
- * Top user contributions link.
+ * Adds a link to the user contributions, at the top of the page.
  * @author Becasita
  * @contact [[User talk:Becasita]]
  */
-( function _topUserContributionsLink( $, mw, console ) {
+( function _gadgetTopContributionsLink( $, mw, console ) {
 	"use strict";
 
 	var LAST_LOG = '~~~~~';
 
-	var config = mw.config.get( [
-		'wgNamespaceNumber',
-		'wgPageName'
-	] );
+	var TopContributionsLink = {
+		config: mw.config.get( [
+			'wgNamespaceNumber',
+			'wgTitle'
+		] ),
 
-	// Either copy the existing button or create one from scratch:
-	var $button = ( $( '#t-contributions' ).length
-		? (
-			$( '#t-contributions' ).clone()
+		getButton: function() {
+			return $( '#t-contributions' ).clone()
 				.attr( 'id', 'ca-contribs' )
 				.find( 'a' )
 					.wrap( '<span>' )
 					.text( 'Contributions' )
 				.end()
-		)
-		: (
-			$( '<li>', {
+			;
+		},
+
+		newButton: function() {
+			return $( '<li>', {
 				id: 'ca-contribs',
 				'class': 'collapsible',
 				html: $( '<span>', {
 					html: $( '<a>', {
+						href: mw.util.getUrl(
+							'Special:Contributions/' + TopContributionsLink.config.wgTitle.split( /\// )[ 0 ]
+						),
 						title: 'A list of contributions by this user',
-						href: '/wiki/Special:Contributions/' + config.wgPageName.split( /:/ ).slice( 1 ).join( ':' ).split( /\// )[ 0 ],
 						text: 'Contributions'
 					} )
 				} )
-			} )
-		)
-	);
+			} );
+		},
 
-	if ( config.wgNamespaceNumber === 2 || config.wgNamespaceNumber === 3 ) {
-		$( '#left-navigation' )
-			.find( '#p-namespaces' )
-				.children( 'ul' )
-					.append( $button );
-	}
+		init: function() {
+			if ( ~[ 2, 3 ].indexOf( TopContributionsLink.config.wgNamespaceNumber ) ) {
+				$( '#left-navigation' )
+					.find( '#p-namespaces' )
+						.children( 'ul' )
+							.append(
+								TopContributionsLink[ $( '#t-contributions' ).length
+									? 'getButton'
+									: 'newButton'
+								]()
+							)
+				;
+			}
+		}
+	};
 
-	// Log:
-	console.log( '[Gadget] TopUserContributionsLink last updated at', LAST_LOG );
+	$( TopContributionsLink.init );
+
+	console.log( '[Gadget] TopContributionsLink last updated at', LAST_LOG );
 
 } )( window.jQuery, window.mediaWiki, window.console );
