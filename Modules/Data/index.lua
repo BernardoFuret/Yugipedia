@@ -195,6 +195,41 @@ function D.getAnimeSeries( arg )
 	];
 end
 
+---------------
+-- Manga stuff:
+---------------
+-- @name getMangaRelease
+-- @description Gets the manga release for `arg`. `nil` if not found.
+-- @parameter {string} arg
+-- @return {string|nil} Manga release or `nil`.
+function D.getMangaRelease( arg )
+	return DATA.manga.release[
+		normalize( arg, function( normalizedArg )
+			return NORM.manga.release[ normalizedArg
+				:gsub( '[%s%-_]', '' ) -- Remove a bunch of commonly used characters.
+			];
+		end )
+	];
+end
+
+-- @name getMangaSeries
+-- @description Gets the manga series name for `arg`. `nil` if not found.
+-- @parameter {string} arg
+-- @return {string|nil} Manga series or `nil`.
+function D.getMangaSeries( arg )
+	return DATA.manga.series[
+		normalize( arg, function( normalizedArg )
+			return NORM.manga.series[ normalizedArg
+				:gsub( "[%s%-_'/:!]", '' ) -- Remove a bunch of commonly used characters.
+				:gsub(         'the', '' )
+				:gsub(   'strongest', '' )
+				:gsub(         'ygo', '' ) 
+				:gsub(      'yugioh', '' )
+			];
+		end )
+	];
+end
+
 -------------------
 -- Templates stuff:
 -------------------

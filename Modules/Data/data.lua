@@ -44,10 +44,10 @@ N.region = {
 	['sp'] = 'sp', ['es'] = 'sp', ['s'] = 'sp', ['spanish'] = 'sp',
 
 	-- Japanese (JP):
-	['jp'] = 'jp', ['j'] = 'jp', ['jap'] = 'jp', ['japanese'] = 'jp', 
+	['jp'] = 'jp', ['j'] = 'jp', ['jap'] = 'jp', ['japanese'] = 'jp',
 
 	-- Japanese Asian (JA):
-	['ja'] = 'ja', ['japaneseasian'] = 'ja', ['asianjapanese'] = 'ja', 
+	['ja'] = 'ja', ['japaneseasian'] = 'ja', ['asianjapanese'] = 'ja',
 
 	-- Asian English (AE):
 	['ae'] = 'ae', ['asianenglish'] = 'ae', ['englishasian'] = 'ae',
@@ -194,13 +194,36 @@ N.anime.series = {
 	['gx']   = 'gx',
 	['5d']   = '5d', ['5ds']    = '5d',
 	['zx']   = 'zx', ['zexal']  = 'zx',
-	['av']   = 'av', ['arcv']   = 'av', 
+	['av']   = 'av', ['arcv']   = 'av',
 	['vr']   = 'vr', ['vrains'] = 'vr',
 
 	-- Movies:
 	['mov']  = 'mov',  ['pyramidoflight'] = 'mov', ['moviepyramidoflight'] = 'mov',  ['pol']  = 'mov',
 	['mov2'] = 'mov2', ['3dbondsbeyondtime'] = 'mov2', ['bondsbeyondtime'] = 'mov2', ['bbt']  = 'mov2',
 	['mov3'] = 'mov3', ['darksideofdimensions'] = 'mov3',                            ['dsod'] = 'mov3',
+};
+
+---------------
+-- Manga stuff:
+---------------
+N.manga = {};
+
+N.manga.release = {
+	['nc'] = 'nc', ['noncard'] = 'nc',
+	['ca'] = 'ca', ['cardart'] = 'ca', ['art'] = 'ca',
+};
+
+N.manga.series = {
+	['dm'] = 'dm', ['manga'] = 'dm', ['duelmonsters'] = 'dm',
+	['r']  = 'r',
+	['gx'] = 'gx',
+	['5d'] = '5d', ['5ds']   = '5d',
+	['zx'] = 'zx', ['zexal'] = 'zx',
+	['dz'] = 'dz', ['dteam'] = 'dz', ['dteamzexal']  = 'dz',
+	['av'] = 'av', ['arcv']  = 'av',
+	['dy'] = 'dy',                   ['duelistyuya'] = 'dy',
+--	['vr']   = 'vr', ['vrains'] = 'vr',
+--	Yu-Gi-Oh! VRAINS: Cyber Warrior Yusaku
 };
 
 --------------------
@@ -412,6 +435,59 @@ return {
 				abbr  = 'MOV3',
 				page  = 'Yu-Gi-Oh! The Dark Side of Dimensions',
 				label = 'Yu-Gi-Oh! The Dark Side of Dimensions',
+			},
+		},
+	},
+
+	---------------
+	-- Manga stuff:
+	---------------
+	['manga'] = {
+		['release'] = {
+			['nc'] = { abbr = 'NC', full = 'Non-card' },
+			['ca'] = { abbr = 'CA', full = 'Card art' },
+		},
+
+		['series'] = {
+			['dm'] = {
+				abbr  = 'DM',
+				page  = 'Yu-Gi-Oh! (manga)',
+				label = 'Yu-Gi-Oh!',
+			},
+			['r'] = {
+				abbr  = 'R',
+				page  = 'Yu-Gi-Oh! R',
+				label = 'Yu-Gi-Oh! R',
+			},
+			['gx'] = {
+				abbr  = 'GX',
+				page  = 'Yu-Gi-Oh! GX (manga)',
+				label = 'Yu-Gi-Oh! GX',
+			},
+			['5d'] = {
+				abbr  = '5D',
+				page  = "Yu-Gi-Oh! 5D's (manga)",
+				label = "Yu-Gi-Oh! 5D's",
+			},
+			['zx'] = {
+				abbr  = 'ZX',
+				page  = 'Yu-Gi-Oh! ZEXAL (manga)',
+				label = 'Yu-Gi-Oh! ZEXAL',
+			},
+			['dz'] = {
+				abbr  = 'DZ',
+				page  = 'Yu-Gi-Oh! D Team ZEXAL',
+				label = 'Yu-Gi-Oh! D Team ZEXAL',
+			},
+			['av'] = {
+				abbr  = 'AV',
+				page  = 'Yu-Gi-Oh! ARC-V (manga)',
+				label = 'Yu-Gi-Oh! ARC-V',
+			},
+			['dy'] = {
+				abbr  = 'DY',
+				page  = 'Yu-Gi-Oh! ARC-V The Strongest Duelist Yuya!!',
+				label = 'Yu-Gi-Oh! ARC-V The Strongest Duelist Yuya!!',
 			},
 		},
 	},
