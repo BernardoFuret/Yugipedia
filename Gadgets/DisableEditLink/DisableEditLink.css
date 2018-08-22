@@ -1,0 +1,9 @@
+#ca-edit a.archived-edit-link,
+#ca-edit a.archived-edit-link:visited,
+#ca-edit a.archived-edit-link:link,
+#ca-edit a.archived-edit-link:hover,
+#ca-edit a.archived-edit-link:active {
+	color: gray;
+	cursor: auto;
+	text-decoration: none;
+}
