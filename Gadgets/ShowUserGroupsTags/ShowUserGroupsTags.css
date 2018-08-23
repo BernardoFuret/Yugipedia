@@ -20,3 +20,9 @@
 	color: red;
 	border-color: red;
 }
+/* For blocked users: */
+#user-group-tag__blocked {
+	font-weight: bold;
+	color: darkslategray;
+	border-color: darkslategray;
+}

@@ -10,6 +10,7 @@
 
 	var ShowUserGroupsTags = {
 		GROUPS: {
+			blocked: 'Blocked',
 			bot: 'Bot',
 			bureaucrat: 'Bcrat',
 			mover: 'Mover',
@@ -42,6 +43,10 @@
 					ShowUserGroupsTags.addTag( group );
 				}
 			} );
+
+			if ( data.query.users[ 0 ].blockexpiry ) {
+				ShowUserGroupsTags.addTag( 'blocked' );
+			}
 		},
 
 		fail: function() {
@@ -54,7 +59,10 @@
 					action: 'query',
 					list: 'users',
 					ususers: ShowUserGroupsTags.config.wgTitle,
-					usprop: 'groups'
+					usprop: [
+						'groups',
+						'blockinfo'
+					].join( '|' )
 				} )
 				.done( ShowUserGroupsTags.addTags )
 				.fail( ShowUserGroupsTags.fail )
