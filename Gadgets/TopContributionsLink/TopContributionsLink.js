@@ -42,16 +42,18 @@
 
 		init: function() {
 			if ( ~[ 2, 3 ].indexOf( TopContributionsLink.config.wgNamespaceNumber ) ) {
-				$( '#left-navigation' )
-					.find( '#p-namespaces' )
-						.children( 'ul' )
-							.append(
-								TopContributionsLink[ $( '#t-contributions' ).length
-									? 'getButton'
-									: 'newButton'
-								]()
-							)
-				;
+				mw.loader.using( 'mediawiki.util' ).then( function() {
+					$( '#left-navigation' )
+						.find( '#p-namespaces' )
+							.children( 'ul' )
+								.append(
+									TopContributionsLink[ $( '#t-contributions' ).length
+										? 'getButton'
+										: 'newButton'
+									]()
+								)
+					;
+				} );
 			}
 		}
 	};
