@@ -229,13 +229,13 @@ N.manga.series = {
 --------------------
 -- Video game stuff:
 --------------------
-N.videoGames = {};
+N.videoGame = {};
 
-N.videoGames.release = {
+N.videoGame.release = {
 	['nc'] = 'nc', ['noncard'] = 'nc',
 };
 
-N.videoGames.games = {
+N.videoGame.game = {
 	-- Monster Capsule:
 	['mc']   = 'mcbb', ['mcbb'] = 'mcbb', ['monstercapsule']   = 'mcbb', ['monstercapsulebreedandbattle'] = 'mcbb', ['monstercapsulebreed&battle'] = 'mcbb',
 	['mcgb'] = 'mcgb', ['gb']   = 'mcgb', ['monstercapsulegb'] = 'mcgb',
@@ -355,10 +355,10 @@ N.videoGames.games = {
 		</ul>
 	</li>
 	<li>
-		videoGames
+		videoGame
 		<ul>
 			<li>release</li>
-			<li>games</li>
+			<li>game</li>
 		</ul>
 	</li>
 	<li>
@@ -611,75 +611,81 @@ return {
 	--------------------
 	-- Video game stuff:
 	--------------------
-	['videoGames'] = {
-		-- Monster Capsule:
-		['mcbb'] = { abbr = 'MCBB', full = 'Yu-Gi-Oh! Monster Capsule: Breed and Battle' },
-		['mcgb'] = { abbr = 'MCGB', full = 'Yu-Gi-Oh! Monster Capsule GB'                },
+	['videoGame'] = {
+		['release'] = {
+			['nc'] = { abbr = 'NC', full = 'Non-card' },
+		},
 
-		-- Duel Monsters:
-		['dm1'] = { abbr = 'DM1', full = 'Yu-Gi-Oh! Duel Monsters (video game)'                       },
-		['dm2'] = { abbr = 'DM2', full = 'Yu-Gi-Oh! Duel Monsters II: Dark duel Stories'              },
-		['dds'] = { abbr = 'DDS', full = 'Yu-Gi-Oh! Dark Duel Stories'                                },
-		['dm4'] = { abbr = 'DM4', full = 'Yu-Gi-Oh! Duel Monsters 4: Battle of Great Duelist'         },
-		['dm5'] = { abbr = 'DM5', full = 'Yu-Gi-Oh! Duel Monsters 5 Expert 1'                         },
-		['eds'] = { abbr = 'EDS', full = 'Yu-Gi-Oh! The Eternal Duelist Soul'                         },
-		['dm6'] = { abbr = 'DM6', full = 'Yu-Gi-Oh! Duel Monsters 6 Expert 2'                         },
-		['tsc'] = { abbr = 'TSC', full = 'Yu-Gi-Oh! The Sacred Cards'                                 },
-		['rod'] = { abbr = 'ROD', full = 'Yu-Gi-Oh! Reshef of Destruction'                            },
-		['sdd'] = { abbr = 'SDD', full = 'Yu-Gi-Oh! Worldwide Edition: Stairway to the Destined Duel' },
+		['game'] = {
+			-- Monster Capsule:
+			['mcbb'] = { abbr = 'MCBB', full = 'Yu-Gi-Oh! Monster Capsule: Breed and Battle' },
+			['mcgb'] = { abbr = 'MCGB', full = 'Yu-Gi-Oh! Monster Capsule GB'                },
 
-		-- Power of Chaos:
-		['poc'] = { abbr = 'POC', full = 'Yu-Gi-Oh! Power of Chaos'                    },
-		['pcy'] = { abbr = 'PCY', full = 'Yu-Gi-Oh! Power of Chaos: Yugi the Destiny'  },
-		['pck'] = { abbr = 'PCK', full = 'Yu-Gi-Oh! Power of Chaos: Kaiba the Revenge' },
-		['pcj'] = { abbr = 'PCJ', full = 'Yu-Gi-Oh! Power of Chaos: Joey the Passion'  },
+			-- Duel Monsters:
+			['dm1'] = { abbr = 'DM1', full = 'Yu-Gi-Oh! Duel Monsters (video game)'                       },
+			['dm2'] = { abbr = 'DM2', full = 'Yu-Gi-Oh! Duel Monsters II: Dark duel Stories'              },
+			['dds'] = { abbr = 'DDS', full = 'Yu-Gi-Oh! Dark Duel Stories'                                },
+			['dm4'] = { abbr = 'DM4', full = 'Yu-Gi-Oh! Duel Monsters 4: Battle of Great Duelist'         },
+			['dm5'] = { abbr = 'DM5', full = 'Yu-Gi-Oh! Duel Monsters 5 Expert 1'                         },
+			['eds'] = { abbr = 'EDS', full = 'Yu-Gi-Oh! The Eternal Duelist Soul'                         },
+			['dm6'] = { abbr = 'DM6', full = 'Yu-Gi-Oh! Duel Monsters 6 Expert 2'                         },
+			['tsc'] = { abbr = 'TSC', full = 'Yu-Gi-Oh! The Sacred Cards'                                 },
+			['rod'] = { abbr = 'ROD', full = 'Yu-Gi-Oh! Reshef of Destruction'                            },
+			['sdd'] = { abbr = 'SDD', full = 'Yu-Gi-Oh! Worldwide Edition: Stairway to the Destined Duel' },
 
-		-- Tag Force:
-		['gx02'] = { abbr = 'GX02', full = 'Yu-Gi-Oh! GX Tag Force'            },
-		['gx04'] = { abbr = 'GX04', full = 'Yu-Gi-Oh! GX Tag Force 2'          },
-		['gx05'] = { abbr = 'GX05', full = 'Yu-Gi-Oh! GX Tag Force Evolution'  },
-		['gx06'] = { abbr = 'GX06', full = 'Yu-Gi-Oh! GX Tag Force 3'          },
-		['tf04'] = { abbr = 'TF04', full = "Yu-Gi-Oh! 5D's Tag Force 4"        },
-		['tf05'] = { abbr = 'TF05', full = "Yu-Gi-Oh! 5D's Tag Force 5"        },
-		['tf06'] = { abbr = 'TF06', full = "Yu-Gi-Oh! 5D's Tag Force 6"        },
-		['tfs']  = { abbr = 'TFS',  full = 'Yu-Gi-Oh! ARC-V Tag Force Special' },
+			-- Power of Chaos:
+			['poc'] = { abbr = 'POC', full = 'Yu-Gi-Oh! Power of Chaos'                    },
+			['pcy'] = { abbr = 'PCY', full = 'Yu-Gi-Oh! Power of Chaos: Yugi the Destiny'  },
+			['pck'] = { abbr = 'PCK', full = 'Yu-Gi-Oh! Power of Chaos: Kaiba the Revenge' },
+			['pcj'] = { abbr = 'PCJ', full = 'Yu-Gi-Oh! Power of Chaos: Joey the Passion'  },
 
-		-- True Duel Monsters:
-		['dor'] = { abbr = 'DOR', full = 'Yu-Gi-Oh! The Duelists of the Roses' },
-		['fmr'] = { abbr = 'FMR', full = 'Yu-Gi-Oh! Forbidden Memories'        },
+			-- Tag Force:
+			['gx02'] = { abbr = 'GX02', full = 'Yu-Gi-Oh! GX Tag Force'            },
+			['gx04'] = { abbr = 'GX04', full = 'Yu-Gi-Oh! GX Tag Force 2'          },
+			['gx05'] = { abbr = 'GX05', full = 'Yu-Gi-Oh! GX Tag Force Evolution'  },
+			['gx06'] = { abbr = 'GX06', full = 'Yu-Gi-Oh! GX Tag Force 3'          },
+			['tf04'] = { abbr = 'TF04', full = "Yu-Gi-Oh! 5D's Tag Force 4"        },
+			['tf05'] = { abbr = 'TF05', full = "Yu-Gi-Oh! 5D's Tag Force 5"        },
+			['tf06'] = { abbr = 'TF06', full = "Yu-Gi-Oh! 5D's Tag Force 6"        },
+			['tfs']  = { abbr = 'TFS',  full = 'Yu-Gi-Oh! ARC-V Tag Force Special' },
 
-		-- World Championship:
-		['wc4']  = { abbr = 'WC4',  full = 'Yu-Gi-Oh! World Championship Tournament 2004'                    },
-		['wc5']  = { abbr = 'WC5',  full = 'Yu-Gi-Oh! 7 Trials to Glory: World Championship Tournament 2005' },
-		['wc6']  = { abbr = 'WC6',  full = 'Yu-Gi-Oh! Ultimate Masters: World Championship Tournament 2006'  },
-		['wc07'] = { abbr = 'WC07', full = 'Yu-Gi-Oh! World Championship 2007'                               },
-		['wc08'] = { abbr = 'WC08', full = 'Yu-Gi-Oh! World Championship 2008'                               },
-		['wc09'] = { abbr = 'WC09', full = "Yu-Gi-Oh! 5D's World Championship 2009: Stardust Accelerator"    },
-		['wc10'] = { abbr = 'WC10', full = "Yu-Gi-Oh! 5D's World Championship 2010: Reverse of Arcadia"      },
-		['wc11'] = { abbr = 'WC11', full = "Yu-Gi-Oh! 5D's World Championship 2011: Over the Nexus"          },
+			-- True Duel Monsters:
+			['dor'] = { abbr = 'DOR', full = 'Yu-Gi-Oh! The Duelists of the Roses' },
+			['fmr'] = { abbr = 'FMR', full = 'Yu-Gi-Oh! Forbidden Memories'        },
 
-		-- Other:
-		['bam']  = { abbr = 'BAM',  full = 'Yu-Gi-Oh! BAM'                                },
-		['cmc']  = { abbr = 'CMC',  full = 'Yu-Gi-Oh! Capsule Monster Coliseum'           },
-		['dar']  = { abbr = 'DAR',  full = 'Yu-Gi-Oh! Duel Arena'                         },
-		['dbt']  = { abbr = 'DBT',  full = 'Yu-Gi-Oh! Destiny Board Traveler'             },
-		['ddm']  = { abbr = 'DDM',  full = 'Yu-Gi-Oh! Dungeon Dice Monsters (video game)' },
-		['dg']   = { abbr = 'DG',   full = 'Yu-Gi-Oh! Duel Generation'                    },
-		['duli'] = { abbr = 'DULI', full = 'Yu-Gi-Oh! Duel Links'                         },
-		['dod']  = { abbr = 'DOD',  full = 'Yu-Gi-Oh! The Dawn of Destiny'                },
-		['gx1']  = { abbr = 'GX1',  full = 'Yu-Gi-Oh! GX Duel Academy'                    },
-		['gx03'] = { abbr = 'GX03', full = 'Yu-Gi-Oh! GX Spirit Caller'                   },
-		['ntr']  = { abbr = 'NTR',  full = 'Yu-Gi-Oh! Nightmare Troubadour'               },
-		['tfk']  = { abbr = 'TFK',  full = 'Yu-Gi-Oh! The Falsebound Kingdom'             },
-		['wb01'] = { abbr = 'WB01', full = "Yu-Gi-Oh! 5D's Wheelie Breakers"              },
-		['ydb1'] = { abbr = 'YDB1', full = 'Yu-Gi-Oh! GX Card Almanac'                    },
-		['ydt1'] = { abbr = 'YDT1', full = "Yu-Gi-Oh! 5D's Duel Transer"                  },
-		['ygoo'] = { abbr = 'YGOO', full = 'Yu-Gi-Oh! Online'                             },
-		['zdc1'] = { abbr = 'ZDC1', full = 'Yu-Gi-Oh! ZEXAL World Duel Carnival'          },
+			-- World Championship:
+			['wc4']  = { abbr = 'WC4',  full = 'Yu-Gi-Oh! World Championship Tournament 2004'                    },
+			['wc5']  = { abbr = 'WC5',  full = 'Yu-Gi-Oh! 7 Trials to Glory: World Championship Tournament 2005' },
+			['wc6']  = { abbr = 'WC6',  full = 'Yu-Gi-Oh! Ultimate Masters: World Championship Tournament 2006'  },
+			['wc07'] = { abbr = 'WC07', full = 'Yu-Gi-Oh! World Championship 2007'                               },
+			['wc08'] = { abbr = 'WC08', full = 'Yu-Gi-Oh! World Championship 2008'                               },
+			['wc09'] = { abbr = 'WC09', full = "Yu-Gi-Oh! 5D's World Championship 2009: Stardust Accelerator"    },
+			['wc10'] = { abbr = 'WC10', full = "Yu-Gi-Oh! 5D's World Championship 2010: Reverse of Arcadia"      },
+			['wc11'] = { abbr = 'WC11', full = "Yu-Gi-Oh! 5D's World Championship 2011: Over the Nexus"          },
 
-		-- Special cases:
-		['md'] = { abbr = 'MD', full = 'Yu-Gi-Oh! Millennium Duels' }, -- TODO: decide on this.
-		['mm'] = { abbr = 'MM', full = 'Yu-Gi-Oh! Multi-Master'     }, -- TODO: decide on this.
+			-- Other:
+			['bam']  = { abbr = 'BAM',  full = 'Yu-Gi-Oh! BAM'                                },
+			['cmc']  = { abbr = 'CMC',  full = 'Yu-Gi-Oh! Capsule Monster Coliseum'           },
+			['dar']  = { abbr = 'DAR',  full = 'Yu-Gi-Oh! Duel Arena'                         },
+			['dbt']  = { abbr = 'DBT',  full = 'Yu-Gi-Oh! Destiny Board Traveler'             },
+			['ddm']  = { abbr = 'DDM',  full = 'Yu-Gi-Oh! Dungeon Dice Monsters (video game)' },
+			['dg']   = { abbr = 'DG',   full = 'Yu-Gi-Oh! Duel Generation'                    },
+			['duli'] = { abbr = 'DULI', full = 'Yu-Gi-Oh! Duel Links'                         },
+			['dod']  = { abbr = 'DOD',  full = 'Yu-Gi-Oh! The Dawn of Destiny'                },
+			['gx1']  = { abbr = 'GX1',  full = 'Yu-Gi-Oh! GX Duel Academy'                    },
+			['gx03'] = { abbr = 'GX03', full = 'Yu-Gi-Oh! GX Spirit Caller'                   },
+			['ntr']  = { abbr = 'NTR',  full = 'Yu-Gi-Oh! Nightmare Troubadour'               },
+			['tfk']  = { abbr = 'TFK',  full = 'Yu-Gi-Oh! The Falsebound Kingdom'             },
+			['wb01'] = { abbr = 'WB01', full = "Yu-Gi-Oh! 5D's Wheelie Breakers"              },
+			['ydb1'] = { abbr = 'YDB1', full = 'Yu-Gi-Oh! GX Card Almanac'                    },
+			['ydt1'] = { abbr = 'YDT1', full = "Yu-Gi-Oh! 5D's Duel Transer"                  },
+			['ygoo'] = { abbr = 'YGOO', full = 'Yu-Gi-Oh! Online'                             },
+			['zdc1'] = { abbr = 'ZDC1', full = 'Yu-Gi-Oh! ZEXAL World Duel Carnival'          },
+
+			-- Special cases:
+			['md'] = { abbr = 'MD', full = 'Yu-Gi-Oh! Millennium Duels' }, -- TODO: decide on this.
+			['mm'] = { abbr = 'MM', full = 'Yu-Gi-Oh! Multi-Master'     }, -- TODO: decide on this.
+		},
 	},
 
 	-------------------
