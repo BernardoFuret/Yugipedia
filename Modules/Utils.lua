@@ -62,7 +62,7 @@ end
 function U.link( page, label )
 	return ('[[%s|%s]]'):format(
 		page:gsub( '#', '' ),
-		label or mwTextSplit( page, '%s*%(' )[ 1 ]
+		label or U.removeDab( page )
 	);
 end
 
