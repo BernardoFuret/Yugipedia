@@ -262,7 +262,7 @@ N.videoGame.game = {
 	-- Tag Force:
 	['gx2'] = 'gx02', ['gx02'] = 'gx02', ['tf'] = 'gx02',  ['tf1'] = 'gx02',  ['tf01'] = 'gx02',  ['tagforce'] = 'gx02',
 	['gx4'] = 'gx04', ['gx04'] = 'gx04', ['tf2'] = 'gx04', ['tf02'] = 'gx04',  ['tagforce2'] = 'gx04',
-	['gx5'] = 'gx05', ['gx05'] = 'gx05', ['tfe'] = 'gx05', ['tagforcee5olution'] = 'gx05',  ['beginningofdestiny'] = 'gx05',
+	['gx5'] = 'gx05', ['gx05'] = 'gx05', ['tfe'] = 'gx05', ['tagforceevolution'] = 'gx05',  ['beginningofdestiny'] = 'gx05',
 	['gx6'] = 'gx06', ['gx06'] = 'gx06', ['tf3'] = 'gx06', ['tf03'] = 'gx06',  ['tagforce3'] = 'gx06',
 	['tf4'] = 'tf04', ['tf04'] = 'tf04', ['tagforce4'] = 'tf04',
 	['tf5'] = 'tf05', ['tf05'] = 'tf05', ['tagforce5'] = 'tf05',
@@ -280,8 +280,8 @@ N.videoGame.game = {
 	['wc7'] = 'wc07', ['wc07'] = 'wc07', ['dm2007'] = 'wc07', ['worldchampionship2007'] = 'wc07',
 	['wc8'] = 'wc08', ['wc08'] = 'wc08', ['dm2008'] = 'wc08', ['worldchampionship2008'] = 'wc08',
 	['wc9'] = 'wc09', ['wc09'] = 'wc09', ['dm2009'] = 'wc09', ['worldchampionship2009'] = 'wc09', ['stardustaccelerator'] = 'wc09', ['stardustaccelerator2009'] = 'wc09', ['2009stardustaccelerator'] = 'wc09',
-	['wc10'] = 'wc10', ['dm2010'] = 'wc10', ['worldchampionship2010'] = 'wc10', ['re5erseofarcadia'] = 'wc10', ['2010re5erseofarcadia'] = 'wc10', ['re5erseofarcadia2010'] = 'wc10',
-	['wc11'] = 'wc11', ['dm2011'] = 'wc11', ['worldchampionship2011'] = 'wc11', ['o5ernexus'] = 'wc11', ['2011o5ernexus'] = 'wc11', ['o5ernexus2011'] = 'wc11',
+	['wc10'] = 'wc10', ['dm2010'] = 'wc10', ['worldchampionship2010'] = 'wc10', ['reverseofarcadia'] = 'wc10', ['2010reverseofarcadia'] = 'wc10', ['reverseofarcadia2010'] = 'wc10',
+	['wc11'] = 'wc11', ['dm2011'] = 'wc11', ['worldchampionship2011'] = 'wc11', ['overnexus'] = 'wc11', ['2011overnexus'] = 'wc11', ['overnexus2011'] = 'wc11',
 
 	-- Other:
 	-- B:
@@ -291,29 +291,31 @@ N.videoGame.game = {
 	['cmc'] = 'cmc', ['capsulemonstercoliseum'] = 'cmc', ['capsulemonstercolosseum'] = 'cmc',
 
 	-- D:
-	['dar']  = 'dar',  ['duelarena']       = 'dar',  ['da']   = 'dar',
+	['dar']  = 'dar',  ['duelarena']      = 'dar',  ['da']   = 'dar',
 	['dbt']  = 'dbt',  ['destinyboardtraveler'] = 'dbt', ['sugorokunosugoroku'] = 'dbt',
 	['ddm']  = 'ddm',  ['dungeondicemonsters']  = 'ddm',
-
-	['dg']   = 'dg',   ['duelgeneration']  = 'dg',   ['mddg'] = 'dg',
-	['duli'] = 'duli', ['duellinks']       = 'duli', ['dl']   = 'duli',
-	['dod']  = 'dod',  ['dawnofdestiny']   = 'dod',
+	['dg']   = 'dg',   ['duelgeneration'] = 'dg',   ['mddg'] = 'dg',
+	['duli'] = 'duli', ['duellinks']      = 'duli', ['dl']   = 'duli',
+	['dod']  = 'dod',  ['dawnofdestiny']  = 'dod',
 	--['decadeduels'] = '',
 	--['decadeduelsplus'] = '',
 
 	-- G:
-	['gx1'] = 'gx1',  ['gx01'] = 'gx1',  ['duelacademy'] = 'gx1',  ['mezaseduelking'] = 'gx1',  ['awakenduelking'] = 'gx1',
-	['gx3'] = 'gx03', ['gx03'] = 'gx03', ['spiritcaller'] = 'gx03',  ['spiritsummoner'] = 'gx03',
+	['gx1'] = 'gx1',  ['gx01'] = 'gx1',  ['duelacademy'] = 'gx1',   ['mezaseduelking'] = 'gx1',  ['awakenduelking'] = 'gx1',
+	['gx3'] = 'gx03', ['gx03'] = 'gx03', ['spiritcaller'] = 'gx03', ['spiritsummoner'] = 'gx03',
+
+	-- L:
+	['ld'] = 'ld', ['lod'] = 'ld', ['legacyofduelist'] = 'ld',
 
 	-- M:
-	['md'] = 'md',     ['millenniumduels'] = 'md', -- Check if correct abbr.
-	['mm'] = 'mm',     ['multimaster'] = 'mm', -- Check if correct abbr.
+	['md'] = 'md', ['millenniumduels'] = 'md', -- Check if correct abbr.
+	['mm'] = 'mm', ['multimaster'] = 'mm', -- Check if correct abbr.
 
 	-- N:
-	['ntr'] = 'ntr',   ['nightmaretroubadour'] = 'ntr',
+	['ntr'] = 'ntr', ['nightmaretroubadour'] = 'ntr',
 
 	-- T:
-	['tfk'] = 'tfk',  ['fbk']  = 'tfk',  ['falseboundkingdom'] = 'tfk',
+	['tfk'] = 'tfk', ['fbk']  = 'tfk', ['falseboundkingdom'] = 'tfk',
 
 	-- W:
 	['wb01'] = 'wb01', ['wheeliebreakers'] = 'wb01',
@@ -674,6 +676,7 @@ return {
 			['dod']  = { abbr = 'DOD',  full = 'Yu-Gi-Oh! The Dawn of Destiny'                },
 			['gx1']  = { abbr = 'GX1',  full = 'Yu-Gi-Oh! GX Duel Academy'                    },
 			['gx03'] = { abbr = 'GX03', full = 'Yu-Gi-Oh! GX Spirit Caller'                   },
+			['ld']   = { abbr = 'LD',   full = 'Yu-Gi-Oh! Legacy of the Duelist'              },
 			['ntr']  = { abbr = 'NTR',  full = 'Yu-Gi-Oh! Nightmare Troubadour'               },
 			['tfk']  = { abbr = 'TFK',  full = 'Yu-Gi-Oh! The Falsebound Kingdom'             },
 			['wb01'] = { abbr = 'WB01', full = "Yu-Gi-Oh! 5D's Wheelie Breakers"              },
