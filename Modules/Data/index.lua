@@ -179,7 +179,7 @@ function D.getAnimeRelease( arg )
 end
 
 -- @name getAnimeSeries
--- @description Gets the anime series name for `arg`. `nil` if not found.
+-- @description Gets the anime series for `arg`. `nil` if not found.
 -- @parameter {string} arg
 -- @return {string|nil} Anime series or `nil`.
 function D.getAnimeSeries( arg )
@@ -188,7 +188,7 @@ function D.getAnimeSeries( arg )
 			return NORM.anime.series[ normalizedArg
 				:gsub( "[%s%-_'/:!]", '' ) -- Remove a bunch of commonly used characters.
 				:gsub(         'the', '' )
-				:gsub(         'ygo', '' ) 
+				:gsub(         'ygo', '' )
 				:gsub(      'yugioh', '' )
 			];
 		end )
@@ -213,7 +213,7 @@ function D.getMangaRelease( arg )
 end
 
 -- @name getMangaSeries
--- @description Gets the manga series name for `arg`. `nil` if not found.
+-- @description Gets the manga series for `arg`. `nil` if not found.
 -- @parameter {string} arg
 -- @return {string|nil} Manga series or `nil`.
 function D.getMangaSeries( arg )
@@ -223,9 +223,82 @@ function D.getMangaSeries( arg )
 				:gsub( "[%s%-_'/:!]", '' ) -- Remove a bunch of commonly used characters.
 				:gsub(         'the', '' )
 				:gsub(   'strongest', '' )
-				:gsub(         'ygo', '' ) 
+				:gsub(         'ygo', '' )
 				:gsub(      'yugioh', '' )
 			];
+		end )
+	];
+end
+
+--------------------
+-- Video game stuff:
+--------------------
+-- @name getVideoGameRelease
+-- @description Gets the video game release for `arg`. `nil` if not found.
+-- @parameter {string} arg
+-- @return {string|nil} Video game release or `nil`.
+function D.getVideoGameRelease( arg )
+	return DATA.videoGame.release[
+		normalize( arg, function( normalizedArg )
+			return NORM.videoGame.release[ normalizedArg
+				:gsub( '[%s%-_]', '' ) -- Remove a bunch of commonly used characters.
+			];
+		end )
+	];
+end
+
+-- @name getVideoGame
+-- @description Gets the video game for `arg`. `nil` if not found.
+-- @parameter {string} arg
+-- @return {string|nil} Manga series or `nil`.
+function D.getVideoGame( arg )
+	return DATA.videoGame.game[
+		normalize( arg, function( normalizedArg )
+			-- Add a space at the end, to replace roman numerals more easily:
+			normalizedArg = table.concat( { normalizedArg, ' ' } )
+				-- Replace roman numerals:
+				:gsub(  ' viii[!: ]', '8' )
+				:gsub(   ' vii[!: ]', '7' )
+				:gsub(    ' vi[!: ]', '6' )
+				:gsub(     ' v[!: ]', '5' )
+				:gsub(    ' iv[!: ]', '4' )
+				:gsub(   ' iii[!: ]', '3' )
+				:gsub(    ' ii[!: ]', '2' )
+				:gsub(     ' i[!: ]', '1' )
+				-- Remove a bunch of commonly used characters:
+				:gsub( "[%s%-_'/:!]",  '' )
+				-- Remove series names:
+				:gsub(      'yugioh',  '' )
+				:gsub(         '5ds',  '' )
+				:gsub(       'zexal',  '' )
+				:gsub(        'arcv',  '' )
+				:gsub(      'vrains',  '' )
+				-- Remove some redundant words:
+				:gsub(         'the',  '' )
+				:gsub(     'gameboy',  '' )
+				-- Normalize some titles:
+				:gsub(     'expert', 'ex' )
+				:gsub( 'worldchampionshiptournament', 'worldchampionship' )
+			;
+
+			-- Remove "gx", if it's large enough (preserve "gx01", "gx3", "ygoo", "ygo" ):
+			if normalizedArg:len() > 4 then
+				normalizedArg
+					:gsub(  'gx', '' )
+					:gsub( 'ygo', '' )
+				;
+				-- Remove "duelmonsters", if it's large enough (preserve cases like /duelmonsters\d/):
+				if normalizedArg:len() > 13 then
+					normalizedArg:gsub( 'duelmonsters', '' );
+					-- Remove "worldchampionship", if it's large enough (preserve cases like /worldchampionship20\d\d/):
+					if normalizedArg:len() > 21 then
+						normalizedArg:gsub( 'worldchampionship', '' );
+					end
+				end
+			end
+
+			-- Finally:
+			return NORM.videoGame.game[ normalizedArg ];
 		end )
 	];
 end
