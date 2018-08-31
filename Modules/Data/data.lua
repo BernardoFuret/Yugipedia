@@ -136,8 +136,8 @@ N.rarity = {
 	['gur']   = 'gur',   ['gold']           = 'gur', ['goldultra'] = 'gur',
 	['gscr']  = 'gscr',  ['goldsecret']     = 'gscr',
 	['ggr']   = 'ggr',   ['ghostgold']      = 'ggr',
-	['pir']   = 'pir',   ['platinum']       = 'pir',
-	['piscr'] = 'piscr', ['platinumsecret'] = 'piscr',
+	['plr']   = 'plr',   ['platinum']       = 'plr',
+	['plscr'] = 'plscr', ['platinumsecret'] = 'plscr',
 
 	-- Millennium:
 	['mlr']   = 'mlr',   ['millennium']      = 'mlr',
@@ -451,8 +451,8 @@ return {
 		['gur']   = { abbr = 'GUR',   full = 'Gold Rare'            },
 		['gscr']  = { abbr = 'GScR',  full = 'Gold Secret Rare'     },
 		['ggr']   = { abbr = 'GGR',   full = 'Ghost/Gold Rare'      },
-		['pir']   = { abbr = 'PIR',   full = 'Platinum Rare'        },
-		['piscr'] = { abbr = 'PIScR', full = 'Platinum Secret Rare' },
+		['plr']   = { abbr = 'PlR',   full = 'Platinum Rare'        },
+		['plscr'] = { abbr = 'PlScR', full = 'Platinum Secret Rare' },
 
 		-- Millennium:
 		['mlr']   = { abbr = 'MLR',   full = 'Millennium Rare'        },
