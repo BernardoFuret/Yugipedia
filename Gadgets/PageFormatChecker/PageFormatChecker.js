@@ -168,7 +168,7 @@
 				.replace( '{{Navigation2}', '{{Navigation|mode=nonGame}' )
 			;
 
-			if ( !vText.match('{{Navigation' ) && !vText.match( '{{Delete' ) ) {
+			if ( !vText.match( '{{Navigation' ) && !vText.match( '{{Delete' ) ) {
 				$textBox.val( '{{Navigation}}\n\n' + vText );
 			} else {
 				$textBox.val( vText );
@@ -177,15 +177,18 @@
 
 		checkPreloads: function() {
 			var $editId = $( '#ca-edit' );
+			var isRedlink = PageFormatChecker.config.redlink;
+			var isCreating = (
+				$editId.hasClass( 'selected' )
+				&&
+				$editId.text() === 'Create'
+			);
+			var hasNoContent = !$textBox.val().trim()
 
 			return (
-				PageFormatChecker.config.redlink
-				||
-				(
-					$editId.hasClass( 'selected' )
-					&&
-					$editId.text() === 'Create'
-				)
+				( isRedlink || isCreating )
+				&&
+				hasNoContent
 			);
 		},
 
@@ -240,12 +243,12 @@
 					PageFormatChecker.addTalkheader();
 				}
 
-				if ( PageFormatChecker.checkNavigation() ) {
-					PageFormatChecker.addNavigation();
-				}
-
 				if ( PageFormatChecker.checkPreloads() ) {
 					PageFormatChecker.addPreload();
+				}
+
+				if ( PageFormatChecker.checkNavigation() ) {
+					PageFormatChecker.addNavigation();
 				}
 
 				//PageFormatChecker.fixPreload(); // TODO: Check later.
