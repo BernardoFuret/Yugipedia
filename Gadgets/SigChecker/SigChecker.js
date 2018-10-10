@@ -72,7 +72,7 @@
 				// If true, then the user signed:
 				new RegExp( SigChecker.SIG, 'g' ).test(
 					SigChecker.$textBox.val().replace(
-						/<\nowiki>[\s\S]*?~~\~~[\s\S]*?<\/nowiki>|<!--[\s\S]*?~~\~~[\s\S]*?-->/g,
+						/<now\iki>[\s\S]*?~~\~~[\s\S]*?<\/nowiki>|<!--[\s\S]*?~~\~~[\s\S]*?-->/g,
 						''
 					)
 				)
