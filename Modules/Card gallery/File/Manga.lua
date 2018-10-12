@@ -52,9 +52,7 @@ end
 -- @name initRelease
 -- @description Sets the `release` attribute.
 local function initRelease( t )
-	local release = _release[ 1 ];
-
-	t.release = DATA.getMangaRelease( release );
+	t.release = DATA.getMangaRelease( _release[ 1 ] );
 end
 
 -- @name initAlt
