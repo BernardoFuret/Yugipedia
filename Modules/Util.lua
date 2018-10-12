@@ -1,54 +1,91 @@
 -- <pre>
--- @name Util
--- @description Holds commonly used simple functions.
--- @author [[User:Becasita]]
--- @contact [[User talk:Becasita]]
+--[=[Doc
+@module Util
+@description Holds commonly used simple functions.
+@author [[User:Becasita]]
+@contact [[User talk:Becasita]]
+@todo Remove those last functions to a dedicated module
+or simply remove them.
+]=]
 
 -------------------
 -- Export variable:
 -------------------
--- @export
+--[[Doc
+@data U
+@description Variable to hold the library to be exported.
+@exportable
+]]
 local U = {};
 
 -------------
 -- Functions:
 -------------
 -- mw functions:
-local mwTextSplit = mw.text.split;
 local mwTextTrim = mw.text.trim;
 
--- @name bold
--- @description Renders bold wikitext markup.
+--[[Doc
+@function U bold
+@description Renders bold wikitext markup.
+@parameter {string} s String to make bold.
+@return {string} Bold formatted `s`.
+@todo Escape ' ?
+]]
 function U.bold( s )
-	return ("'''%s'''"):format( s )
+	return ("'''%s'''"):format( s );
 end
 
--- @name italic
--- @description Renders italics wikitext markup.
+--[[Doc
+@function U italic
+@description Renders italic wikitext markup.
+@parameter {string} s String to italicize.
+@return {string} Italicized `s`.
+@todo Escape ' ?
+]]
 function U.italic( s )
-	return ("''%s''"):format( s )
+	return ("''%s''"):format( s );
 end
 
--- @name italicButDab
--- @description Renders italics wikitext markup, except for the dab.
--- Also normalizes the space between the dab and the rest.
+--[=[Doc
+@function U italicNoDab
+@description Renders italics wikitext markup, except for the dab.
+Also normalizes the space between the dab and the rest.
+@parameter {string} s String to italicize, except its dab.
+@return {string} Italicized `s`, except its dab.
+@see [[#U.getDab]]
+@see [[#U.removeDab]]
+]=]
 function U.italicNoDab( s )
 	local dab = U.getDab( s );
-	local noDab = U.removeDab( s )
-	return table.concat( { ("''%s''"):format( noDab ), dab }, ' ' );
+	local noDab = U.removeDab( s );
+	return table.concat( {
+		("''%s''"):format( noDab ),
+		dab ~= '' and dab or nil
+	}, ' ' );
 end
 
--- @name trim
--- @description Trims white space from front and tail of string. Returns nil if only whitespace.
--- @see [[mw:Extension:Scribunto/Lua reference manual#mw.text.trim]]
+--[=[Doc
+@function U trim
+@description Trims white space from front and tail of string.
+Returns nil if only whitespace. Also normalizes the space between
+the dab and the rest.
+@parameter {string|nil} s String to trim.
+@return {string|nil} Trimmed `s`. If `s` ends up being only whitespace
+or `s` is `nil`, it returns `nil`.
+@see [[mw:Extension:Scribunto/Lua reference manual#mw.text.trim]]
+]=]
 function U.trim( s )
 	if s and not s:match( '^%s*$' ) then
 		return mwTextTrim( s );
 	end
 end
 
--- @name count
--- @description Counts the number of elements in a table.
+--[[Doc
+@function U count
+@description Counts the number of elements in a table.
+@parameter {table} t Table to get counted.
+@return {number} Number of elements in the table.
+]]
 function U.count( t )
 	local counter = 0;
 	for key, value in pairs( t ) do
@@ -57,8 +94,14 @@ function U.count( t )
 	return counter;
 end
 
--- @name link
--- @description Creates a wikitext link.
+--[[Doc
+@function U link
+@description Creates a wikitext link.
+@parameter {string} page Page name to link.
+@parameter {string|nil} label Label for the link. If unspecified,
+the label used will be `page` with its dab removed.
+@return {string} Wikilink.
+]]
 function U.link( page, label )
 	return ('[[%s|%s]]'):format(
 		page:gsub( '#', '' ),
@@ -66,55 +109,110 @@ function U.link( page, label )
 	);
 end
 
--- @name getDab
--- @description Gets the dab text of a title, if it has dab.
+--[[Doc
+@function U getDab
+@description Gets the dab text of a title, if it has dab.
+@parameter {string} title Page title to get the dab from.
+@return {string} Dab for `title`.
+]]
 function U.getDab( title )
 	return title:match( '%(([^%(]*)%)%s*$' ) or '';
 end
 
--- @name removeDab
--- @description Removes the dab text of a title.
+--[[Doc
+@function U removeDab
+@description Removes the dab text of a title.
+@parameter {string} title Page title to get its dab removed.
+@return {string} `title` with its dab removed.
+]]
 function U.removeDab( title )
 	return title:gsub( '%s*%(([^%(]*)%)%s*$', '' );
 end
 
--- @name isSomething
--- @description Meta-function for type checkers.
+--[[Doc
+@function isSomething
+@description Meta-function for type checkers.
+@parameter {*} toCompare Anything to type-compare.
+@parameter {*} compareTo Specific thing to be type-compared with.
+@return {boolean} If `toCompare` and `compareTo` have the same type. 
+]]
 local function isSomething( toCompare, compareTo )
 	return type( toCompare ) == type( compareTo );
 end
 
--- @name isBoolean
+--[=[Doc
+@function U isBoolean
+@description Checks if it's a `boolean` type.
+@parameter {*} v Any value to check if it's a `boolean`.
+@return {boolean} If `v` type is `boolean`.
+@see [[#isSomething]] 
+]=]
 function U.isBoolean( v )
 	return isSomething( v, true );
 end
 
--- @name isFunction
+--[=[Doc
+@function U isFunction
+@description Checks if it's a `function` type.
+@parameter {*} v Any value to check if it's a `function`.
+@return {boolean} If `v` type is `function`.
+@see [[#isSomething]] 
+]=]
 function U.isFunction( v )
 	return isSomething( v, function() end );
 end
 
--- @name isNil
+--[=[Doc
+@function U isNil
+@description Checks if it's `nil`.
+@parameter {*} v Any value to check if it's `nil`.
+@return {boolean} If `v` type `nil`.
+@see [[#isSomething]] 
+]=]
 function U.isNil( v )
 	return isSomething( v, nil );
 end
 
--- @name isNumber
+--[=[Doc
+@function U isNumber
+@description Checks if it's a `number` type.
+@parameter {*} v Any value to check if it's a `number`.
+@return {boolean} If `v` type is `number`.
+@see [[#isSomething]] 
+]=]
 function U.isNumber( v )
 	return isSomething( v, 1 );
 end
 
--- @name isString
+--[=[Doc
+@function U isString
+@description Checks if it's a `string` type.
+@parameter {*} v Any value to check if it's a `string`.
+@return {boolean} If `v` type is `string`.
+@see [[#isSomething]] 
+]=]
 function U.isString( v )
 	return isSomething( v, '' );
 end
 
--- @name isTable
+--[=[Doc
+@function U isTable
+@description Checks if it's a `table` type.
+@parameter {*} v Any value to check if it's a `table`.
+@return {boolean} If `v` type is `table`.
+@see [[#isSomething]] 
+]=]
 function U.isTable( v )
 	return isSomething( v, {} );
 end
 
--- @name isEmpty
+--[[Doc
+@function U isEmpty
+@description Checks if it's a empty.
+@parameter {*} v Any value to check if it's empty.
+@return {boolean} If `v` type is empty.
+@todo Keep this? Check dependencies.
+]]
 function U.isEmpty( v )
 	return (
 		U.isString( v ) and mwTextTrim( v ) == ''
@@ -136,8 +234,14 @@ end
 	if U.isTable( v ) then return  U.count( v ) ~= 0 and v end
 end--]]
 
--- @param ln A language index.
--- @description
+--[[Doc
+@function U wrapInQuotes
+@description Wraps a name in quotes, based on the language.
+@parameter {string|nil} name A name to wrap in quotes.
+@parameter {string} ln A language index.
+@return {string} Wrapped `name`. If `name` is `nil`, returns the empty string.
+@todo Accept `ln` as a language struct.
+]]
 function U.wrapInQuotes( name, ln )
 	if not UTIL.trim( name ) then
 		return '';  --  Return empty string.
@@ -155,50 +259,43 @@ end]]
 -- @name getArgs
 -- @description Parses arguments.
 -- @see [[Module:Arguments]]
-local getArgs;
 function U.getArgs( ... )
-	getArgs = getArgs or require( 'Module:Arguments' ).getArgs;
-	return getArgs( ... );
+	return require( 'Module:Arguments' ).getArgs( ... );
 end
 
 -- @name getName
 -- @description Gets the localized name of a card, set or character.
 -- @see [[Module:Name]]
-local getName;
 function U.getName( ... )
-	getName = getName or require( 'Module:Name' ).main;
-	return getName( ... );
+	return require( 'Module:Name' ).main( ... );
 end
 
 -- @name getImgName
 -- @description Gets the localized name of a card, set or character.
 -- @see [[Module:Name]]
-local getImgName;
 function U.getImgName( ... )
-	getImgName = getImgName or require( 'Module:Card image name' ).main;
-	return getImgName( ... );
+	return require( 'Module:Card image name' ).main( ... );
 end
 
 -- @name newInfoObject
 -- @description
 -- @see [[Module:Info class]]
-local InfoClass;
 function U.newInfoObject( title )
-	InfoClass = InfoClass or require( 'Module:Info class' );
-	return InfoClass.new( title );
+	return require( 'Module:Info class' ).new( title );
 end
 
 -- @name newStringBuffer
 -- @description
 -- @see [[Module:StringBuffer]]
-local StringBuffer;
 function U.newStringBuffer()
-	StringBuffer = StringBuffer or require( 'Module:StringBuffer' );
-	return StringBuffer.new();
+	return require( 'Module:StringBuffer' ).new();
 end
 
 ----------
 -- Return:
 ----------
+--[[Doc
+@exports Util library (`U`).
+]]
 return U;
 -- </pre>
