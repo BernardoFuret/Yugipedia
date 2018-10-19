@@ -23,7 +23,7 @@
 		aicontinue: aicontinue,
 	} );
 
-	const getTrimmedName = filepath => filepath.replace( /^File:/, '' ).split( '-' )[ 0 ];
+	const getTrimmedName = filepath => filepath.replace( /^File:/, "" ).split( "-" )[ 0 ];
 
 	const queryName = trimmed => api.get( {
 		// https://yugipedia.com/api.php?action=ask&query=[[Card%20image%20name::NirvanaHighPaladin]]&api_version=3
@@ -52,11 +52,11 @@
 		summary: "Adding {{OCG-TCG card image}}",
 		bot: true,
 	} )
-		.then( () => console.log( 'Template added!' ) )
+		.then( () => console.log( "Template added!" ) )
 		.catch( ( code, err ) => {
 			console.warn( "Error adding template.", err );
 
-			if ( code === 'articleexists' ) {
+			if ( code === "articleexists" ) {
 				__filesWithContent.push( { pagename, name, err } );
 			}
 		} )
@@ -108,7 +108,7 @@
 				continue;
 			}
 
-			console.log( 'Adding template to', pagename, 'with name', name );
+			console.log( "Adding template to", pagename, "with name", name );
 
 			await addTemplate( pagename, name );
 
@@ -127,9 +127,9 @@
 } )( window, window.jQuery, window.mediaWiki, ( window => {
 	const win = window.open();
 
-	const doWrite = (args, color = 'black') => win.document.write(
+	const doWrite = (args, color = "black") => win.document.write(
 		`<pre style="color: ${color};">${
-			args.map( a => typeof a !== typeof '' ? JSON.stringify( a, null, '  ' ) : a ).join( ' ' )
+			args.map( a => typeof a !== typeof "" ? JSON.stringify( a, null, "  " ) : a ).join( " " )
 		}</pre>`
 	);
 
@@ -139,11 +139,11 @@
 		},
 
 		warn: (...args) => {
-			doWrite( args, 'darkorange' );
+			doWrite( args, "darkorange" );
 		},
 
 		error: (...args) => {
-			doWrite( args, 'red' );
+			doWrite( args, "red" );
 		},
 	};
 } )( window ) ).catch( window.console.error );
