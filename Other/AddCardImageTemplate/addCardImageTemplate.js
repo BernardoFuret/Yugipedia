@@ -6,8 +6,6 @@
 
 	const __filesWithContent = [];
 
-	const hasOwnProperty = Object.prototype.hasOwnProperty;
-
 	const SKIP = "[SKIPPING]";
 
 	const api = new mw.Api();
@@ -33,36 +31,49 @@
 		api_version: 3,
 	} )
 		.then( data => {
-			const res = data.query.results[ 0 ]; // Shouldn't error...
+			const res = data.query.results[ 0 ] || {}; // Shouldn't error...
 
-			for ( let prop in res ) {
-				if ( hasOwnProperty.call( res, prop ) ) {
-					return prop; // The first one that pops out should be enough.
-				}
-			}
+			return Object.keys( res )[ 0 ]; // The first one that pops out should be enough.
 		} )
+		.catch( console.error )
+	;
+
+	const getContent = pagename => api.get( {
+		action: "query",
+		redirects: false,
+		prop: "revisions",
+		rvprop: "content",
+		format: "json",
+		formatversion: 2,
+		titles: pagename
+	} )
+		.then ( data => data.query.pages[ 0 ].revisions[ 0 ].content )
 		.catch( console.error )
 	;
 
 	const addTemplate = ( pagename, name ) => api.postWithToken( "csrf", {
 		action: "edit",
 		title: pagename,
-		createonly: true,
+		nocreate: true,
 		text: `{{OCG-TCG card image\n| name = ${name}\n}}`,
 		summary: "Adding {{OCG-TCG card image}}",
 		bot: true,
 	} )
-		.then( () => console.log( "Template added!" ) )
+		.then( data => console.log(
+			"Template added!",
+			$( '<a>', {
+				target: '_blank',
+				href: `https://yugipedia.com/index.php?diff=${data.edit.newrevid}`,
+				text: data.edit.newrevid
+			} ).prop( "outerHTML" ),
+		) )
 		.catch( ( code, err ) => {
-			console.warn( "Error adding template.", err );
-
-			if ( code === "articleexists" ) {
-				__filesWithContent.push( { pagename, name, err } );
-			}
+			console.warn( "Error adding template.", code, err );
 		} )
 	;
 
 	let continueToken = null;
+	loop:
 	do {
 		console.log( "Starting do-while iteration.", "continueToken:", continueToken );
 
@@ -81,8 +92,12 @@
 			}
 		} )( response );
 
-		for ( let i = 0, length = images.length; i < length; i+=1 ) {
-			console.log( "****FOR START****" );
+		for ( let i = 0, length = images.length; i < length; i += 1 ) {
+			console.log( "********" );
+
+			if ( window.STOP_SCRIPT ) {
+				break loop;
+			}
 
 			const { title: pagename } = images[ i ];
 
@@ -92,7 +107,7 @@
 				continue;
 			}
 
-			console.log( "Getting trimmed name for:", pagename );
+			console.log( "Getting trimmed name for", pagename );
 			const trimmedName = getTrimmedName( pagename );
 
 			if ( !trimmedName ) {
@@ -108,21 +123,39 @@
 				continue;
 			}
 
-			console.log( "Adding template to", pagename, "with name", name );
+			console.log( "Retrieving content for", pagename );
+			const content = await getContent( pagename );
 
+			if (
+				content
+				&&
+				!content.replace(
+					/^(=+?)[^\n=]*?\1\s*?$/gm,
+					''
+				).match(
+					/^\s*{{\s*fair use\s*(\|.*?)?}}\s*$/i
+				)
+			) {
+				console.log( SKIP, "File", pagename, "has content" );
+
+				__filesWithContent.push( { pagename, name, content } );
+
+				continue;
+			}
+
+			console.log( "Adding template to", pagename, "with name", name );
 			await addTemplate( pagename, name );
 
 			await sleep( 250 );
-			console.log( "****FOR END****" );
 		}
 
-		await sleep( 250 );
+		await sleep( 500 );
 	} while ( continueToken );
 
 
 	window[ `__filesWithContent$${Date.now().toString( 36 )}` ] = __filesWithContent;
 
-	console.log( "All done!" );
+	console.log( window.STOP_SCRIPT ? "Stopped!" : "All done!" );
 
 } )( window, window.jQuery, window.mediaWiki, ( window => {
 	const win = window.open();
