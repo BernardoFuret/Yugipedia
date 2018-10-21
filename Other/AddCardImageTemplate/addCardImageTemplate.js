@@ -24,8 +24,6 @@
 	const getTrimmedName = filepath => filepath.replace( /^File:/, "" ).split( "-" )[ 0 ];
 
 	const queryName = trimmed => api.get( {
-		// https://yugipedia.com/api.php?action=ask&query=[[Card%20image%20name::NirvanaHighPaladin]]&api_version=3
-		// https://yugipedia.com/api.php?action=askargs&conditions=Card%20image%20name::NirvanaHighPaladin&api_version=3
 		action: "askargs",
 		conditions: `Card image name::${trimmed}`,
 		api_version: 3,
@@ -55,14 +53,14 @@
 		action: "edit",
 		title: pagename,
 		nocreate: true,
-		text: `{{OCG-TCG card image\n| name = ${name}\n}}`,
+		text: `{{OCG-TCG card image${name ? `\n| name = ${name}\n` : ""}}}`,
 		summary: "Adding {{OCG-TCG card image}}",
 		bot: true,
 	} )
 		.then( data => console.log(
 			"Template added!",
-			$( '<a>', {
-				target: '_blank',
+			$( "<a>", {
+				target: "_blank",
 				href: `https://yugipedia.com/index.php?diff=${data.edit.newrevid}`,
 				text: data.edit.newrevid
 			} ).prop( "outerHTML" ),
@@ -73,6 +71,9 @@
 	;
 
 	let continueToken = null;
+	let fileCount = 0;
+	const START_TIME = window.performance.now();
+
 	loop:
 	do {
 		console.log( "Starting do-while iteration.", "continueToken:", continueToken );
@@ -94,6 +95,7 @@
 
 		for ( let i = 0, length = images.length; i < length; i += 1 ) {
 			console.log( "********" );
+			fileCount += 1;
 
 			if ( window.STOP_SCRIPT ) {
 				break loop;
@@ -102,7 +104,11 @@
 			const { title: pagename } = images[ i ];
 
 			console.log( "Validating file name..." );
-			if ( /-(anime|vg|manga|ow)[-.]/i.test( pagename ) ) {
+			if ( pagename.split( "-" ).length < 3 ) {
+				console.log( SKIP, pagename, "is not formatted correctly." );
+				continue;
+			}
+			if ( /-(anime|vg|manga|ow|ca|nc|commercial|figure|box|booster|avatar)[-.]/i.test( pagename ) ) {
 				console.log( SKIP, pagename, "is a", RegExp.$1, "file." );
 				continue;
 			}
@@ -131,7 +137,7 @@
 				&&
 				!content.replace(
 					/^(=+?)[^\n=]*?\1\s*?$/gm,
-					''
+					""
 				).match(
 					/^\s*{{\s*fair use\s*(\|.*?)?}}\s*$/i
 				)
@@ -144,7 +150,7 @@
 			}
 
 			console.log( "Adding template to", pagename, "with name", name );
-			await addTemplate( pagename, name );
+			await addTemplate( pagename, name !== trimmedName && name );
 
 			await sleep( 250 );
 		}
@@ -152,31 +158,30 @@
 		await sleep( 500 );
 	} while ( continueToken );
 
+	const END_TIME = window.performance.now();
 
-	window[ `__filesWithContent$${Date.now().toString( 36 )}` ] = __filesWithContent;
+	window[ `__filesWithContent$${Date.now().toString( 36 )}` ] = __filesWithContent; // TODO: filter {{card image}}?
 
 	console.log( window.STOP_SCRIPT ? "Stopped!" : "All done!" );
+	console.log( "Took", END_TIME - START_TIME, "to process", fileCount, "files." );
 
-} )( window, window.jQuery, window.mediaWiki, ( window => {
+} )( window, window.jQuery, window.mediaWiki, ( ( window, $ ) => {
 	const win = window.open();
 
 	const doWrite = (args, color = "black") => win.document.write(
-		`<pre style="color: ${color};">${
-			args.map( a => typeof a !== typeof "" ? JSON.stringify( a, null, "  " ) : a ).join( " " )
-		}</pre>`
+		$( "<pre>", {
+			html: args.map( arg => typeof arg !== typeof ""
+				? JSON.stringify( arg, null, "  " )
+				: arg
+			).join( " " )
+		} ).css( "color", color ).prop( "outerHTML" )
 	);
 
 	return {
-		log: (...args) => {
-			doWrite( args )
-		},
+		log: (...args) => doWrite( args ),
 
-		warn: (...args) => {
-			doWrite( args, "darkorange" );
-		},
+		warn: (...args) => doWrite( args, "darkorange" ),
 
-		error: (...args) => {
-			doWrite( args, "red" );
-		},
+		error: (...args) => doWrite( args, "red" ),
 	};
-} )( window ) ).catch( window.console.error );
+} )( window, window.jQuery ) ).catch( window.console.error );
