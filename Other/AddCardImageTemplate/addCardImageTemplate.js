@@ -70,7 +70,7 @@
 		} )
 	;
 
-	let continueToken = null;
+	let continueToken = window.START_TOKEN || null;
 	let fileCount = 0;
 	const START_TIME = window.performance.now();
 
@@ -108,7 +108,7 @@
 				console.log( SKIP, pagename, "is not formatted correctly." );
 				continue;
 			}
-			if ( /-(anime|vg|manga|ow|ca|nc|commercial|figure|box|booster|avatar)[-.]/i.test( pagename ) ) {
+			if ( /-(anime|vg|manga|ow|ca|nc|commercial|figure|toy|box|booster|avatar)[-.]/i.test( pagename ) ) {
 				console.log( SKIP, pagename, "is a", RegExp.$1, "file." );
 				continue;
 			}
@@ -139,7 +139,7 @@
 					/^(=+?)[^\n=]*?\1\s*?$/gm,
 					""
 				).match(
-					/^\s*{{\s*fair use\s*(\|.*?)?}}\s*$/i
+					/^\s*({{\s*fair use\s*(\|.*?)?}}|importing file)\s*$/i
 				)
 			) {
 				console.log( SKIP, "File", pagename, "has content" );
