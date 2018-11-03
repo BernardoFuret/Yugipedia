@@ -46,7 +46,10 @@
 		titles: pagename
 	} )
 		.then ( data => data.query.pages[ 0 ].revisions[ 0 ].content )
-		.catch( console.error )
+		.catch( (...args) => {
+			console.warn( 'Error getting content:', ...args );
+			return SKIP; // Return some content. This will avoid trying to edit the page if there was an error here.
+		} )
 	;
 
 	const addTemplate = ( pagename, name ) => api.postWithToken( "csrf", {
