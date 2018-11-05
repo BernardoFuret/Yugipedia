@@ -80,7 +80,17 @@ function StringBuffer:toString()
 end
 
 --[[Doc
-@exports The `StringBuffer` class.
+@exports The `StringBuffer` class,
+with the `__call` metamethod to allow instantiation.
 ]]
-return StringBuffer;
+return setmetatable( StringBuffer, {
+	__call = function( t )
+		assert(
+			t == StringBuffer,
+			'Cannot apply StringBuffer constructor except to itself'
+		);
+
+		return StringBuffer.new();
+	end
+} );
 -- </pre>
