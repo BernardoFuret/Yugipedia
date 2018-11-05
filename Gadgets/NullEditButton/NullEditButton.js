@@ -35,7 +35,11 @@
 			} ),
 			click: function( e ) {
 				e.preventDefault();
-				notify( 'Waiting for mediawiki.api module to load.', 'fail' );
+
+				// Wait fot the notifiy module to load:
+				mw.loader.using( 'mediawiki.notify' ).then( function() {
+					notify( 'Waiting for mediawiki.api module to load.', 'fail' );
+				} );
 			}
 		} ),
 
@@ -102,7 +106,10 @@
 				// Wait for the mw API module to load, just to be sure nothing breaks:
 				mw.loader.using( 'mediawiki.api' ).done( function() {
 					mw.log( '[Gadget] NullEditButton - mediawiki.api loaded.' );
-					NullEditButton.$button.off( 'click' ).click( NullEditButton.nullEdit );
+					NullEditButton.$button
+						.off( 'click' ) // Remove fallback click.
+						.click( NullEditButton.nullEdit )
+					;
 				} );
 			}
 		}
