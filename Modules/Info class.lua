@@ -1,86 +1,87 @@
 -- <pre>
 --[=[Doc
-@module Info class
+@module InfoWrapper
 @description Creates an object to store module info.
 @author [[User:Becasita]]
 @contact [[User talk:Becasita]]
 ]=]
 
 --[[Doc
-@class InfoClass
+@class InfoWrapper
 @description Stores and provides an interface to manage module info.
 @exportable
 ]]
-local InfoClass = {};
-InfoClass.__index = InfoClass;
-InfoClass.__class = InfoClass;
+local InfoWrapper = {};
+InfoWrapper.__index = InfoWrapper;
+InfoWrapper.__class = InfoWrapper;
 
 --[[Doc
-@function InfoClass new
-@description Initializes an instance of `InfoClass`.
-@return {InfoClass} New instance of `InfoClass`.
+@function InfoWrapper new
+@description Initializes an instance of `InfoWrapper`.
+@return {InfoWrapper} New instance of `InfoWrapper`.
 ]]
-function InfoClass.new( title )
+function InfoWrapper.new( title )
 	local data = {
-		_title      = title or '',
 		_categories = {},
 		_errors     = {},
 	};
 
-	return setmetatable( data, InfoClass );
+	InfoWrapper.setTitle( data, title );
+
+	return setmetatable( data, InfoWrapper );
 end
 
 --[[Doc
-@method InfoClass setTitle
+@method InfoWrapper setTitle
 @description Changes the instance title.
 @parameter {string|nil} title The new title. If `nil`, the empty string is used.
-@return {InfoClass} `self`
+@return {InfoWrapper} `self`
 ]]
-function InfoClass:setTitle( title )
-	self._title = title or '';
+function InfoWrapper:setTitle( title )
+	self._title = title and tostring( title ) or '';
 
 	return self;
 end
 
 --[[Doc
-@method InfoClass getCategories
+@method InfoWrapper getCategories
 @description Get the stored categories.
 @return {table} Table, as an array, of all of the stored categories.
 ]]
-function InfoClass:getCategories()
+function InfoWrapper:getCategories()
 	return self._categories;
 end
 
 --[[Doc
-@method InfoClass getErrors
+@method InfoWrapper getErrors
 @description Get the stored errors.
 @return {table} Table, as an array, of all of the stored errors.
 ]]
-function InfoClass:getErrors()
+function InfoWrapper:getErrors()
 	return self._errors;
 end
 
 --[[Doc
-@method InfoClass category
+@method InfoWrapper category
 @description Stores a new category.
 @parameter {string} category The category name
 (no need to prefix the `Category` namespace).
-@return {InfoClass} `self`
+@return {InfoWrapper} `self`
 ]]
-function InfoClass:category( category )
+function InfoWrapper:category( category )
 	table.insert( self._categories, category );
 
 	return self;
 end
 
 --[[Doc
-@method InfoClass error
+@method InfoWrapper error
 @description Stores a new error.
 @parameter {string} message The error message.
 @parameter {*} default A default return a value.
-@return {*|InfoClass} `default` or `self`.
+@return {*|InfoWrapper} `default` or `self`.
 ]]
-function InfoClass:error( message, default )
+function InfoWrapper:error( message, default )
 	self._errors.exists = true;
 	table.insert( self._errors, message );
 
@@ -88,9 +89,9 @@ function InfoClass:error( message, default )
 end
 
 --[[Doc
-@method InfoClass dumpCategories
+@method InfoWrapper dumpCategories
 ]]
-function InfoClass:dumpCategories( callback )
+function InfoWrapper:dumpCategories( callback )
 	callback = callback or function( cat, index )
 		return cat;
 	end;
@@ -113,9 +114,9 @@ function InfoClass:dumpCategories( callback )
 end
 
 --[[Doc
-@method InfoClass dumpErrors
+@method InfoWrapper dumpErrors
 ]]
-function InfoClass:dumpErrors( callback )
+function InfoWrapper:dumpErrors( callback )
 	callback = callback or function( err, index )
 		return ('%d - %s'):format( index, err );
 	end;
@@ -130,10 +131,17 @@ function InfoClass:dumpErrors( callback )
 end
 
 --[=[Doc
-@exports The `InfoClass` class constructor (`new`).
-@see [[#InfoClass.new]]
+@exports The `InfoWrapper` class constructor (`new`).
+@see [[#InfoWrapper.new]]
 ]=]
-return {
-	['new'] = InfoClass.new,
-}
+return setmetatable( InfoWrapper, {
+	__call = function( t, ... )
+		assert(
+			t == InfoWrapper,
+			'Cannot apply InfoWrapper constructor except to itself'
+		);
+
+		return InfoWrapper.new( ... );
+	end
+} );
 -- </pre>
