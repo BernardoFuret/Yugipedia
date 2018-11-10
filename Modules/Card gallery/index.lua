@@ -9,13 +9,17 @@
 ----------------
 local DATA = require( 'Module:Data' );
 local UTIL = require( 'Module:Util' );
+
+local InfoWrapper  = require( 'Module:InfoWrapper' );
+local StringBuffer = require( 'Module:StringBuffer' );
+
 local File = require( 'Module:Card gallery/File' );
 
 --------------------
 -- Module variables:
 --------------------
 -- This can be seen as the ast:
-local CardGallery = UTIL.newInfoObject( 'Card gallery' );
+local CardGallery = InfoWrapper( 'Card gallery' );
 
 -- Parser state:
 local
@@ -134,7 +138,7 @@ end
 
 -- @description Builds the gallery itself.
 local function getGallery()
-	local gallery = UTIL.newStringBuffer()
+	local gallery = StringBuffer()
 		:addLine( '<gallery heights="175px" position="center" captionalign="center">' )
 	;
 	for _, file in ipairs( _files ) do
@@ -169,7 +173,7 @@ local function getCategories()
 end
 
 local function render()
-	local buffer = UTIL.newStringBuffer()
+	local buffer = StringBuffer()
 		:addLine( '<div id="card-gallery--' .. _region.index .. '" class="card-gallery">' )
 		:addLine( getMwSectionHeader() )
 		:addLine( getToC() )
