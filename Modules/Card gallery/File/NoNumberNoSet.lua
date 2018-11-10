@@ -10,6 +10,8 @@
 local DATA = require( 'Module:Data' );
 local UTIL = require( 'Module:Util' );
 
+local StringBuffer = require( 'Module:StringBuffer' );
+
 -------------
 -- Constants:
 -------------
@@ -159,7 +161,7 @@ function File:render()
 	end
 
 	-- Build file:
-	local file = UTIL.newStringBuffer()
+	local file = StringBuffer()
 		:add( UTIL.getImgName() )
 		:add( self.parent:getRegion().index )
 	;
@@ -177,7 +179,7 @@ function File:render()
 	;
 	
 	-- Build caption:
-	local caption = UTIL.newStringBuffer();
+	local caption = StringBuffer();
 	
 	for _, release in ipairs( self.releases ) do
 		caption:add( UTIL.link( release.full ) );

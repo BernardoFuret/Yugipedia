@@ -23,6 +23,8 @@ local ANIME_CARD_BACK = 'Back-Anime-DM.png';
 local DATA = require( 'Module:Data' );
 local UTIL = require( 'Module:Util' );
 
+local StringBuffer = require( 'Module:StringBuffer' );
+
 ---------------
 -- Helper vars:
 ---------------
@@ -138,7 +140,7 @@ function File:render()
 	end
 
 	-- Build file:
-	local file = UTIL.newStringBuffer()
+	local file = StringBuffer()
 		:add( UTIL.getImgName() )
 		:add( self.parent:getRegion().index )
 		:add( 'Anime' )
@@ -151,7 +153,7 @@ function File:render()
 	;
 
 	-- Build caption:
-	local caption = UTIL.newStringBuffer()
+	local caption = StringBuffer()
 		:add(
 			UTIL.link(
 				self.series.page,

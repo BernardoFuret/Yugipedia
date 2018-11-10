@@ -23,6 +23,8 @@ local VG_CARD_BACK = 'Back-DOR-VG.png';
 local DATA = require( 'Module:Data' );
 local UTIL = require( 'Module:Util' );
 
+local StringBuffer = require( 'Module:StringBuffer' );
+
 ---------------
 -- Helper vars:
 ---------------
@@ -136,7 +138,7 @@ function File:render()
 	end
 
 	-- Build file:
-	local file = UTIL.newStringBuffer()
+	local file = StringBuffer()
 		:add( UTIL.getImgName() )
 		:add( self.game.abbr )
 		:add( self.parent:getRegion().index )
@@ -149,7 +151,7 @@ function File:render()
 	;
 
 	-- Build caption:
-	local caption = UTIL.newStringBuffer()
+	local caption = StringBuffer()
 		:add(
 			UTIL.italic(
 				UTIL.link(
