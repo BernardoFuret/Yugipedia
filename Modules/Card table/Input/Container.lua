@@ -38,7 +38,7 @@ function Container:getContent()
 end
 
 function Container:getId()
-	return self._data._content;
+	return self._data._id;
 end
 
 return function()
