@@ -277,20 +277,6 @@ function U.getImgName( ... )
 	return require( 'Module:Card image name' ).main( ... );
 end
 
--- @name newInfoObject
--- @description
--- @see [[Module:Info class]]
-function U.newInfoObject( title )
-	return require( 'Module:Info class' ).new( title );
-end
-
--- @name newStringBuffer
--- @description
--- @see [[Module:StringBuffer]]
-function U.newStringBuffer()
-	return require( 'Module:StringBuffer' ).new();
-end
-
 ----------
 -- Return:
 ----------
