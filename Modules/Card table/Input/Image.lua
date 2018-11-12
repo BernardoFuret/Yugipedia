@@ -1,6 +1,6 @@
 -- <pre>
 --[=[Doc
-@module
+@module Card table/Args/Image
 @description 
 @author [[User:Becasita]]
 @contact [[User talk:Becasita]]
@@ -30,27 +30,27 @@ end
 
 function Image:Header()
 	return self._data._header or ( function()
-		self._data._header = require( 'Module:Card table/Input/Container' )();
+		self._data._header = require( 'Module:Card table/Args/Container' )();
 		return self._data._header;
 	end )();
 end
 
 function Image:Footer()
 	return self._data._footer or ( function()
-		self._data._footer = require( 'Module:Card table/Input/Container' )();
+		self._data._footer = require( 'Module:Card table/Args/Container' )();
 		return self._data._footer;
 	end )();
 end
 
-function Container:getMain()
+function Image:getMain()
 	return self._data._main;
 end
 
-function Container:getDefault()
+function Image:getDefault()
 	return self._data._default;
 end
 
-function Container:getId()
+function Image:getId()
 	return self._data._id;
 end
 

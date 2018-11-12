@@ -1,73 +1,73 @@
 -- <pre>
 --[=[Doc
-@module Card table/Input
+@module Card table/Args
 @description Object allowing easy creation, construction and manipulation
 of the input received by the card table interface.
 @author [[User:Becasita]]
 @contact [[User talk:Becasita]]
 ]=]
 
-local Input = {};
-Input.__index = Input;
-Input.__class = Input;
+local Args = {};
+Args.__index = Args;
+Args.__class = Args;
 
-function Input:Classes()
+function Args:Classes()
 	return self._metadata._classes or ( function()
-		self._metadata._classes = require( 'Module:Card table/Input/Sequence' )();
+		self._metadata._classes = require( 'Module:Card table/Args/Sequence' )();
 		return self._metadata._classes;
 	end )();
 end
 
-function Input:Header()
+function Args:Header()
 	return self._metadata._header or ( function()
-		self._metadata._header = require( 'Module:Card table/Input/Container' )();
+		self._metadata._header = require( 'Module:Card table/Args/Container' )();
 		return self._metadata._header;
 	end )();
 end
 
-function Input:Caption()
+function Args:Caption()
 	return self._metadata._caption or ( function()
-		self._metadata._caption = require( 'Module:Card table/Input/Container' )();
+		self._metadata._caption = require( 'Module:Card table/Args/Container' )();
 		return self._metadata._caption;
 	end )();
 end
 
-function Input:Image()
+function Args:Image()
 	return self._metadata._caption or ( function()
-		self._metadata._caption = require( 'Module:Card table/Input/Image' )();
+		self._metadata._caption = require( 'Module:Card table/Args/Image' )();
 		return self._metadata._caption;
 	end )();
 end
 
-function Input:Rows()
+function Args:Rows()
 	return self._metadata._rows or ( function()
-		self._metadata._rows = require( 'Module:Card table/Input/Mixed' )();
+		self._metadata._rows = require( 'Module:Card table/Args/Mixed' )();
 		return self._metadata._rows;
 	end )();
 end
 
-function Input:Footer()
+function Args:Footer()
 	return self._metadata._footer or ( function()
-		self._metadata._footer = require( 'Module:Card table/Input/Container' )();
+		self._metadata._footer = require( 'Module:Card table/Args/Container' )();
 		return self._metadata._footer;
 	end )();
 end
 
-function Input:Sections()
+function Args:Sections()
 	return self._metadata._sections or ( function()
-		self._metadata._sections = require( 'Module:Card table/Input/Mixed' )();
+		self._metadata._sections = require( 'Module:Card table/Args/Mixed' )();
 		return self._metadata._sections;
 	end )();
 end
 
 --[=[Doc
-@exports The constructor for the `???`.
+@exports The constructor for the `Args` object.
 ]=]
 return function()
 	local data = {
 		_metadata = {},
 	};
 
-	return setmetatable( data, Input );
+	return setmetatable( data, Args );
 end
 -- </pre>

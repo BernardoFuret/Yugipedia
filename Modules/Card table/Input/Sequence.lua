@@ -34,13 +34,18 @@ end
 not a number or convertible to number, then a list of all items is returned.
 @returns {*|table} Item at position `index` or a list of all items.
 ]]
-function Sequence:get( index )
+function Sequence:get( index ) -- TODO: accept index or callback
 	if not tonumber( index ) then
-		return self._data;
+		return self._data; -- TODO: getAll()
 	end
 
 	return self._data[ index ];
-end 
+end
+
+-- TODO: search for something and insert after it
+--function Sequence:insertAfter( search ) insertBefore find
+	-- body
+--end
 
 --[[Doc
 @method Sequence values

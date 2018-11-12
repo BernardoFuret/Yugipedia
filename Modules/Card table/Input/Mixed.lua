@@ -7,10 +7,10 @@
 ]=]
 
 -- Use Containers as the items.
-local Container = require( 'Module:Card table/Input/Container' );
+local Container = require( 'Module:Card table/Args/Container' );
 
--- Use the behavior of Sequence instance.
-local seq = require( 'Module:Card table/Input/Sequence' )();
+-- Use the behavior of a Sequence instance.
+local seq = require( 'Module:Card table/Args/Sequence' )();
 
 --[[Doc
 @class Mixed
@@ -37,6 +37,20 @@ end
 function Mixed:Get( index )
 	return seq.get( self, index ) or Container();
 end
+
+--[[Doc
+@method Mixed values
+]]
+function Mixed:values()
+	return seq.values( self );
+end
+
+--[[Doc
+@method Mixed each
+]]
+--[[function Mixed:each( cb )
+	return seq.each( self, cb );
+end--]]
 
 --[[Doc
 @exports The `Mixed` constructor.
