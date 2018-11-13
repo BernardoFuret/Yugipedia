@@ -14,14 +14,14 @@ CardTable.__index = CardTable;
 CardTable.__class = CardTable;
 
 function CardTable:Args()
-	return self._args or ( function()
+	return self._metadata._args or ( function()
 		self._metadata._args = require( 'Module:Card table/Args' )();
 		return self._metadata._args;
 	end )();
 end
 
 function CardTable:SMW()
-	return self._smw or ( function()
+	return self._metadata._smw or ( function()
 		self._metadata._smw = require( 'Module:Card table/SMW' )();
 		return self._metadata._smw;
 	end )();
