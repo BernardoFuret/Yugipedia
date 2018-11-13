@@ -2,7 +2,7 @@
 --[=[Doc
 @module Card table/Args
 @description Object allowing easy creation, construction and manipulation
-of the input received by the card table interface.
+of the input (arguments) received by the card table interface.
 @author [[User:Becasita]]
 @contact [[User talk:Becasita]]
 ]=]
@@ -33,9 +33,9 @@ function Args:Caption()
 end
 
 function Args:Image()
-	return self._metadata._caption or ( function()
-		self._metadata._caption = require( 'Module:Card table/Args/Image' )();
-		return self._metadata._caption;
+	return self._metadata._image or ( function()
+		self._metadata._image = require( 'Module:Card table/Args/Image' )();
+		return self._metadata._image;
 	end )();
 end
 
