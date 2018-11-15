@@ -37,7 +37,7 @@ end
 @return {StringBuffer} `self`
 ]]
 function StringBuffer:add( content )
-	table.insert( self.buffer, content )
+	table.insert( self.buffer, content );
 
 	return self;
 end
@@ -64,8 +64,8 @@ concat the buffer entries.
 ]]
 function StringBuffer:flush( delimiter )
 	self.buffer = {
-		table.concat( self.buffer, delimiter or '' );
-	}
+		self.buffer[ 1 ] and table.concat( self.buffer, delimiter or '' ),
+	};
 
 	return self;
 end
