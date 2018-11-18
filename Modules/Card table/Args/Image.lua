@@ -22,6 +22,12 @@ function Image:setDefault( filename )
 	return self;
 end
 
+function Image:setWidth( width )
+	self._data._width = tonumber( width );
+
+	return self;
+end
+
 function Image:setId( id )
 	self._data._id = id;
 
@@ -48,6 +54,10 @@ end
 
 function Image:getDefault()
 	return self._data._default;
+end
+
+function Image:getWidth()
+	return self._data._width;
 end
 
 function Image:getId()
