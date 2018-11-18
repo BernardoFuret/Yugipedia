@@ -6,9 +6,9 @@
 @contact [[User talk:Becasita]]
 ]=]
 
-local CardTable = {
-	render = require( 'Module:Card table/Render' ),
-};
+local InfoWrapper = require( 'Module:InfoWrapper' );
+
+local CardTable = setmetatable( {}, InfoWrapper );
 
 CardTable.__index = CardTable;
 CardTable.__class = CardTable;
@@ -27,13 +27,19 @@ function CardTable:SMW()
 	end )();
 end
 
+function CardTable:Render()
+	return self._metadata._renderer or ( function()
+		self._metadata._renderer = require( 'Module:Card table/Renderer' )( self );
+		return self._metadata._renderer;
+	end )();
+end
+
 --[=[Doc
 @exports The constructor for the `CardTable` object.
 ]=]
-return function()
-	local data = {
-		_metadata = {},
-	};
+return function( title )
+	local data = InfoWrapper( title );
+	data._metadata = {};
 
 	return setmetatable( data, CardTable );
 end
