@@ -325,5 +325,22 @@ end
 -- Return:
 ----------
 -- @exports `D`: Interface to interact with [[Module:Data/data]].
-return D;
+return setmetatable( D, {
+	__call = function( t, ... )
+		assert( t == D );
+
+		local arguments = {
+			size = select( '#', ... ),
+			...
+		};
+
+		local data = DATA;
+		
+		for i = 1, arguments.size do
+			data = (data or {})[ arguments[ i ] ];
+		end
+
+		return data;
+	end
+} );
 -- </pre>
