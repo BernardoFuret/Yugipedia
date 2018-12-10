@@ -297,6 +297,7 @@ N.videoGame.game = {
 	['dg']   = 'dg',   ['duelgeneration'] = 'dg',   ['mddg'] = 'dg',
 	['duli'] = 'duli', ['duellinks']      = 'duli', ['dl']   = 'duli',
 	['dod']  = 'dod',  ['dawnofdestiny']  = 'dod',
+	['dt']   = 'dt',   ['duelterminal']   = 'dt',
 	--['decadeduels'] = '',
 	--['decadeduelsplus'] = '',
 
@@ -674,6 +675,7 @@ return {
 			['dg']   = { abbr = 'DG',   full = 'Yu-Gi-Oh! Duel Generation'                    },
 			['duli'] = { abbr = 'DULI', full = 'Yu-Gi-Oh! Duel Links'                         },
 			['dod']  = { abbr = 'DOD',  full = 'Yu-Gi-Oh! The Dawn of Destiny'                },
+			['dt']   = { abbr = 'DT',   full = 'Duel Terminal'                                },
 			['gx1']  = { abbr = 'GX1',  full = 'Yu-Gi-Oh! GX Duel Academy'                    },
 			['gx03'] = { abbr = 'GX03', full = 'Yu-Gi-Oh! GX Spirit Caller'                   },
 			['ld']   = { abbr = 'LD',   full = 'Yu-Gi-Oh! Legacy of the Duelist'              },
