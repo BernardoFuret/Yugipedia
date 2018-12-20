@@ -44,6 +44,15 @@ function InfoWrapper:setTitle( title )
 end
 
 --[[Doc
+@method InfoWrapper getTitle
+@description Gets the instance title.
+@return {string} The instance title.
+]]
+function InfoWrapper:getTitle()
+	return self._title;
+end
+
+--[[Doc
 @method InfoWrapper getCategories
 @description Get the stored categories.
 @return {table} Table, as an array, of all of the stored categories.
