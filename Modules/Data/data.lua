@@ -243,14 +243,15 @@ N.videoGame.game = {
 	-- Duel Monsters:
 	['g1'] = 'dm1', ['gb1'] = 'dm1', ['dm1'] = 'dm1', ['duelmonsters']  = 'dm1', ['g'] = 'dm1', ['dm'] = 'dm1',
 	['g2'] = 'dm2', ['gb2'] = 'dm2', ['dm2'] = 'dm2', ['duelmonsters2'] = 'dm2', ['2darkduelstories']  = 'dm2',
-	['g3'] = 'dds', ['gb3'] = 'dds', ['dm3'] = 'dds', ['duelmonsters3'] = 'dds', ['3triholygodad5ent'] = 'dds', ['triholygodad5ent'] = 'dds', ['dds'] = 'dds',  ['darkduelstories'] = 'dds',
+	['g3'] = 'dm3', ['gb3'] = 'dm3', ['dm3'] = 'dm3', ['duelmonsters3'] = 'dm3', ['3triholygodad5ent'] = 'dm3', ['triholygodad5ent'] = 'dm3',
 	['g4'] = 'dm4', ['gb4'] = 'dm4', ['dm4'] = 'dm4', ['duelmonsters4'] = 'dm4', ['4battleofgreatduelist'] = 'dm4', ['battleofgreatduelist'] = 'dm4',
 	--['ex'] = '',
 	['g5'] = 'dm5', ['gb5'] = 'dm5', ['dm5'] = 'dm5', ['duelmonsters5'] = 'dm5', ['5'] = 'dm5', ['5ex'] = 'dm5', ['5ex1'] = 'dm5', ['5exi'] = 'dm5', ['exi'] = 'dm5', ['ex1'] = 'dm5',
 	['g6'] = 'dm6', ['gb6'] = 'dm6', ['dm6'] = 'dm6', ['duelmonsters6'] = 'dm6', ['ex2'] = 'dm6', ['6ex'] = 'dm6',  ['6ex2'] = 'dm6',
 	['g7'] = 'tsc', ['gb7'] = 'tsc', ['dm7'] = 'tsc', ['duelmonsters7'] = 'tsc', ['7duelcitylegend'] = 'tsc', ['duelcitylegend'] = 'tsc', ['tsc'] = 'tsc', ['sacredcards'] = 'tsc',
 	['g8'] = 'rod', ['gb8'] = 'rod', ['dm8'] = 'rod', ['duelmonsters8'] = 'rod', ['8reshefofdestruction'] = 'rod', ['rod'] = 'rod',   ['reshefofdestruction'] = 'rod',
-	['gbi'] = 'sdd',  ['dmi'] = 'sdd',   ['di'] = 'sdd',   ['di1'] = 'sdd',  ['international'] = 'sdd',  ['worldwide'] = 'sdd',  ['worldwideedition'] = 'sdd', ['sdd'] = 'sdd', ['worldwideeditionstairwaytodestinedduel']  = 'sdd', ['stairwaytodestinedduel'] = 'sdd',
+	['dds'] = 'dds', ['darkduelstories'] = 'dds',
+	['gbi'] = 'sdd', ['dmi'] = 'sdd',   ['di'] = 'sdd',   ['di1'] = 'sdd',  ['international'] = 'sdd',  ['worldwide'] = 'sdd',  ['worldwideedition'] = 'sdd', ['sdd'] = 'sdd', ['worldwideeditionstairwaytodestinedduel']  = 'sdd', ['stairwaytodestinedduel'] = 'sdd',
 	['eds'] = 'eds', ['eternalduelistsoul'] = 'eds', ['eternalduelistssoul'] = 'eds',
 
 	-- Power of Chaos:
@@ -627,6 +628,7 @@ return {
 			-- Duel Monsters:
 			['dm1'] = { abbr = 'DM1', full = 'Yu-Gi-Oh! Duel Monsters (video game)'                       },
 			['dm2'] = { abbr = 'DM2', full = 'Yu-Gi-Oh! Duel Monsters II: Dark duel Stories'              },
+			['dm3'] = { abbr = 'DM3', full = 'Yu-Gi-Oh! Duel Monsters III: Tri-Holy God Advent'           },
 			['dds'] = { abbr = 'DDS', full = 'Yu-Gi-Oh! Dark Duel Stories'                                },
 			['dm4'] = { abbr = 'DM4', full = 'Yu-Gi-Oh! Duel Monsters 4: Battle of Great Duelist'         },
 			['dm5'] = { abbr = 'DM5', full = 'Yu-Gi-Oh! Duel Monsters 5 Expert 1'                         },
