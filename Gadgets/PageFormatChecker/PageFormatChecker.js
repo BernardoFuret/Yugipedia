@@ -10,55 +10,203 @@
 
 	var LAST_LOG = '~~~~~';
 
+	var config;
+
+	var hasOwn = Object.prototype.hasOwnProperty;
+
 	var $textBox = $( '#wpTextbox1' );
 
 	// <pre>
-	var PageFormatChecker = {
-		PRELOADS: {
-			'Generic': '* ',
+	var PRELOADS = {
+		'Card_Tips': '* ',
 
-			'Card_Gallery': [
-				'{{Card gallery|region=EN|',
-				'number; set; rarity; edition :: release // option::value',
-				'}}',
-				'',
-				'{{Card gallery|region=JP|type=anime|',
-				'series',
-				'}}',
-			].join( '\n' ),
+		'Card_Trivia': '* ',
 
-			'Card_Errata': [
-				'{{Errata table',
-				'| lore0  = ',
-				'| image0 = ',
-				'| cap0   = [[Card Number]]<br />[[Set Name]]',
-				'',
-				'| lore1  = ',
-				'| image1 = ',
-				'| cap1   = [[Card Number]]<br />[[Set Name]]',
-				'}}',
-			].join( '\n' ),
+		'Card_Gallery': [
+			'{{Card gallery|region=EN|',
+			'number; set; rarity; edition :: release // option::value',
+			'}}',
+			'',
+			'{{Card gallery|region=JP|type=anime|',
+			'series',
+			'}}',
+		].join( '\n' ),
 
-			'Card_Appearances': [
-				'* In [[Yu-Gi-Oh! VRAINS - Episode 000|episode 000]],',
-				'[[character name]] plays this card',
-				'against [[opponent name]].\n',
-			].join( ' ' ),
+		'Card_Errata': [
+			'{{Errata table',
+			'| lore0  = ',
+			'| image0 = ',
+			'| cap0   = [[Card Number]]<br />[[Set Name]]',
+			'',
+			'| lore1  = ',
+			'| image1 = ',
+			'| cap1   = [[Card Number]]<br />[[Set Name]]',
+			'}}',
+		].join( '\n' ),
 
-			'Card_Artworks': [
-				'* ',
-				'',
-				'{{ArtworkHeader|lang=jp}}',
-				'<gallery heights="175px">',
-				'Image.png  | Japanese',
-				'Image.png  | International',
-				'</gallery>',
-				'|}',
-			].join( '\n' ),
-		},
+		'Card_Appearances': [
+			'* In [[Yu-Gi-Oh! VRAINS - Episode 000|episode 000]],',
+			'[[character name]] plays this card',
+			'against [[opponent name]].\n',
+		].join( ' ' ),
 
-		config: function() {
-			this.config = $.extend(
+		'Card_Artworks': [
+			'* ',
+			'',
+			'{{ArtworkHeader|lang=jp}}',
+			'<gallery heights="175px">',
+			'Image.png  | Japanese',
+			'Image.png  | International',
+			'</gallery>',
+			'|}',
+		].join( '\n' ),
+
+		'Set_Card_Galleries': [
+			'{{Set gallery|',
+			'number; name; rarity // option::value',
+			'}}',
+		].join( '\n' ),
+
+		'Set_Card_Lists': [
+			'{{Set list|region=|',
+			'number; name; rarity // option::value',
+			'}}',
+		].join( '\n' ),
+	};
+
+	function cleanToCheck( text ) {
+		return text.replace( /\s+/g, '' ).replace( /{{Navigation.*?}}/gi, '' );
+	}
+
+	function onSubmitCheck( preloadText ) {
+		return function( e ) {
+			if (
+				cleanToCheck( $textBox.val() )
+				===
+				cleanToCheck( preloadText )
+			) {
+				window.alert( 'You have not made any changes to the page.' );
+
+				return false;
+			}
+		};
+	}
+
+	/**
+	 * Checks if a page is eligible for {{Talk header}}.
+	 */
+	function isTalkHeaderPage() {
+		return (
+			// Any talk page:
+			config.wgNamespaceNumber % 2
+			&&
+			// Except user talk pages:
+			config.wgNamespaceNumber !== 3
+			&&
+			// Except when editing sections:
+			!config.section
+			&&
+			// Except when already submitting: 
+			config.action !== 'submit'
+		);
+	}
+
+	/**
+	 * Adds {{Talk header}} if it isn't there. Fixes it if it is (assues it is
+	 * at the top of the page, not only because it should, but because there can
+	 * be cases where it is wrapped inside `pre` tags or so. This is to avoid
+	 * creating a scanner just for this task).
+	 */
+	function handleTalkHeader() {
+		var pageText = $textBox.val().replace( /^[ \t]*{{\s*talk[ \t]*header/gmi, '{{Talk header' );
+
+		if ( !/{{\s*Delete/.test( pageText ) && !/^[ \t]*{{Talk header/m.test( pageText ) ) {
+			$textBox.val( '{{Talk header}}\n\n' + pageText );
+		} else {
+			$textBox.val( pageText );
+		}
+	}
+
+	/**
+	 * Checks if a page is eligible for a preload.
+	 */
+	function isPreloadPage() {
+		var $editId = $( '#ca-edit' );
+		var isRedlink = config.redlink;
+		var isCreating = (
+			$editId.hasClass( 'selected' )
+			&&
+			$editId.text() === 'Create'
+		);
+		var hasNoContent = !$textBox.val().trim();
+
+		return (
+			hasOwn.call( PRELOADS, config.wgCanonicalNamespace )
+			&&
+			( isRedlink || isCreating )
+			&&
+			hasNoContent
+		);
+	}
+
+	/**
+	 * Adds the respective preload to the page.
+	 */
+	function handlePreload() {
+		var newText = PRELOADS[ config.wgCanonicalNamespace ];
+
+		$textBox.val( newText );
+
+		$( 'form[name=editform]' ).submit( onSubmitCheck( newText ) );
+	}
+
+	/**
+	 * Checks if the page is eligible for {{Navigation}}.
+	 */
+	function isNavigationPage() {
+		var isNavigationNamespace = ~[
+			'Card_Gallery',
+			'Card_Rulings',
+			'Card_Errata',
+			'Card_Tips',
+			'Card_Appearances',
+			'Card_Trivia',
+			'Card_Lores',
+			'Card_Artworks',
+		].indexOf( config.wgCanonicalNamespace );
+
+		var isGroupRulingsPage = ~$textBox.val().indexOf( '[[Category:Group Rulings' );
+
+		return (
+			isNavigationNamespace
+			&&
+			!isGroupRulingsPage
+			&&
+			!config.section
+			&&
+			config.action !== 'submit'
+		);
+	}
+
+	/**
+	 * Adds {{Navigation}} if it isn't there. Fixes it if it is.
+	 */
+	function handleNavigation() {
+		var pageText = $textBox.val()
+			.replace( /^[ \t]*{{\s*Navigation2\s*}}/mi, '{{Navigation|mode=nonGame}}' )
+			.replace( /^[ \t]*{{\s*Navigation3}\s*}/mi, '{{Navigation|mode=otherGame}}' )
+		;
+
+		if ( !/{{\s*Delete/.test( pageText ) && !/^[ \t]*{{Navigation/m.test( pageText ) ) {
+			$textBox.val( '{{Navigation}}\n\n' + pageText );
+		} else {
+			$textBox.val( pageText );
+		}
+	}
+
+	function init() {
+		mw.loader.using( 'mediawiki.util' ).then( function() {
+			config = $.extend(
 				mw.config.get( [
 					'wgCanonicalNamespace',
 					'wgNamespaceNumber',
@@ -69,195 +217,28 @@
 					redlink: mw.util.getParamValue( 'redlink' ),
 				}
 			);
-		},
 
-		checkSubmit: function( preload ) {
+			if ( isTalkHeaderPage() ) {
+				handleTalkHeader();
+			}
+
+			if ( isPreloadPage() ) {
+				handlePreload();
+			}
+
+			if ( isNavigationPage() ) {
+				handleNavigation();
+			}
+
 			$( '#wpSave, #wpPreview' ).mousedown( function() {
-				$textBox.val( $textBox.val()
-					.replace( /{{Navigation2}}/i, '{{Navigation|mode=nonGame}}' )
-					.replace( /{{Navigation3}}/i, '{{Navigation|mode=otherGame}}' )
-				);
-			} );
-
-			$( 'form[name=editform]' ).submit( function(e) {
-				if ( // Kinda dirty...
-					$textBox.val().replace( /{{Navigation.*?}}/i, '' ).trim()
-					===
-					preload.replace( /{{Navigation.*?}}/i, '' ).trim()
-				) {
-					window.alert( 'You have not made any changes to the page.' );
-
-					return false;
+				if ( isNavigationPage() ) {
+					handleNavigation();
 				}
 			} );
-		},
+		} );
+	}
 
-		checkTalkHeader: function() {
-			return (
-				// Any talk page:
-				PageFormatChecker.config.wgNamespaceNumber % 2
-				&&
-				// Except user talk pages:
-				PageFormatChecker.config.wgNamespaceNumber !== 3
-				&&
-				// Except when editing sections:
-				!PageFormatChecker.config.section
-				&&
-				// Except when already submitting: 
-				PageFormatChecker.config.action !== 'submit'
-			);
-		},
-
-		/**
-		 * Add Template:Talkheader if it's not there. Fix it if it is.
-		 */
-		addTalkheader: function() {
-			var vText = $textBox.val().replace( /{{[Tt]alkheader/, '{{Talk header' );
-			if ( !vText.match( '{{Talk header' ) && !vText.match( '{{Delete' ) ) {
-				$textBox.val( '{{Talk header}}\n\n' + vText );
-			} else {
-				$textBox.val( vText );
-			}
-		},
-
-		checkNavigation: function() {
-			var trimmedCanonicalNamespace = PageFormatChecker.config.wgCanonicalNamespace
-				.replace( 'Card_', '' )
-			;
-			var namespaces = [
-				'Gallery',
-				'Errata',
-				'Tips',
-				'Appearances',
-				'Trivia',
-				'Lores',
-				'Artworks',
-				'Names',
-				'Sets'
-			];
-
-			return (
-				(
-					// For Card_Rulings namespace, except "group rulings" pages:
-					(
-						trimmedCanonicalNamespace === 'Rulings'
-						&&
-						!~$textBox.val().indexOf( '[[Category:Group Rulings' )
-					)
-					||
-					// For Card_$$ namespace, where $$ belongs to `namespaces`:
-					~namespaces.indexOf( trimmedCanonicalNamespace )
-				)
-				&&
-				(
-					// Except when editing sections:
-					!PageFormatChecker.config.section
-					&&
-					// Except when already submitting: 
-					PageFormatChecker.config.action !== 'submit'
-				)
-			);
-		},
-
-		/**
-		 * Add Template:Navigation if it's not there. Fix it if it is.
-		 */
-		addNavigation: function() {
-			var vText = $textBox.val()
-				.replace( '{{navigation', '{{Navigation' )
-				.replace( '{{Navigation2}', '{{Navigation|mode=nonGame}' )
-			;
-
-			if ( !vText.match( '{{Navigation' ) && !vText.match( '{{Delete' ) ) {
-				$textBox.val( '{{Navigation}}\n\n' + vText );
-			} else {
-				$textBox.val( vText );
-			}
-		},
-
-		checkPreloads: function() {
-			var $editId = $( '#ca-edit' );
-			var isRedlink = PageFormatChecker.config.redlink;
-			var isCreating = (
-				$editId.hasClass( 'selected' )
-				&&
-				$editId.text() === 'Create'
-			);
-			var hasNoContent = !$textBox.val().trim()
-
-			return (
-				( isRedlink || isCreating )
-				&&
-				hasNoContent
-			);
-		},
-
-		getPreload: function() {
-			var wgCanonicalNamespace = PageFormatChecker.config.wgCanonicalNamespace;
-
-			switch ( wgCanonicalNamespace ) {
-				case 'Card_Tips':
-				case 'Card_Trivia':
-				case 'Card_Names':
-					return PageFormatChecker.PRELOADS[ 'Generic' ];
-				case 'Card_Gallery':
-				case 'Card_Appearances':
-				case 'Card_Errata':
-				case 'Card_Artworks':
-					return PageFormatChecker.PRELOADS[ wgCanonicalNamespace ];
-			}
-
-			return null;
-		},
-
-		/**
-		 * Add a preload, depending on the namespace, during page creation.
-		 */
-		addPreload: function() {
-			var text = PageFormatChecker.getPreload();
-
-			if ( text ) {
-				text = '{{Navigation}}\n\n' + text;
-				$textBox.val( text );
-
-				PageFormatChecker.checkSubmit( text );
-			}
-		},
-
-		/**
-		 * Add missing preload to [[MediaWiki:Createbox-exists]].
-		 * Using js since there doesn't seem to be a "getURL" option in the wikia magic words.
-		 * TODO: check if stil needed.
-		 */
-		fixPreload: function() {
-			/*if (mAction === 'create' && $('[name="preload"]').val() === '') {
-				$('[name="preload"]').val(mw.util.getParamValue('preload'));
-			}*/
-		},
-
-		init: function() {
-			mw.loader.using( 'mediawiki.util' ).then( function() {
-				PageFormatChecker.config(); // Inits config.
-
-				if ( PageFormatChecker.checkTalkHeader() ) {
-					PageFormatChecker.addTalkheader();
-				}
-
-				if ( PageFormatChecker.checkPreloads() ) {
-					PageFormatChecker.addPreload();
-				}
-
-				if ( PageFormatChecker.checkNavigation() ) {
-					PageFormatChecker.addNavigation();
-				}
-
-				//PageFormatChecker.fixPreload(); // TODO: Check later.
-			} );
-		}
-
-	};
-
-	mw.hook( 'wikipage.editform' ).add( PageFormatChecker.init );
+	mw.hook( 'wikipage.editform' ).add( init );
 	// </pre>
 
 	console.log( '[Gadget] PageFormatChecker last updated at', LAST_LOG );
