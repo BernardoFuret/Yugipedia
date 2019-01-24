@@ -161,6 +161,65 @@ function D.getRarity( arg )
 	];
 end
 
+-- @name getCardType
+function D.getCardType( arg )
+	return DATA.cardType[
+		normalize( arg, function( normalizedArg )
+			return normalizedArg
+				:gsub( "[%s%-_']", '' ) -- Remove a bunch of commonly used characters.
+				:gsub(     'card', '' )
+			;
+		end )
+	];
+end
+
+-- @name getAttribute
+function D.getAttribute( arg )
+	return DATA.attribute[
+		normalize( arg, function( normalizedArg )
+			return normalizedArg
+				:gsub( "[%s%-_']", '' ) -- Remove a bunch of commonly used characters.
+		;
+		end )
+	];
+end
+
+-- @name getProperty
+function D.getProperty( arg )
+	return DATA.property[
+		normalize( arg, function( normalizedArg )
+			return normalizedArg
+				:gsub( "[%s%-_']", '' ) -- Remove a bunch of commonly used characters.
+		;
+		end )
+	];
+end
+
+-- @name getEffectType
+function D.getEffectType( arg, like )
+	local normalizedArg = normalize( arg, function( normalizedArg )
+		return normalizedArg;
+	end );
+
+	return normalizedArg and DATA.effectType[
+		(like or normalizedArg:match( 'like' )) and 'like' or 'regular'
+	][ normalizedArg
+		:gsub( "[%s%-_']", '' ) -- Remove a bunch of commonly used characters.
+		:gsub(   "effect", '' )
+		:gsub(     "like", '' )
+	];
+end
+
+-- @name getLinkArrow
+function D.getLinkArrow( arg )
+	return DATA.linkArrow[
+		normalize( arg, function( normalizedArg )
+			return normalizedArg
+				:gsub( "[%s%-_']", '' ) -- Remove a bunch of commonly used characters.
+		;
+		end )
+	];
+end
 ---------------
 -- Anime stuff:
 ---------------

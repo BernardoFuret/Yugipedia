@@ -344,6 +344,11 @@ N.videoGame.game = {
 	<li>edition</li>
 	<li>release</li>
 	<li>rarity</li>
+	<li>cardType</li>
+	<li>attribute</li>
+	<li>property</li>
+	<li>effectType</li>
+	<li>linkArrow</li>
 	<li>
 		anime
 		<ul>
@@ -491,6 +496,77 @@ return {
 		['msr'] = { abbr = 'MSR', full = 'Mosaic Rare'      },
 		['shr'] = { abbr = 'SHR', full = 'Shatterfoil Rare' },
 		['cr']  = { abbr = 'CR',  full = 'Collectors Rare'  },
+	},
+
+	['cardType'] = {
+		['monster'] = 'Monster Card',
+		['spell'] = 'Spell Card',
+		['trap'] = 'Trap Card',
+	},
+
+	['attribute'] = {
+		['dark']   = 'DARK',
+		['divine'] = 'DIVINE',
+		['earth']  = 'EARTH',
+		['fire']   = 'FIRE',
+		['light']  = 'LIGHT',
+		['water']  = 'WATER',
+		['wind']   = 'WIND',
+	},
+
+	['property'] = {
+		['normal']     = 'Normal',
+		['continuous'] = 'Continuous',
+		['counter']    = 'Counter',
+		['equip']      = 'Equip',
+		['field']      = 'Field',
+		['quickplay']  = 'Quick-Play',
+		['ritual']     = 'Ritual',
+	},
+
+	['effectType'] = {
+		['regular'] = {
+			['activationrequirement'] = { name  = 'Activation requirement', label = 'Activation requirement' },
+			['condition']             = { name  = 'Condition',              label = 'Condition'              },
+			['continuous']            = { name  = 'Continuous Effect',      label = 'Continuous'             },
+			['cost']                  = { name  = 'Cost',                   label = 'Cost'                   },
+			['effect']                = { name  = 'Effect',                 label = 'Card Effect'            },
+			['flip']                  = { name  = 'Flip effect',            label = 'Flip'                   },
+			['ignition']              = { name  = 'Ignition Effect',        label = 'Ignition'               },
+			['lingering']             = { name  = 'Lingering Effect',       label = 'Lingering'              },
+			['maintenancecost']       = { name  = 'Maintenance cost',       label = 'Maintenance cost'       },
+			['quick']                 = { name  = 'Quick Effect',           label = 'Quick'                  },
+			['summoningcondition']    = { name  = 'Summoning condition',    label = 'Summoning condition'    },
+			['trigger']               = { name  = 'Trigger Effect',         label = 'Trigger'                },
+			['unclassified']          = { name  = 'Unclassified Effect',    label = 'Unclassified'           },
+		},
+
+		['like'] = {
+			['activationrequirement'] = { name  = 'Activation requirement', label = 'Activation requirement' },
+			['condition']             = { name  = 'Condition',              label = 'Condition'              },
+			['continuous']            = { name  = 'Continuous-like Effect', label = 'Continuous-like'        },
+			['cost']                  = { name  = 'Cost',                   label = 'Cost'                   },
+			['effect']                = { name  = 'Effect',                 label = 'Card Effect'            },
+			['flip']                  = { name  = 'Flip effect',            label = 'Flip'                   },
+			['ignition']              = { name  = 'Ignition-like Effect',   label = 'Ignition-like'          },
+			['lingering']             = { name  = 'Lingering Effect',       label = 'Lingering'              },
+			['maintenancecost']       = { name  = 'Maintenance cost',       label = 'Maintenance cost'       },
+			['quick']                 = { name  = 'Quick-like Effect',      label = 'Quick-like'             },
+			['summoningcondition']    = { name  = 'Summoning condition',    label = 'Summoning condition'    },
+			['trigger']               = { name  = 'Trigger-like Effect',    label = 'Trigger-like'           },
+			['unclassified']          = { name  = 'Unclassified Effect',    label = 'Unclassified'           },
+		},
+	},
+
+	['linkArrow'] = {
+		['topleft']      = 'Top-Left',
+		['topcenter']    = 'Top-Center',
+		['topright']     = 'Top-Right',
+		['middleleft']   = 'Middle-Left',
+		['middleright']  = 'Middle-Right',
+		['bottomleft']   = 'Bottom-Left',
+		['bottomcenter'] = 'Bottom-Center',
+		['bottomright']  = 'Bottom-Right',
 	},
 
 	---------------
