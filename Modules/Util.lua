@@ -253,6 +253,16 @@ function U.wrapInQuotes( name, ln )
 	;
 end
 
+--[[Doc
+@function U formatParameter
+@description
+@parameter {string} v
+@return {string}
+]]
+function U.formatParameter( v )
+	return ('&#123;&#123;&#123;%s&#125;&#125;&#125;'):format( v );
+end
+
 --[[function U.processArgs( frame, ... )
 	return
 end]]
