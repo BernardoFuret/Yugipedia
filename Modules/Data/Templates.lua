@@ -7,6 +7,7 @@
 ]=]
 
 local DATA = require( 'Module:Data' )
+local UTIL = require( 'Module:Util' )
 
 local D = {}
 
@@ -28,6 +29,12 @@ local function getMedium( frame )
 	return DATA.getMedium( v ) or {}
 end
 
+local function getVideoGame( frame )
+	local v = frame:getParent().args[ 1 ]
+
+	return DATA.getVideoGame( v ) or {}
+end
+
 function D.ln( frame )
 	return getLanguage( frame ).index or ''
 end
@@ -42,17 +49,30 @@ end
 
 function D.region( frame )
 	--[[
-		after2
 		short
+		short2
 		oceanic
 		english
 		after
+		after2
 	]]
 	return getRegion( frame ).full or ''
 end
 
 function D.rgo( frame )
 	return getMedium( frame ).abbr or ''
+end
+
+function D.vg( frame )
+	local full = UTIL.trim( frame:getParent().args[ 'full' ] )
+
+	local link = UTIL.trim( frame:getParent().args[ 'link' ] )
+
+	local game = getVideoGame( frame )
+	
+	return full
+		and ( link and game.full or UTIL.removeDab( game.full ) )
+		or game.abbr
 end
 
 return D
