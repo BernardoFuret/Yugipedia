@@ -310,8 +310,9 @@ N.videoGame.game = {
 	['ld'] = 'ld', ['lod'] = 'ld', ['legacyofduelist'] = 'ld',
 
 	-- M:
-	['md'] = 'md', ['millenniumduels'] = 'md', -- Check if correct abbr.
-	['mm'] = 'mm', ['multimaster'] = 'mm', -- Check if correct abbr.
+	['md']   = 'md',   ['millenniumduels'] = 'md', -- Check if correct abbr.
+	['mm']   = 'mm',   ['multimaster']     = 'mm', -- Check if correct abbr.
+	['mnst'] = 'mnst', ['monsterstrike']   = 'mnst',
 
 	-- N:
 	['ntr'] = 'ntr', ['nightmaretroubadour'] = 'ntr',
@@ -757,6 +758,7 @@ return {
 			['gx1']  = { abbr = 'GX1',  full = 'Yu-Gi-Oh! GX Duel Academy'                    },
 			['gx03'] = { abbr = 'GX03', full = 'Yu-Gi-Oh! GX Spirit Caller'                   },
 			['ld']   = { abbr = 'LD',   full = 'Yu-Gi-Oh! Legacy of the Duelist'              },
+			['mnst'] = { abbr = 'MNST', full = 'Yu-Gi-Oh! Monster Strike'                     },
 			['ntr']  = { abbr = 'NTR',  full = 'Yu-Gi-Oh! Nightmare Troubadour'               },
 			['tfk']  = { abbr = 'TFK',  full = 'Yu-Gi-Oh! The Falsebound Kingdom'             },
 			['wb01'] = { abbr = 'WB01', full = "Yu-Gi-Oh! 5D's Wheelie Breakers"              },
