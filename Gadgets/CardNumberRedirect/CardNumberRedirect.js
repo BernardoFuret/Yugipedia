@@ -81,7 +81,7 @@
 				( function( number, name ) {
 					chain = chain.then( function() {
 						return new Promise( function( resolve ) {
-							return resolve( redirect( number, name ) );
+							return redirect( number, name ).always( resolve );
 						} );
 					} );
 
