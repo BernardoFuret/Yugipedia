@@ -90,8 +90,8 @@
 		for ( var i = 0, length = pages.length; i < length; i++ ) {
 			( function( pagename ) {
 				chain = chain.then( function() {
-					return new Promise( function( resolve, reject ) {
-						return resolve( nullEdit( pagename ) );
+					return new Promise( function( resolve ) {
+						return nullEdit( pagename ).always( resolve );
 					} );
 				} );
 
