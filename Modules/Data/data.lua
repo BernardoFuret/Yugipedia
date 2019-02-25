@@ -299,8 +299,8 @@ N.videoGame.game = {
 	['duli'] = 'duli', ['duellinks']      = 'duli', ['dl']   = 'duli',
 	['dod']  = 'dod',  ['dawnofdestiny']  = 'dod',
 	['dt']   = 'dt',   ['duelterminal']   = 'dt',
-	--['decadeduels'] = '',
-	--['decadeduelsplus'] = '',
+	['5dd']  = '5dd',  ['decadeduels']    = '5dd',   ['dd']  = '5dd',
+	['5ddp'] = '5ddp', ['decadeduelsplus'] = '5ddp', ['ddp'] = '5ddp',
 
 	-- G:
 	['gx1'] = 'gx1',  ['gx01'] = 'gx1',  ['duelacademy'] = 'gx1',   ['mezaseduelking'] = 'gx1',  ['awakenduelking'] = 'gx1',
@@ -755,6 +755,8 @@ return {
 			['duli'] = { abbr = 'DULI', full = 'Yu-Gi-Oh! Duel Links'                         },
 			['dod']  = { abbr = 'DOD',  full = 'Yu-Gi-Oh! The Dawn of Destiny'                },
 			['dt']   = { abbr = 'DT',   full = 'Duel Terminal'                                },
+			['5dd']  = { abbr = '5DD',  full = "Yu-Gi-Oh! 5D's Decade Duels"                  },
+			['5ddp'] = { abbr = '5DDP', full = "Yu-Gi-Oh! 5D's Decade Duels Plus"             },
 			['gx1']  = { abbr = 'GX1',  full = 'Yu-Gi-Oh! GX Duel Academy'                    },
 			['gx03'] = { abbr = 'GX03', full = 'Yu-Gi-Oh! GX Spirit Caller'                   },
 			['ld']   = { abbr = 'LD',   full = 'Yu-Gi-Oh! Legacy of the Duelist'              },
