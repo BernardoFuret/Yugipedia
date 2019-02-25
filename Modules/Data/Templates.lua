@@ -71,7 +71,7 @@ function D.vg( frame )
 	local game = getVideoGame( frame )
 	
 	return full
-		and ( link and game.full or UTIL.removeDab( game.full ) )
+		and ( link and game.full or UTIL.removeDab( game.full or '' ) )
 		or game.abbr
 end
 
