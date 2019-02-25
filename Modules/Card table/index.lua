@@ -193,9 +193,9 @@ function makeSortkey()
 		return full:gsub( no, pad( no ) )
 	end
 
-	local sortkey = currentTitle.text:gsub( '^(Number%s*%u?(%d-):)', replaceCb )
-
-	sortkey = sortkey:gsub( '^(New Order%s*(%d-):)', replaceCb )
+	local sortkey = currentTitle.text
+		:gsub( '^(Number%s*%u?(%d-):)', replaceCb )
+		:gsub( '^(New Order%s*(%d-):)', replaceCb )
 
 	return sortkey
 end
@@ -342,7 +342,9 @@ function ct._main( args )
 		warnings:toString(),
 		tostring( mainWrapper ),
 		categories:toString(),
-		defaultsort( args.defaultsort ),
+		mw.getCurrentFrame():preprocess(
+			defaultsort( args.defaultsort )
+		),
 	}
 end
 
