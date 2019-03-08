@@ -22,7 +22,7 @@ N.region = {
 	['eu'] = 'eu', ['e'] = 'eu', ['european'] = 'eu', ['europeanenglish'] = 'eu',
 
 	-- Australian/Oceanic English (AU/OC):
-	['au'] = 'au', ['australian'] = 'au', ['australianenglish'] = 'au',
+	['au'] = 'au', ['australian'] = 'au', ['australianenglish'] = 'au', ['a'] = 'au',  ['at'] = 'au',
 	['oc'] = 'oc', ['oceanic']    = 'oc', ['oceanicenglish']    = 'oc',
 
 	-- French (FR):
@@ -32,7 +32,7 @@ N.region = {
 	['fc'] = 'fc', ['c'] = 'fc', ['canadian'] = 'fc', ['frenchcanadian'] = 'fc',
 
 	-- German (DE):
-	['de'] = 'de', ['g'] = 'de', ['german'] = 'de',
+	['de'] = 'de', ['g'] = 'de', ['german'] = 'de', ['d'] = 'de',
 
 	-- Italian (IT):
 	['it'] = 'it', ['i'] = 'it', ['italian'] = 'it',
@@ -53,7 +53,7 @@ N.region = {
 	['ae'] = 'ae', ['asianenglish'] = 'ae', ['englishasian'] = 'ae',
 
 	-- Chinese (TC):
-	['tc'] = 'tc', ['zh'] = 'tc', ['ch'] = 'tc', ['chinese'] = 'tc',
+	['tc'] = 'tc', ['zh'] = 'tc', ['ch'] = 'tc', ['chinese'] = 'tc', ['traditionalchinese'] = 'tc',
 
 	-- Korean (KR):
 	['kr'] = 'kr', ['ko'] = 'kr', ['k'] = 'kr', ['korean'] = 'kr',
