@@ -60,7 +60,7 @@ function U.italicNoDab( s )
 	local noDab = U.removeDab( s );
 	return table.concat( {
 		("''%s''"):format( noDab ),
-		dab ~= '' and dab or nil
+		dab ~= '' and ("(%s)"):format( dab ) or nil
 	}, ' ' );
 end
 
@@ -107,6 +107,25 @@ function U.link( page, label )
 		page:gsub( '#', '' ),
 		label or U.removeDab( page )
 	);
+end
+
+--[[Doc
+@function U italicLink
+@description Creates a wikitext link, italicized. Usually used
+to display linked set names, etc..
+@parameter {string} page Page name to link.
+@parameter {string|nil} label Label for the link. If unspecified,
+the label used will be `page` with its dab removed and italicized.
+Else, will italicize the label given. 
+@return {string} Italicized wikilink.
+]]
+function U.italicLink( page, label )
+	return U.link(
+		page,
+		label and U.italic( label ) or U.italicNoDab(
+			U.removeDab( page ) -- TODO there's some twisted logic here for edge cases of multiple dabs. Check this.
+		)
+	)
 end
 
 --[[Doc
