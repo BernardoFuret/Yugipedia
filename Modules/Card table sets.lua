@@ -9,12 +9,39 @@
 local DATA = require( 'Module:Data' )
 local UTIL = require( 'Module:Util' )
 
+local InfoWrapper = require( 'Module:InfoWrapper' )
 local StringBuffer = require( 'Module:StringBuffer' )
 
 local LANGUAGE_ENGLISH = DATA.getLanguage( 'English' )
 
 local mwText = mw.text
 local mwHtmlCreate = mw.html.create
+
+local Log;
+
+local function dumpLog()
+	local formatError = function( err )
+		return tostring( mwHtmlCreate( 'li' )
+			:tag( 'strong' )
+				:wikitext( err )
+			:allDone()
+		)
+	end
+
+	local createErrorContainer = function()
+		return tostring( mwHtmlCreate( 'div' )
+			:addClass( 'card-table-sets__errors' )
+			:tag( 'ul' )
+				:node( Log:dumpErrors( formatError ) )
+			:allDone()
+		)
+	end
+
+	return StringBuffer()
+		:add( createErrorContainer() )
+		:add( Log:dumpCategories() )
+		:toString()
+end
 
 local function getSetReleaseDate( setName, regionFull ) -- TODO: move to a dedicated script.
 	local prop = table.concat{ regionFull, ' release date' }
@@ -34,17 +61,24 @@ local function getSetReleaseDate( setName, regionFull ) -- TODO: move to a dedic
 		or ''
 end
 
-local function mapRarities( rarities )
+local function mapRarities( rarities, lineno )
 	local mapped = {}
+
+	local position = 0
 
 	for _, r in ipairs( rarities ) do
 		if UTIL.trim( r ) then
+			position = position + 1
+
 			local rarity = DATA.getRarity( r )
 
 			if rarity then
 				table.insert( mapped, UTIL.link( rarity.full ) )
 			else
-				-- error?
+				local message = ('No such rarity for `%s`, at non-empty input line number %d, at position %d.')
+					:format( r, lineno, position )
+
+				Log:error( message )
 			end
 		end
 	end
@@ -91,7 +125,7 @@ local function createCell( id, text )
 	)
 end
 
-local function createDataRow( regionFull, languageFull, line )
+local function createDataRow( regionFull, languageFull, line, lineno )
 	local parts = mwText.split( line, '%s*;%s*' )
 
 	local cardNumber = parts[ 1 ]
@@ -101,6 +135,7 @@ local function createDataRow( regionFull, languageFull, line )
 		or {}
 
 	local tr = mwHtmlCreate( 'tr' )
+		:attr( 'id', 'card-table-sets__data-row--' .. lineno )
 		:node( createCell( 'release', getSetReleaseDate( setName, regionFull ) ) )
 		:node( createCell( 'number', UTIL.link( cardNumber ) ) )
 		:node( createCell( 'set', UTIL.italicLink( setName ) ) )
@@ -114,13 +149,15 @@ local function createDataRow( regionFull, languageFull, line )
 		)
 	end
 
-	tr:node( createCell( 'rarity', mapRarities( rarities ) ) )
+	tr:node( createCell( 'rarity', mapRarities( rarities, lineno ) ) )
 
 	return tostring( tr )
 end
 
 
 local function main( regionInput, setsInput )
+	Log = InfoWrapper( 'Card table sets' )
+
 	local region = DATA.getRegion( regionInput )
 
 	local language = DATA.getLanguage( regionInput )
@@ -135,13 +172,20 @@ local function main( regionInput, setsInput )
 		:done()
 		:node( createHeaderRow( language.full ) )
 
+	local lineno = 0 -- Non-empty lines count.
+
 	for line in mwText.gsplit( setsInput, '%s*\n%s*' ) do
 		if UTIL.trim( line ) then
-			setsTable:node( createDataRow( region.full, language.full, line ) )
+			lineno = lineno + 1
+
+			setsTable:node( createDataRow( region.full, language.full, line, lineno ) )
 		end
 	end
 
-	return tostring( setsTable )
+	return StringBuffer()
+		:addLine( dumpLog() )
+		:add( tostring( setsTable ) )
+		:toString()
 end
 
 return setmetatable( {
