@@ -9,7 +9,7 @@
 local DATA = require( 'Module:Data' )
 local UTIL = require( 'Module:Util' )
 
-local InfoWrapper = require( 'Module:InfoWrapper' )
+local InfoWrapper = require( 'Module:InfoWrapper' ) -- TODO: Reporter
 local StringBuffer = require( 'Module:StringBuffer' )
 
 local LANGUAGE_ENGLISH = DATA.getLanguage( 'English' )
@@ -61,6 +61,12 @@ local function getSetReleaseDate( setName, regionFull ) -- TODO: move to a dedic
 		or ''
 end
 
+local function formatCardNumber( cardNumber )
+	return cardNumber:match( '?' )
+		and cardNumber 
+		or UTIL.link( cardNumber )
+end
+
 local function mapRarities( rarities, lineno )
 	local mapped = {}
 
@@ -75,7 +81,7 @@ local function mapRarities( rarities, lineno )
 			if rarity then
 				table.insert( mapped, UTIL.link( rarity.full ) )
 			else
-				local message = ('No such rarity for `%s`, at non-empty input line number %d, at position %d.')
+				local message = ('No such rarity for `%s`, at non-empty input line %d, at non-empty position %d.')
 					:format( r, lineno, position )
 
 				Log:error( message )
@@ -122,16 +128,23 @@ end
 local function createDataRow( regionFull, languageFull, line, lineno )
 	local parts = mwText.split( line, '%s*;%s*' )
 
-	local cardNumber = parts[ 1 ]
-	local setName = parts[ 2 ]
-	local rarities = parts[ 3 ]
+	local cardNumber = UTIL.trim( parts[ 1 ] )
+	local setName = UTIL.trim( parts[ 2 ] )
+	local rarities = UTIL.trim( parts[ 3 ] )
 		and mwText.split( parts[ 3 ], '%s*,%s*' )
 		or {}
 
+	if not setName then
+		local message = ('No set name given at non-empty input line %d.')
+			:format( lineno )
+
+		Log:error( message )
+	end
+
 	local tr = mwHtmlCreate( 'tr' )
-		:node( createCell( 'release', getSetReleaseDate( setName, regionFull ) ) )
-		:node( createCell( 'number', UTIL.link( cardNumber ) ) )
-		:node( createCell( 'set', UTIL.italicLink( setName ) ) )
+		:node( createCell( 'release', setName and getSetReleaseDate( setName, regionFull ) ) )
+		:node( createCell( 'number', cardNumber and formatCardNumber( cardNumber ) ) )
+		:node( createCell( 'set', setName and UTIL.italicLink( setName ) ) )
 
 	if languageFull ~= LANGUAGE_ENGLISH.full then
 		tr:node(
@@ -151,7 +164,7 @@ end
 local function main( regionInput, setsInput )
 	Log = InfoWrapper( 'Card table sets' )
 
-	local region = DATA.getRegion( regionInput )
+	local region = DATA.getRegion( regionInput ) -- TODO: handle incorrect regions (necessary?)
 
 	local language = DATA.getLanguage( regionInput )
 
@@ -161,14 +174,20 @@ local function main( regionInput, setsInput )
 		:addClass( 'card-list' )
 		:node( createHeaderRow( language.full ) )
 
-	local lineno = 0 -- Non-empty lines count.
+	if UTIL.trim( setsInput ) then 
+		local lineno = 0 -- Non-empty lines count.
 
-	for line in mwText.gsplit( setsInput, '%s*\n%s*' ) do
-		if UTIL.trim( line ) then
-			lineno = lineno + 1
+		for line in mwText.gsplit( setsInput, '%s*\n%s*' ) do
+			if UTIL.trim( line ) then
+				lineno = lineno + 1
 
-			setsTable:node( createDataRow( region.full, language.full, line, lineno ) )
+				setsTable:node( createDataRow( region.full, language.full, line, lineno ) )
+			end
 		end
+	else
+		local message = 'No input given for the sets.' -- TODO: add tracking categories
+
+		Log:error( message )
 	end
 
 	return StringBuffer()
@@ -181,7 +200,7 @@ return setmetatable( {
 	main = function( frame )
 		local arguments = frame:getParent().args
 
-		return main( arguments.region, arguments[ 1 ] )
+		return main( arguments[ 'region' ], arguments[ 1 ] )
 	end
 }, {
 	__call = function( t, ... )
