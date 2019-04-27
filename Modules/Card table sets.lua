@@ -30,7 +30,7 @@ local function dumpLog()
 
 	local createErrorContainer = function()
 		return tostring( mwHtmlCreate( 'div' )
-			:addClass( 'card-table-sets__errors' )
+			:addClass( 'cts__errors' )
 			:tag( 'ul' )
 				:node( Log:dumpErrors( formatError ) )
 			:allDone()
@@ -88,11 +88,7 @@ end
 
 local function createHeader( id, text )
 	return tostring( mwHtmlCreate( 'th' )
-		:attr{
-			scope = 'col',
-			id = table.concat{ 'card-table-sets__header--', id }
-		}
-		:addClass( 'card-table-sets__header' )
+		:attr( 'scope', 'col' )
 		:wikitext( text )
 	)
 end
@@ -119,8 +115,6 @@ end
 
 local function createCell( id, text )
 	return tostring( mwHtmlCreate( 'td' )
-		:addClass( 'card-table-sets__data' )
-		:addClass( table.concat{ 'card-table-sets__data--', id } )
 		:wikitext( text )
 	)
 end
@@ -135,7 +129,6 @@ local function createDataRow( regionFull, languageFull, line, lineno )
 		or {}
 
 	local tr = mwHtmlCreate( 'tr' )
-		:attr( 'id', 'card-table-sets__data-row--' .. lineno )
 		:node( createCell( 'release', getSetReleaseDate( setName, regionFull ) ) )
 		:node( createCell( 'number', UTIL.link( cardNumber ) ) )
 		:node( createCell( 'set', UTIL.italicLink( setName ) ) )
@@ -166,10 +159,6 @@ local function main( regionInput, setsInput )
 		:addClass( 'wikitable' )
 		:addClass( 'sortable' )
 		:addClass( 'card-list' )
-		:tag( 'caption' )
-			:addClass( 'mobile-show' )
-			:wikitext( region.full )
-		:done()
 		:node( createHeaderRow( language.full ) )
 
 	local lineno = 0 -- Non-empty lines count.
