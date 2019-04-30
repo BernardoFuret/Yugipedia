@@ -9,7 +9,7 @@
 local DATA = require( 'Module:Data' )
 local UTIL = require( 'Module:Util' )
 
-local InfoWrapper = require( 'Module:InfoWrapper' ) -- TODO: Reporter
+local Reporter = require( 'Module:Reporter' )
 local StringBuffer = require( 'Module:StringBuffer' )
 
 local LANGUAGE_ENGLISH = DATA.getLanguage( 'English' )
@@ -18,30 +18,6 @@ local mwText = mw.text
 local mwHtmlCreate = mw.html.create
 
 local Log;
-
-local function dumpLog()
-	local formatError = function( err )
-		return tostring( mwHtmlCreate( 'li' )
-			:tag( 'strong' )
-				:wikitext( err )
-			:allDone()
-		)
-	end
-
-	local createErrorContainer = function()
-		return tostring( mwHtmlCreate( 'div' )
-			:addClass( 'cts__errors' )
-			:tag( 'ul' )
-				:node( Log:dumpErrors( formatError ) )
-			:allDone()
-		)
-	end
-
-	return StringBuffer()
-		:add( createErrorContainer() )
-		:add( Log:dumpCategories() )
-		:toString()
-end
 
 local function getSetReleaseDate( setName, regionFull ) -- TODO: move to a dedicated script.
 	local prop = table.concat{ regionFull, ' release date' }
@@ -63,7 +39,7 @@ end
 
 local function formatCardNumber( cardNumber )
 	return cardNumber:match( '?' )
-		and cardNumber 
+		and cardNumber
 		or UTIL.link( cardNumber )
 end
 
@@ -84,7 +60,7 @@ local function mapRarities( rarities, lineno )
 				local message = ('No such rarity for `%s`, at non-empty input line %d, at non-empty position %d.')
 					:format( r, lineno, position )
 
-				Log:error( message )
+				Log:addError( message )
 			end
 		end
 	end
@@ -138,7 +114,7 @@ local function createDataRow( regionFull, languageFull, line, lineno )
 		local message = ('No set name given at non-empty input line %d.')
 			:format( lineno )
 
-		Log:error( message )
+		Log:addWarning( message )
 	end
 
 	local tr = mwHtmlCreate( 'tr' )
@@ -162,7 +138,7 @@ end
 
 
 local function main( regionInput, setsInput )
-	Log = InfoWrapper( 'Card table sets' )
+	Log = Reporter( 'Card table sets' )
 
 	local region = DATA.getRegion( regionInput ) -- TODO: handle incorrect regions (necessary?)
 
@@ -174,7 +150,7 @@ local function main( regionInput, setsInput )
 		:addClass( 'card-list' )
 		:node( createHeaderRow( language.full ) )
 
-	if UTIL.trim( setsInput ) then 
+	if UTIL.trim( setsInput ) then
 		local lineno = 0 -- Non-empty lines count.
 
 		for line in mwText.gsplit( setsInput, '%s*\n%s*' ) do
@@ -187,11 +163,11 @@ local function main( regionInput, setsInput )
 	else
 		local message = 'No input given for the sets.' -- TODO: add tracking categories
 
-		Log:error( message )
+		Log:addError( message )
 	end
 
 	return StringBuffer()
-		:addLine( dumpLog() )
+		:add( Log:dump() )
 		:add( tostring( setsTable ) )
 		:toString()
 end
