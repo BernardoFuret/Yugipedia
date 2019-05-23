@@ -1,5 +1,5 @@
 /**
- * Passcode redirect (browser).
+ * Password redirect (browser).
  */
 ( async ( window, $, mw, console ) => {
 	"use strict";
@@ -11,9 +11,9 @@
 	const getCategoryPages = cmcontinue => api.get( {
 		action: "query",
 		list: "categorymembers",
-		cmtitle: "Category:Cards needing a passcode redirect",
+		cmtitle: "Category:Cards needing a password redirect",
 		cmlimit: "max",
-		cmcontinue: String( cmcontinue || 0 )
+		cmcontinue: cmcontinue,
 	} );
 
 	const getContent = pagename => api.get( {
@@ -23,22 +23,22 @@
 		rvprop: "content",
 		format: "json",
 		formatversion: 2,
-		titles: pagename
+		titles: pagename,
 	} )
 		.then ( data => data.query.pages[ 0 ].revisions[ 0 ].content )
 		.catch( console.error )
 	;
 
-	const getPasscode = content => /\| *passcode *= *(\d+?)$/m.exec( content )[ 1 ];
+	const getPassword = content => /\| *pass(?:word|code) *= *(\d+?)$/m.exec( content )[ 1 ];
 
-	const redirect = ( passcode, pagename ) => api.post( {
+	const redirect = ( password, pagename ) => api.post( {
 		action: "edit",
-		title: passcode,
+		title: password,
 		createonly: true,
-		text: `#REDIRECT [[${pagename}]] {{R from passcode}}`,
+		text: `#REDIRECT [[${pagename}]] {{R from password}}`,
 		summary: `Creating redirects: Redirected page to [[${pagename}]].`,
 		bot: true,
-		token: mw.user.tokens.get( "editToken" )
+		token: mw.user.tokens.get( "editToken" ),
 	} )
 		.then( () => console.log( `Redirected page to [[${pagename}]].` ) )
 		.catch( err => console.warn( "Error redirecting:", err ) )
@@ -66,31 +66,31 @@
 
 		for ( let i = 0; i < length; i+=1 ) {
 			console.log( "****FOR START****" );
-			// Page to get the passcode from:
+			// Page to get the password from:
 			const { title: pagename } = pages[ i ];
 
 			console.log( "Getting raw content for:", pagename );
 			const content = await getContent( pagename );
 
-			console.log( "Retrieving passcode." );
-			const passcode = ( ( pagename, content ) => {
+			console.log( "Retrieving password." );
+			const password = ( ( pagename, content ) => {
 				try {
-					return getPasscode( content );
+					return getPassword( content );
 				} catch ( e ) {
-					console.warn( "Error getting passcode for", pagename );
+					console.warn( "Error getting password for", pagename );
 					console.log( "Content:", content );
 					console.warn( "Exception:", e );
 					return null;
 				}
 			} )( pagename, content );
 
-			if ( !passcode ) {
+			if ( !password ) {
 				console.log( "Skipping." );
 				continue;
 			}
 
-			console.log( "Redirecting", passcode, "to", pagename );
-			await redirect( passcode, pagename );
+			console.log( "Redirecting", password, "to", pagename );
+			await redirect( password, pagename );
 			console.log( "Done redirecting." );
 
 			await sleep( 500 );
