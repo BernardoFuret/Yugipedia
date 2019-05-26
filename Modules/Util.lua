@@ -262,7 +262,7 @@ end--]]
 @todo Accept `ln` as a language struct.
 ]]
 function U.wrapInQuotes( name, ln )
-	if not UTIL.trim( name ) then
+	if not U.trim( name ) then
 		return '';  --  Return empty string.
 	end
 
