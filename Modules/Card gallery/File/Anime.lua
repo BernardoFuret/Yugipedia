@@ -72,6 +72,9 @@ local function initOptions( t )
 	local extension = _options[ 'extension' ];
 	t.extension  = UTIL.isString( extension ) and extension:lower() or 'png';
 
+	-- Alternate file name:
+	t.fileName = _options[ 'file' ];
+
 	-- Description:
 	t.description = _options[ 'description' ];
 end
@@ -141,7 +144,7 @@ function File:render()
 
 	-- Build file:
 	local file = StringBuffer()
-		:add( UTIL.getImgName() )
+		:add( self.fileName or UTIL.getImgName() )
 		:add( self.parent:getRegion().index )
 		:add( 'Anime' )
 		:add( self.series.abbr )
