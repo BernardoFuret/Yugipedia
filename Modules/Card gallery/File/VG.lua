@@ -73,6 +73,9 @@ local function initOptions( t )
 	-- Alternate file name:
 	t.fileName = _options[ 'file' ];
 
+	-- Alternate file path:
+	t.filePath = _options[ 'path' ];
+
 	-- Description:
 	t.description = _options[ 'description' ];
 end
@@ -166,7 +169,7 @@ function File:render()
 		:flush( '<br />' )
 	;
 
-	return ('%s | %s'):format( file:toString(), caption:toString() );
+	return ('%s | %s'):format( self.filePath or file:toString(), caption:toString() );
 end
 
 ----------
