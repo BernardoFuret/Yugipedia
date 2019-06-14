@@ -160,8 +160,20 @@ local function initAlt( t )
 end
 
 -- @name initOptions
--- @description Sets any possible options (`extension` and `description`).
+-- @description Sets any possible options (`region`, `extension` and `description`).
 local function initOptions( t )
+	-- Region:
+	t.region = DATA.getRegion( _options[ 'region' ] );
+	
+	if _options[ 'region' ] and not t.region then
+		t.parent:error(
+			('Invalid custom region value %s given for file input number %d!'):format(
+				_options[ 'region' ],
+				t.id
+			)
+		);
+	end
+
 	-- Extension:
 	local extension = _options[ 'extension' ];
 	t.extension  = UTIL.isString( extension ) and extension:lower() or 'png';
@@ -247,7 +259,7 @@ function File:render()
 	local file = StringBuffer()
 		:add( UTIL.getImgName() )
 		:add( self.setAbbr )
-		:add( self.parent:getRegion().index )
+		:add( ( self.region or self.parent:getRegion() ).index )
 		:add( self.rarity and self.rarity.abbr )
 		:add( self.edition and self.edition.abbr )
 	;
