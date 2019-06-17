@@ -17,6 +17,8 @@
 
 	var api;
 
+	var editedPages = 0;
+
 	function getCategoryMembers( cmcontinue ) {
 		return api.get( {
 			action: 'query',
@@ -44,6 +46,8 @@
 	}
 
 	function nullEdit( pagename ) {
+		editedPages++;
+
 		return api
 			.postWithToken( 'csrf', {
 				action: 'edit',
@@ -53,13 +57,20 @@
 				prependtext: '',
 			} )
 			.done( function() {
-				console.log( '[Gadget][MassNullEdit] - Null edited', pagename );
+				console.log(
+					'[Gadget][MassNullEdit] - Null edited',
+					pagename,
+					'(page number',
+					String( editedPages ).concat( ')' ),
+				);
 			} )
 			.fail(
 				console.error.bind(
 					console,
 					'[Gadget][MassNullEdit] - Error null editing',
-					pagename
+					pagename,
+					'(page number',
+					String( editedPages ).concat( ')' ),
 				)
 			)
 		;
@@ -121,9 +132,16 @@
 			} );
 		} else {
 			chain.then( function() {
-				console.log( '[Gadget][MassNullEdit] - All done!' );
+				var message = 'All done! ('.concat(
+					editedPages,
+					' page',
+					editedPages === 1 ? '' : 's',
+					')',
+				);
 
-				return mw.notify( 'All done!', {
+				console.log( '[Gadget][MassNullEdit] -', message );
+
+				return mw.notify( message, {
 					title: 'Mass null edit',
 					tag: 'mass_null_edit',
 				} );
@@ -133,6 +151,8 @@
 
 	function onMassNullEditClick( e ) {
 		e.preventDefault();
+
+		editedPages = 0;
 
 		requestCategoryMembers( null );
 	}
