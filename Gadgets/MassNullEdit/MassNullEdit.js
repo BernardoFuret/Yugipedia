@@ -32,7 +32,10 @@
 	}
 
 	function requestCategoryMembers( cmcontinue ) {
-		console.log( '[Gadget][MassNullEdit] - Requesting members from', cmcontinue );
+		console.log(
+			'[Gadget][MassNullEdit] - Requesting members from',
+			cmcontinue || 'the start'
+		);
 
 		return getCategoryMembers( cmcontinue )
 			.done( nullEditAll )
@@ -61,7 +64,7 @@
 					'[Gadget][MassNullEdit] - Null edited',
 					pagename,
 					'(page number',
-					String( editedPages ).concat( ')' ),
+					String( editedPages ).concat( ')' )
 				);
 			} )
 			.fail(
@@ -70,7 +73,7 @@
 					'[Gadget][MassNullEdit] - Error null editing',
 					pagename,
 					'(page number',
-					String( editedPages ).concat( ')' ),
+					String( editedPages ).concat( ')' )
 				)
 			)
 		;
@@ -136,7 +139,7 @@
 					editedPages,
 					' page',
 					editedPages === 1 ? '' : 's',
-					')',
+					')'
 				);
 
 				console.log( '[Gadget][MassNullEdit] -', message );
