@@ -123,9 +123,8 @@
 			return;
 		}
 
-		var $button = $( '<span>', {
+		var $button = $( '<li>', {
 			id: 'ca-alignText',
-			'class': 'tab',
 			html: $( '<a>', {
 				href: '#',
 				title: 'Align text.',
@@ -138,9 +137,11 @@
 			},
 		} );
 
-		$( '#wikiEditor-ui-toolbar' )
-			.find( '.tabs' )
-				.append( $button )
+		$( '#p-cactions' )
+			.removeClass( 'emptyPortlet' )
+			.find( '.menu' )
+				.find( 'ul' )
+					.append( $button )
 		;
 
 		/**
@@ -165,7 +166,7 @@
 		};
 	}
 
-	mw.hook( 'wikipage.editform' ).add( init );
+	$( init );
 
 	console.log( '[Gadget] MarkupFormatting last updated at', LAST_LOG );
 
