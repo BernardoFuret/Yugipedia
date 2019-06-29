@@ -25,7 +25,7 @@
 
 		// Reduce the spacing around the "=" in each parameter to a single space on either side.
 		// Put each line in an array
-		var lines         = selected_text.replace(/\t/, ' ').replace(/^\s*\|\s*([^\s=]+)\s*/gm, '| $1 ').split('\n');
+		var lines         = selected_text.replace(/\t/, ' ').replace(/^[ \t]*\|\s*([^\s=]+)\s*/gm, '| $1 ').split('\n');
 
 		// Loop through each line to find the furthest out "=".
 		for (var i = 0; i < lines.length; i++)
