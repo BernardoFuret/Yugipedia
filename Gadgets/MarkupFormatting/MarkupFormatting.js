@@ -123,8 +123,9 @@
 			return;
 		}
 
-		var $button = $( '<li>', {
+		var $button = $( '<span>', {
 			id: 'ca-alignText',
+			'class': 'tab',
 			html: $( '<a>', {
 				href: '#',
 				title: 'Align text.',
@@ -137,12 +138,21 @@
 			},
 		} );
 
-		$( '#p-cactions' )
-			.removeClass( 'emptyPortlet' )
-			.find( '.menu' )
-				.find( 'ul' )
+		if ( mw.user.options.get( 'usebetatoolbar' ) == 1 ) {
+			// Enhanced edit toolbar:
+			$( '#wikiEditor-ui-toolbar' )
+				.find( '.tabs' )
 					.append( $button )
-		;
+			;
+		} else {
+			// Classic toolbar:
+			$( '#toolbar' ).append(
+				$( '<div>' )
+					.addClass( 'mw-toolbar-editbutton' )
+					.addClass( 'mw-toolbar-editbutton--custom' )
+					.append( $button )
+			);
+		}
 
 		/**
 		 * To add a keyboard shortcut, add the following to Special:MyPage/common.js
@@ -166,7 +176,9 @@
 		};
 	}
 
-	$( init );
+	mw.hook( 'wikipage.editform' ).add( function() {
+		mw.loader.using( 'mediawiki.toolbar' ).then( init );
+	} );
 
 	console.log( '[Gadget] MarkupFormatting last updated at', LAST_LOG );
 
