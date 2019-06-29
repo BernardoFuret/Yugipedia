@@ -1,0 +1,4 @@
+.mw-toolbar-editbutton--custom {
+	width: inherit;
+	border: 1px dashed gray;
+}
