@@ -107,7 +107,7 @@
 	}
 
 	function doAlign( $textBox ) {
-		$textBox.text( function( index, text ) {
+		$textBox.val( function( index, text ) {
 			return align( text );
 		} );
 	}
