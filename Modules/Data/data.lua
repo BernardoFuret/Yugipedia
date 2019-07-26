@@ -110,14 +110,14 @@ N.release = {
 
 -- @description
 N.rarity = {
-	-- Stadard non-foils:
+	-- Standard non-foils:
 	['c']    = 'c',      ['common']          = 'c',  ['n'] = 'c',
 	['nr']   = 'nr',     ['normal']          = 'nr',
 	['sp']   = 'sp',     ['shortprint']      = 'sp',
 	['ssp']  = 'ssp',    ['supershortprint'] = 'ssp',
 	['r']    = 'r',      ['rare']            = 'r',
 
-	-- Stadard foils:
+	-- Standard foils:
 	['sr']   = 'sr',     ['super']       = 'sr',
 	['ur']   = 'ur',     ['ultra']       = 'ur',
 	['utr']  = 'utr',    ['ultimate']    = 'utr',
@@ -433,14 +433,14 @@ return {
 	},
 
 	['rarity'] = {
-		-- Stadard non-foils:
+		-- Standard non-foils:
 		['c']   = { abbr = 'C',   full = 'Common'            },
 		['nr']  = { abbr = 'NR',  full = 'Normal Rare'       },
 		['sp']  = { abbr = 'SP',  full = 'Short Print'       },
 		['ssp'] = { abbr = 'SSP', full = 'Super Short Print' },
 		['r']   = { abbr = 'R',   full = 'Rare'              },
 
-		-- Stadard foils:
+		-- Standard foils:
 		['sr']  = { abbr = 'SR',  full = 'Super Rare'       },
 		['ur']  = { abbr = 'UR',  full = 'Ultra Rare'       },
 		['utr'] = { abbr = 'UtR', full = 'Ultimate Rare'    },
