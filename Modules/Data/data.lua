@@ -129,8 +129,9 @@ N.rarity = {
 	['pscr']  = 'pscr',  ['prismatic']   = 'pscr', ['prismaticsecret'] = 'pscr',
 	['uscr']  = 'uscr',  ['ultrasecret'] = 'uscr',
 	['scur']  = 'scur',  ['secretultra'] = 'scur',
-	['20scr'] = '20scr', ['20thsecret']  = '20scr',
 	['escr']  = 'escr',  ['extrasecret'] = 'escr',
+	['20scr'] = '20scr', ['20thsecret']  = '20scr',
+	['10000scr'] = '10000scr', ['10000secret'] = '10000scr',
 
 	-- Precious:
 	['gur']   = 'gur',   ['gold']           = 'gur', ['goldultra'] = 'gur',
@@ -448,12 +449,13 @@ return {
 		['hgr'] = { abbr = 'HGR', full = 'Holographic Rare' },
 
 		-- Secrets:
-		['scr']   = { abbr = 'ScR',   full = 'Secret Rare'           },
-		['pscr']  = { abbr = 'PScR',  full = 'Prismatic Secret Rare' },
-		['uscr']  = { abbr = 'UScR',  full = 'Ultra Secret Rare'     },
-		['scur']  = { abbr = 'ScUR',  full = 'Secret Ultra Rare'     },
-		['escr']  = { abbr = 'EScR',  full = 'Extra Secret Rare'     },
-		['20scr'] = { abbr = '20ScR', full = '20th Secret Rare'      },
+		['scr']      = { abbr = 'ScR',      full = 'Secret Rare'           },
+		['pscr']     = { abbr = 'PScR',     full = 'Prismatic Secret Rare' },
+		['uscr']     = { abbr = 'UScR',     full = 'Ultra Secret Rare'     },
+		['scur']     = { abbr = 'ScUR',     full = 'Secret Ultra Rare'     },
+		['escr']     = { abbr = 'EScR',     full = 'Extra Secret Rare'     },
+		['20scr']    = { abbr = '20ScR',    full = '20th Secret Rare'      },
+		['10000scr'] = { abbr = '10000ScR', full = '10000 Secret Rare'     },
 
 		-- Precious:
 		['gur']   = { abbr = 'GUR',   full = 'Gold Rare'            },
