@@ -225,6 +225,7 @@ N.manga.series = {
 	['dy'] = 'dy',                   ['duelistyuya'] = 'dy',
 --	['vr']   = 'vr', ['vrains'] = 'vr',
 --	Yu-Gi-Oh! VRAINS: Cyber Warrior Yusaku
+	['os'] = 'os', ['ocg']   = 'os', ['structures'] = 'os',
 };
 
 --------------------
@@ -688,6 +689,11 @@ return {
 				page  = 'Yu-Gi-Oh! ARC-V The Strongest Duelist Yuya!!',
 				label = 'Yu-Gi-Oh! ARC-V The Strongest Duelist Yuya!!',
 			},
+			['os'] = {
+				abbr  = 'OS',
+				page  = 'Yu-Gi-Oh! OCG Structures',
+				label = 'Yu-Gi-Oh! OCG Structures',
+			},
 		},
 	},
 
@@ -794,7 +800,7 @@ return {
 				['manga'] = 'Manga',
 				['game']  = 'Video games', ['vg'] = 'Video games',
 				['other'] = 'Other',
-			}
-		}
+			},
+		},
 	},
 };
