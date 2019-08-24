@@ -47,7 +47,7 @@ function _link( v, ... )
 	elseif type( v ) == 'table' then
 		local t = {};
 		for key, value in ipairs( v ) do
-			table.insert( t, __link( value, labels[key] ));
+			table.insert( t, __link( value, labels[key] ) );
 		end
 		return t;
 	else
@@ -69,7 +69,7 @@ function _unlink( v, getLabel )
 	elseif type( v ) == 'table' then
 		local t = {};
 		for key, value in ipairs( v ) do
-			table.insert( t, __unlink( value, getLabel ));
+			table.insert( t, __unlink( value, getLabel ) );
 		end
 		return t;
 	else
@@ -180,7 +180,7 @@ function _full( pendulum, monsterCardType, tuner, ability, effect )
 	local cardType = {};
 	local notLast  = false;
 	if pendulum then
-		table.insert( cardType, 1, _link( 'Pendulum Monster' ));
+		table.insert( cardType, 1, _link( 'Pendulum Monster' ) );
 		notLast = true;
 	end
 	if monsterCardType then
@@ -211,21 +211,21 @@ function _monster( card )
 		return card:match( '(original)' ) and _link( 'Monster Card' ) --  For Egyptian Gods.
 			or _error( 'On «_monster»; No primary type available!' );
 	end
-	if primary:match('Token') then
-		return _link( 'Token Monster', 'Token' );
+	if primary:match( 'Token' ) then
+		return _link( 'Monster Token', 'Token' );
 	end
 	
 	--  Primary type:
 	local primaryTable    = split( primary, '\n' );
 	local monsterCardType = _monsterCardType( primaryTable );
-	local pendulum        = primary:match('Pendulum');
+	local pendulum        = primary:match( 'Pendulum' );
 	local effect          = _effect( primaryTable );
 	
 	--  Secondary type:
 	local secondary      = _trim( _show( card, 'Secondary type' ) );
 	local secondaryTable = secondary and split( secondary, '\n' );
 	local ability        = secondary and _ability( secondaryTable );
-	local tuner          = secondary and secondary:match('Tuner');
+	local tuner          = secondary and secondary:match( 'Tuner' );
 	
 	--  Full monster card type:
 	return _full( pendulum, monsterCardType, tuner, ability, effect );
