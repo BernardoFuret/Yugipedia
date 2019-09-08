@@ -235,6 +235,7 @@ N.videoGame = {};
 
 N.videoGame.release = {
 	['nc'] = 'nc', ['noncard'] = 'nc',
+	['ca'] = 'ca', ['cardart'] = 'ca',
 };
 
 N.videoGame.game = {
@@ -703,6 +704,7 @@ return {
 	['videoGame'] = {
 		['release'] = {
 			['nc'] = { abbr = 'NC', full = 'Non-card' },
+			['ca'] = { abbr = 'CA', full = 'Card art' },
 		},
 
 		['game'] = {
