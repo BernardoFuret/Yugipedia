@@ -81,15 +81,13 @@
 				( function( number, name ) {
 					chain = chain.then( function() {
 						return new Promise( function( resolve ) {
-							return redirect( number, name ).always( resolve );
+							redirect( number, name ).always( resolve );
 						} );
 					} );
 
 					chain = chain.then( function() {
 						return new Promise( function( resolve ) {
-							return setTimeout( function() {
-								resolve();
-							}, window.CARD_NUMBER_REDIRECT_DELAY || 500 );
+							window.setTimeout( resolve, window.CARD_NUMBER_REDIRECT_DELAY || 500 );
 						} );
 					} );
 				} )( cardNumber, redirectMap[ cardNumber ] );
