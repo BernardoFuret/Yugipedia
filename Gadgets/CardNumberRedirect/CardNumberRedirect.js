@@ -132,7 +132,7 @@
 				click: function( e ) {
 					e.preventDefault();
 
-					console.error( '[Gadget][CardNumberRedirect] - Waiting for mediawiki.api module to load.' );
+					console.error( '[Gadget][CardNumberRedirect] - Waiting for mediawiki.api and mediawiki.notify modules to load.' );
 				},
 			} );
 
