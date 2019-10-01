@@ -105,15 +105,13 @@
 			( function( pagename ) {
 				chain = chain.then( function() {
 					return new Promise( function( resolve ) {
-						return nullEdit( pagename ).always( resolve );
+						nullEdit( pagename ).always( resolve );
 					} );
 				} );
 
 				chain = chain.then( function() {
 					return new Promise( function( resolve ) {
-						return setTimeout( function() {
-							resolve();
-						}, window.MASS_NULL_EDIT_DELAY || 1000 );
+						window.setTimeout( resolve, window.MASS_NULL_EDIT_DELAY || 1000 );
 					} );
 				} );
 			} )( pages[ i ] );
@@ -130,7 +128,7 @@
 		if ( continueToken !== null ) {
 			chain = chain.then( function() {
 				return new Promise( function( resolve ) {
-					return resolve( requestCategoryMembers( continueToken ) );
+					requestCategoryMembers( continueToken ).always( resolve );
 				} );
 			} );
 		} else {
@@ -172,7 +170,7 @@
 				click: function( e ) {
 					e.preventDefault();
 
-					console.error( '[Gadget][MassNullEdit] - Waiting for mediawiki.api module to load.' );
+					console.error( '[Gadget][MassNullEdit] - Waiting for mediawiki.api and mediawiki.notify modules to load.' );
 				},
 			} );
 
