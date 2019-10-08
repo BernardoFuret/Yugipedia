@@ -41,7 +41,7 @@
 		token: mw.user.tokens.get( "editToken" ),
 	} )
 		.then( () => console.log( `Redirected page to [[${pagename}]].` ) )
-		.catch( err => console.warn( "Error redirecting:", err ) )
+		.catch( console.warn.bind( console, "Error redirecting:" ) )
 	;
 
 	let continueToken = "0";
