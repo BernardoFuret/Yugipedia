@@ -132,6 +132,7 @@ N.rarity = {
 	['escr']  = 'escr',  ['extrasecret'] = 'escr',
 	['20scr'] = '20scr', ['20thsecret']  = '20scr',
 	['10000scr'] = '10000scr', ['10000secret'] = '10000scr',
+	['altr']  = 'altr',  ['alternate']   = 'altr',
 
 	-- Precious:
 	['gur']   = 'gur',   ['gold']           = 'gur', ['goldultra'] = 'gur',
@@ -458,6 +459,7 @@ return {
 		['escr']     = { abbr = 'EScR',     full = 'Extra Secret Rare'     },
 		['20scr']    = { abbr = '20ScR',    full = '20th Secret Rare'      },
 		['10000scr'] = { abbr = '10000ScR', full = '10000 Secret Rare'     },
+		['altr']     = { abbr = 'AltR',     full = 'Alternate Rare'        },
 
 		-- Precious:
 		['gur']   = { abbr = 'GUR',   full = 'Gold Rare'            },
