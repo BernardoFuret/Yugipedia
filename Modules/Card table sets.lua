@@ -11,31 +11,14 @@ local UTIL = require( 'Module:Util' )
 
 local Reporter = require( 'Module:Reporter' )
 local StringBuffer = require( 'Module:StringBuffer' )
+local getReleaseDate = require( 'Module:GetReleaseDate' )
 
 local LANGUAGE_ENGLISH = DATA.getLanguage( 'English' )
 
 local mwText = mw.text
 local mwHtmlCreate = mw.html.create
 
-local Log;
-
-local function getSetReleaseDate( setName, regionFull ) -- TODO: move to a dedicated script.
-	local prop = table.concat{ regionFull, ' release date' }
-
-	local askResult = mw.smw.ask{
-		table.concat{ '[[', setName, ']]' },
-		table.concat{ '?', prop, '#ISO' },
-		mainlabel = '-',
-	}
-
-	local dateInfo = askResult and askResult[ 1 ] or {}
-
-	-- TODO: remove when the sets store the Sneak Peek dates separately.
-	return type( dateInfo[ prop ] ) == type( {} )
-		and dateInfo[ prop ][ 1 ]
-		or dateInfo[ prop ]
-		or ''
-end
+local reporter;
 
 local function formatCardNumber( cardNumber )
 	return cardNumber:match( '?' )
@@ -60,7 +43,7 @@ local function mapRarities( rarities, lineno )
 				local message = ('No such rarity for `%s`, at non-empty input line %d, at non-empty position %d.')
 					:format( r, lineno, position )
 
-				Log:addError( message )
+				reporter:addError( message )
 			end
 		end
 	end
@@ -101,7 +84,7 @@ local function createCell( id, text )
 	)
 end
 
-local function createDataRow( regionFull, languageFull, line, lineno )
+local function createDataRow( region, languageFull, line, lineno )
 	local parts = mwText.split( line, '%s*;%s*' )
 
 	local cardNumber = UTIL.trim( parts[ 1 ] )
@@ -114,11 +97,11 @@ local function createDataRow( regionFull, languageFull, line, lineno )
 		local message = ('No set name given at non-empty input line %d.')
 			:format( lineno )
 
-		Log:addWarning( message )
+		reporter:addWarning( message )
 	end
 
 	local tr = mwHtmlCreate( 'tr' )
-		:node( createCell( 'release', setName and getSetReleaseDate( setName, regionFull ) ) )
+		:node( createCell( 'release', setName and getReleaseDate( setName, region ) ) )
 		:node( createCell( 'number', cardNumber and formatCardNumber( cardNumber ) ) )
 		:node( createCell( 'set', setName and UTIL.italicLink( setName ) ) )
 
@@ -138,7 +121,7 @@ end
 
 
 local function main( regionInput, setsInput )
-	Log = Reporter( 'Card table sets' )
+	reporter = Reporter( 'Card table sets' )
 
 	local region = DATA.getRegion( regionInput ) -- TODO: handle incorrect regions (necessary?)
 
@@ -157,17 +140,21 @@ local function main( regionInput, setsInput )
 			if UTIL.trim( line ) then
 				lineno = lineno + 1
 
-				setsTable:node( createDataRow( region.full, language.full, line, lineno ) )
+				setsTable:node( createDataRow( region, language.full, line, lineno ) )
 			end
 		end
 	else
-		local message = 'No input given for the sets.' -- TODO: add tracking categories
+		local message = 'No input given for the sets.'
 
-		Log:addError( message )
+		local category = '((Card table sets)) transclusions with no input (((1)))'
+
+		reporter
+			:addError( message )
+			:addCategory( category )
 	end
 
 	return StringBuffer()
-		:add( Log:dump() )
+		:add( reporter:dump() )
 		:add( tostring( setsTable ) )
 		:toString()
 end
