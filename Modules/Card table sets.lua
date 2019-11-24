@@ -26,8 +26,8 @@ local function formatCardNumber( cardNumber )
 		or UTIL.link( cardNumber )
 end
 
-local function mapRarities( rarities, lineno )
-	local mapped = {}
+local function validateRarities( rarities, lineno )
+	local validated = {}
 
 	local position = 0
 
@@ -38,7 +38,7 @@ local function mapRarities( rarities, lineno )
 			local rarity = DATA.getRarity( r )
 
 			if rarity then
-				table.insert( mapped, UTIL.link( rarity.full ) )
+				table.insert( validated, rarity.full )
 			else
 				local message = ('No such rarity for `%s`, at non-empty input line %d, at non-empty position %d.')
 					:format( r, lineno, position )
@@ -48,7 +48,56 @@ local function mapRarities( rarities, lineno )
 		end
 	end
 
-	return table.concat( mapped, '<br />' )
+	return validated
+end
+
+local function printRarities( rarities )
+	local linked = {}
+
+	for _, rarity in ipairs( rarities ) do
+		table.insert( linked, UTIL.link( rarity ) )
+	end
+
+	return table.concat( linked, '<br />' )
+end
+
+local function setSMWProps( cardNumber, setName, rarities, regionFull )
+	if not mw.smw then
+		reporter:addError( 'SMW is not available!' )
+
+		return
+	end
+
+	local setInfoProp = ('--- %s --- %s --- %s --- %s ---')
+		:format(
+			cardNumber,
+			setName,
+			table.concat( rarities, ',' ),
+			regionFull
+		)
+
+	local jsonRarities = {}
+
+	for _, rarity in ipairs( rarities ) do
+		table.insert( jsonRarities, '"' .. rarity .. '"' )
+	end
+
+	local setInfoJSONProp = ('{ "number": "%s", "name": "%s", "rarity": [%s], "region": "%s" }')
+		:format(
+			cardNumber,
+			setName,
+			table.concat( jsonRarities, ',' ),
+			regionFull
+		)
+
+	local setRes = mw.smw.set{
+		['Set information'] = setInfoProp,
+		['Set information (JSON)'] = setInfoJSONProp,
+	}
+
+	if not setRes then
+		reporter:addError( "Failed to set SMW properties for set information!" )
+	end
 end
 
 local function createHeader( id, text )
@@ -90,7 +139,10 @@ local function createDataRow( region, languageFull, line, lineno )
 	local cardNumber = UTIL.trim( parts[ 1 ] )
 	local setName = UTIL.trim( parts[ 2 ] )
 	local rarities = UTIL.trim( parts[ 3 ] )
-		and mwText.split( parts[ 3 ], '%s*,%s*' )
+		and validateRarities(
+			mwText.split( parts[ 3 ], '%s*,%s*' ),
+			lineno
+		)
 		or {}
 
 	if not setName then
@@ -114,7 +166,9 @@ local function createDataRow( region, languageFull, line, lineno )
 		)
 	end
 
-	tr:node( createCell( 'rarity', mapRarities( rarities, lineno ) ) )
+	tr:node( createCell( 'rarity', printRarities( rarities ) ) )
+
+	setSMWProps( cardNumber or '', setName or '', rarities, region.full )
 
 	return tostring( tr )
 end
