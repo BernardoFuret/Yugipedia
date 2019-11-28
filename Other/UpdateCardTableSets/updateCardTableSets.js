@@ -44,7 +44,7 @@
 		/\{\{Card table set\/header.*([\s\S]+?)^.*?footer}}/gm,
 		( m, $1 ) => $1.split( /\n/ ).reduce(
 			( acc, line ) => line.trim()
-				? acc.add( line.match( /{{Card +table +set\|(.*?)\|(.*?)(?:\|(.*?))?}}/ ) )
+				? acc.add( line.match( /{{Card +table +set\|(.*?)\|(.*?)(?:\|(.*?))?}}/i ) )
 				: acc
 			,
 			new OrderedContainer(),
@@ -132,7 +132,8 @@
 			if ( updatedContent === content ) {
 				console.warn( "No changes for", pagename );
 
-				window.console.log( pagename, updatedContent, '||', content );
+				window.console.warn( "No changes for", pagename );
+				window.console.log( content );
 
 				__errors.push( {
 					pagename,
