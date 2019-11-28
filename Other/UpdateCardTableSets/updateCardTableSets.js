@@ -109,6 +109,12 @@
 				break loop;
 			}
 
+			if ( mw.user.isAnon() ) {
+				console.warn( "Bot has logged out." );
+
+				break loop;
+			}
+
 			pageCount++;
 
 			console.log( "Getting content for", pagename );
@@ -154,7 +160,7 @@
 
 	window[ `__ctsErrors$${Date.now().toString( 36 )}` ] = __errors;
 
-	console.log( window.STOP_SCRIPT ? "Stopped!" : "All done!" );
+	console.log( ( window.STOP_SCRIPT || mw.user.isAnon() ) ? "Stopped!" : "All done!" );
 	console.log( "Took", END_TIME - START_TIME, "to process", pageCount, "pages." );
 
 } )( window, window.jQuery, window.mediaWiki, ( ( window, $ ) => {
