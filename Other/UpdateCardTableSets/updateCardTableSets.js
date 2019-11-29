@@ -109,12 +109,6 @@
 				break loop;
 			}
 
-			if ( mw.user.isAnon() ) {
-				console.warn( "Bot has logged out." );
-
-				break loop;
-			}
-
 			pageCount++;
 
 			console.log( "Getting content for", pagename );
@@ -132,7 +126,23 @@
 				continue;
 			}
 
-			const updatedContent = updateContent( content );
+			let updatedContent;
+
+			try {
+				updatedContent = updateContent( content );
+			} catch ( e ) {
+				console.warn( "Failed to convert content for", pagename, e.message );
+
+				window.console.log( "Failed to convert content for", pagename, e );
+				window.console.log( content );
+
+				__errors.push( {
+					pagename,
+					type: "Cannot convert",
+				} );
+
+				continue;
+			}
 
 
 			if ( updatedContent === content ) {
@@ -148,6 +158,13 @@
 
 				continue;
 			}
+
+			if ( mw.user.isAnon() ) {
+				console.warn( "Bot has logged out." );
+
+				break loop;
+			}
+
 			await edit( pagename, updatedContent );
 
 			await sleep( window.LATENCY || 5000 );
