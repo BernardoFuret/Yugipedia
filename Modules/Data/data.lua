@@ -143,11 +143,11 @@ N.rarity = {
 	['plscr'] = 'plscr', ['platinumsecret'] = 'plscr',
 
 	-- Millennium:
-	['mlr']   = 'mlr',   ['millennium']      = 'mlr',
-	['mlsr']  = 'mlsr',  ['millenniumsuper'] = 'mlsr',
-	['mlur']  = 'mlur',  ['millenniumultra'] = 'mlur',
-	['mlscr'] = 'mlscr', ['millenniumultra'] = 'mlur',
-	['mlgr']  = 'mlgr',  ['millenniumgold']  = 'mlgr', -- Why not MLGUR?
+	['mlr']   = 'mlr',   ['millennium']       = 'mlr',
+	['mlsr']  = 'mlsr',  ['millenniumsuper']  = 'mlsr',
+	['mlur']  = 'mlur',  ['millenniumultra']  = 'mlur',
+	['mlscr'] = 'mlscr', ['millenniumsecret'] = 'mlscr',
+	['mlgr']  = 'mlgr',  ['millenniumgold']   = 'mlgr', -- Why not MLGUR?
 
 	-- Parallel:
 	['npr']   = 'npr',   ['normalparallel']      = 'npr',
