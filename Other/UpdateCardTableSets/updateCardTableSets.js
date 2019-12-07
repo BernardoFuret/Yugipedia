@@ -19,15 +19,17 @@
 		}
 
 		add( [ _, number, set, rarity ] ) {
-			if ( this.archiver[ set ] == null ) {
-				this.archiver[ set ] = this.order.push( {
+			const key = `${number}${set}`;
+
+			if ( this.archiver[ key ] == null ) {
+				this.archiver[ key ] = this.order.push( {
 					set,
 					number,
 					rarity: [],
 				} ) - 1;
 			}
 
-			this.order[ this.archiver[ set ] ].rarity.push( rarity );
+			this.order[ this.archiver[ key ] ].rarity.push( rarity );
 
 			return this;
 		}
@@ -157,12 +159,6 @@
 				} );
 
 				continue;
-			}
-
-			if ( mw.user.isAnon() ) {
-				console.warn( "Bot has logged out." );
-
-				break loop;
 			}
 
 			await edit( pagename, updatedContent );
