@@ -29,7 +29,7 @@ local function getReleaseDate( pagename, regionFull )
 	local dateInfo = askResult and askResult[ 1 ] or {}
 
 	-- TODO: remove when the sets store the Sneak Peek dates separately.
-	return type( dateInfo[ prop ] ) == type( {} )
+	return type( dateInfo[ prop ] ) == 'table'
 		and dateInfo[ prop ][ 1 ]
 		or dateInfo[ prop ]
 end
