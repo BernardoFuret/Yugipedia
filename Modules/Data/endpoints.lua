@@ -14,7 +14,8 @@ return {
 	getFullCardType = 'smw/cardType', -- TODO: move module?
 	
 	-- Sub-Namespaces:
-	anime = 'namespaces/anime',
-	manga = 'namespaces/manga',
+	anime      = 'namespaces/anime',
+	manga      = 'namespaces/manga',
+	videoGames = 'namespaces/videoGames',
 }
 -- </pre>
