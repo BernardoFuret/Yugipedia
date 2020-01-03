@@ -57,6 +57,19 @@ local HTML = mw.html.create;
 --------------------
 -- Module functions:
 --------------------
+local function getCardGalleryType( t )
+	if type( t ) == 'string' then
+		return ( {
+			['anime'] = 'Anime',
+			['manga'] = 'Manga',
+			['game']  = 'Video games', ['vg'] = 'Video games',
+			['other'] = 'Other',
+		} )[
+			mw.text.trim( t ):lower():gsub( "[%s%-s]", '' ):gsub( 'video', '' )
+		]
+	end
+end
+
 -- @name initInfo
 -- @description Handles generic info.
 local function initInfo()
@@ -73,7 +86,7 @@ local function initInfo()
 	_language = DATA.getLanguage( _region.index );
 
 	-- Type of gallery:
-	_type  = DATA.getCardGalleryType( _args[ 'type' ] );
+	_type  = getCardGalleryType( _args[ 'type' ] );
 	_title = _args[ 'title' ];
 	_debug = _args[ 'debug' ];
 end
