@@ -1,3 +1,14 @@
 -- <pre>
-return require( 'Module:Data/loader' )()
+local DATA = require( 'Module:Data/loader' )()
+
+return setmetatable( {
+	getAnimeRelease = DATA.anime.getRelease,
+	getAnimeSeries = DATA.anime.getSeries,
+
+	getMangaRelease = DATA.manga.getRelease,
+	getMangaSeries = DATA.manga.getSeries,
+
+	getVideoGameRelease = DATA.videoGames.getRelease,
+	getVideoGame = DATA.videoGames.getName,
+}, { __index = DATA } )
 -- </pre>
