@@ -10,5 +10,8 @@ return setmetatable( {
 
 	getVideoGameRelease = DATA.videoGames.getRelease,
 	getVideoGame = DATA.videoGames.getName,
-}, { __index = DATA } )
+}, {
+	__index = DATA,
+	__call  = getmetatable( DATA ).__call,
+} )
 -- </pre>
