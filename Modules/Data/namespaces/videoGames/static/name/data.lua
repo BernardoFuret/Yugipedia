@@ -5,7 +5,7 @@ local normalize = {
 	['mcgb'] = 'mcgb', ['gb']   = 'mcgb', ['monstercapsulegb'] = 'mcgb',
 
 	-- Duel Monsters:
-	['g1'] = 'dm1', ['gb1'] = 'dm1', ['dm1'] = 'dm1', ['duelmonsters']  = 'dm1', ['g'] = 'dm1', ['dm'] = 'dm1',
+	['g1'] = 'dm1', ['gb1'] = 'dm1', ['dm1'] = 'dm1', ['duelmonsters1'] = 'dm1', ['duelmonsters'] = 'dm1', ['g'] = 'dm1', ['dm'] = 'dm1',
 	['g2'] = 'dm2', ['gb2'] = 'dm2', ['dm2'] = 'dm2', ['duelmonsters2'] = 'dm2', ['2darkduelstories']  = 'dm2',
 	['g3'] = 'dm3', ['gb3'] = 'dm3', ['dm3'] = 'dm3', ['duelmonsters3'] = 'dm3', ['3triholdadvent'] = 'dm3', ['triholdadvent'] = 'dm3', -- adjusted because of the `gsub` of "ygo"
 	['g4'] = 'dm4', ['gb4'] = 'dm4', ['dm4'] = 'dm4', ['duelmonsters4'] = 'dm4', ['4battleofgreatduelist'] = 'dm4', ['battleofgreatduelist'] = 'dm4',
@@ -15,7 +15,7 @@ local normalize = {
 	['g7'] = 'tsc', ['gb7'] = 'tsc', ['dm7'] = 'tsc', ['duelmonsters7'] = 'tsc', ['7duelcitylegend'] = 'tsc', ['duelcitylegend'] = 'tsc', ['tsc'] = 'tsc', ['sacredcards'] = 'tsc',
 	['g8'] = 'rod', ['gb8'] = 'rod', ['dm8'] = 'rod', ['duelmonsters8'] = 'rod', ['8reshefofdestruction'] = 'rod', ['rod'] = 'rod',   ['reshefofdestruction'] = 'rod',
 	['dds'] = 'dds', ['darkduelstories'] = 'dds',
-	['gbi'] = 'sdd', ['dmi'] = 'sdd',   ['di'] = 'sdd',   ['di1'] = 'sdd',  ['international'] = 'sdd',  ['worldwide'] = 'sdd',  ['worldwideedition'] = 'sdd', ['sdd'] = 'sdd', ['worldwideeditionstairwaytodestinedduel']  = 'sdd', ['stairwaytodestinedduel'] = 'sdd',
+	['gbi'] = 'sdd', ['dmi'] = 'sdd',   ['di'] = 'sdd',   ['di1'] = 'sdd',  ['international1'] = 'sdd', ['international'] = 'sdd', ['worldwide'] = 'sdd',  ['worldwideedition'] = 'sdd', ['sdd'] = 'sdd', ['worldwideeditionstairwaytodestinedduel']  = 'sdd', ['stairwaytodestinedduel'] = 'sdd',
 	['eds'] = 'eds', ['eternalduelistsoul'] = 'eds', ['eternalduelistssoul'] = 'eds',
 
 	-- Power of Chaos:
@@ -25,7 +25,7 @@ local normalize = {
 	['pcy'] = 'pcy', ['powerofchaosyugi']  = 'pcy', ['powerofchaosyugidestiny']  = 'pcy', ['yugi']  = 'pcy', ['yugidestiny']  = 'pcy',
 
 	-- Tag Force:
-	['gx2'] = 'gx02', ['gx02'] = 'gx02', ['tf'] = 'gx02',  ['tf1'] = 'gx02',  ['tf01'] = 'gx02',  ['tagforce'] = 'gx02',
+	['gx2'] = 'gx02', ['gx02'] = 'gx02', ['tf'] = 'gx02',  ['tf1'] = 'gx02',  ['tf01'] = 'gx02',  ['tagforce1'] = 'gx02', ['tagforce'] = 'gx02',
 	['gx4'] = 'gx04', ['gx04'] = 'gx04', ['tf2'] = 'gx04', ['tf02'] = 'gx04',  ['tagforce2'] = 'gx04',
 	['gx5'] = 'gx05', ['gx05'] = 'gx05', ['tfe'] = 'gx05', ['tagforceevolution'] = 'gx05',  ['beginningofdestiny'] = 'gx05',
 	['gx6'] = 'gx06', ['gx06'] = 'gx06', ['tf3'] = 'gx06', ['tf03'] = 'gx06',  ['tagforce3'] = 'gx06',
