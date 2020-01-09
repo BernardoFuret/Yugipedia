@@ -1,7 +1,7 @@
 -- <pre>
 local thisData = mw.loadData( 'Module:Data/static/medium/data' )
 
-local getRegion = require( 'Module:Data/static/region' )
+local DATA = require( 'Module:Data' )
 
 local function normalize( v )
 	return type( v ) == 'string'
@@ -16,7 +16,7 @@ end
 return function( v )
 	return thisData.main[
 		thisData.normalize[
-			( getRegion( v ) or {} ).index
+			( DATA.getRegion( v ) or {} ).index
 			or normalize( v )
 		]
 	]
