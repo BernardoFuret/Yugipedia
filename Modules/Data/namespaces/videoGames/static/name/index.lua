@@ -28,11 +28,12 @@ local function normalize( v )
 		-- Remove some redundant words:
 		:gsub(          'the',  '' )
 		:gsub(      'gameboy',  '' )
+		:gsub( '%(videogame%)', '' )
 		-- Normalize some titles:
 		:gsub(      'expert', 'ex' )
 		:gsub( 'worldchampionshiptournament', 'worldchampionship' )
 
-	-- Remove "gx", if it's large enough (preserve "gx01", "gx3", "ygoo", "ygo" ):
+	-- Remove "gx" and "ygo", if it's large enough (preserve "gx01", "gx3", "ygoo", "ygo" ):
 	if normalizedV:len() > 4 then
 		normalizedV = normalizedV
 			:gsub(  'gx', '' )
@@ -41,6 +42,7 @@ local function normalize( v )
 		-- Remove "duelmonsters", if it's large enough (preserve cases like /duelmonsters\d/):
 		if normalizedV:len() > 13 then
 			normalizedV = normalizedV:gsub( 'duelmonsters', '' )
+
 			-- Remove "worldchampionship", if it's large enough (preserve cases like /worldchampionship20\d\d/):
 			if normalizedV:len() > 21 then
 				normalizedV = normalizedV:gsub( 'worldchampionship', '' )
