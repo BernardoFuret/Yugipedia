@@ -102,6 +102,7 @@ end
 local function createHeader( id, text )
 	return tostring( mwHtmlCreate( 'th' )
 		:attr( 'scope', 'col' )
+		:addClass( 'cts__header--' .. id )
 		:wikitext( text )
 	)
 end
@@ -184,6 +185,7 @@ local function main( regionInput, setsInput )
 		:addClass( 'wikitable' )
 		:addClass( 'sortable' )
 		:addClass( 'card-list' )
+		:addClass( 'cts' )
 		:node( createHeaderRow( language.full ) )
 
 	if UTIL.trim( setsInput ) then
