@@ -44,7 +44,7 @@ local _standard, _release, _options;
 -- @name initGame
 -- @description Sets the `game`.
 local function initGame( t )
-	t.game = DATA.getVideoGame( _standard[ 1 ] );
+	t.game = DATA.videoGames.getName( _standard[ 1 ] );
 
 	if not t.game then
 		return t:error( 'video game' );
@@ -54,7 +54,7 @@ end
 -- @name initRelease
 -- @description Sets the `release` attribute.
 local function initRelease( t )
-	t.release = DATA.getVideoGameRelease( _release[ 1 ] );
+	t.release = DATA.videoGames.getRelease( _release[ 1 ] );
 end
 
 -- @name initAlt

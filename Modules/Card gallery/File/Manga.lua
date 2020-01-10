@@ -44,7 +44,7 @@ local _standard, _release, _options;
 -- @name initSeries
 -- @description Sets the `series`.
 local function initSeries( t )
-	t.series = DATA.getMangaSeries( _standard[ 1 ] );
+	t.series = DATA.manga.getSeries( _standard[ 1 ] );
 
 	if not t.series then
 		return t:error( 'series' );
@@ -54,7 +54,7 @@ end
 -- @name initRelease
 -- @description Sets the `release` attribute.
 local function initRelease( t )
-	t.release = DATA.getMangaRelease( _release[ 1 ] );
+	t.release = DATA.manga.getRelease( _release[ 1 ] );
 end
 
 -- @name initAlt
