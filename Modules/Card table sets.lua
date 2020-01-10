@@ -11,7 +11,6 @@ local UTIL = require( 'Module:Util' )
 
 local Reporter = require( 'Module:Reporter' )
 local StringBuffer = require( 'Module:StringBuffer' )
-local getReleaseDate = require( 'Module:GetReleaseDate' )
 
 local LANGUAGE_ENGLISH = DATA.getLanguage( 'English' )
 
@@ -133,7 +132,7 @@ local function createCell( id, text )
 	)
 end
 
-local function createDataRow( region, languageFull, line, lineno )
+local function createDataRow( region, language, line, lineno )
 	local parts = mwText.split( line, '%s*;%s*' )
 
 	local cardNumber = UTIL.trim( parts[ 1 ] )
@@ -153,15 +152,15 @@ local function createDataRow( region, languageFull, line, lineno )
 	end
 
 	local tr = mwHtmlCreate( 'tr' )
-		:node( createCell( 'release', setName and getReleaseDate( setName, region ) ) )
+		:node( createCell( 'release', setName and DATA.getReleaseDate( setName, region ) ) )
 		:node( createCell( 'number', cardNumber and formatCardNumber( cardNumber ) ) )
 		:node( createCell( 'set', setName and UTIL.italicLink( setName ) ) )
 
-	if languageFull ~= LANGUAGE_ENGLISH.full then
+	if language.full ~= LANGUAGE_ENGLISH.full then
 		tr:node(
 			createCell(
 				'set-localized',
-				UTIL.getName( setName, languageFull )
+				DATA.getName( setName, language )
 			)
 		)
 	end
@@ -194,7 +193,7 @@ local function main( regionInput, setsInput )
 			if UTIL.trim( line ) then
 				lineno = lineno + 1
 
-				setsTable:node( createDataRow( region, language.full, line, lineno ) )
+				setsTable:node( createDataRow( region, language, line, lineno ) )
 			end
 		end
 	else
