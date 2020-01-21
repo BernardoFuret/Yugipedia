@@ -9,39 +9,31 @@
 local DATA = require( 'Module:Data' )
 local UTIL = require( 'Module:Util' )
 
-local D = {}
-
-local function getLanguage( frame )
-	local v = frame:getParent().args[ 1 ]
-
-	return DATA.getLanguage( v ) or {}
+local function getArg( frame, index )
+	return frame:getParent().args[ index ]
 end
 
 local function getRegion( frame )
-	local v = frame:getParent().args[ 1 ]
+	return DATA.getRegion( getArg( frame, 1 ) ) or {}
+end
 
-	return DATA.getRegion( v ) or {}
+local function getLanguage( v )
+	return DATA.getLanguage( getArg( frame, 1 ) ) or {}
 end
 
 local function getMedium( frame )
-	local v = frame:getParent().args[ 1 ]
-
-	return DATA.getMedium( v ) or {}
+	return DATA.getMedium( getArg( frame, 1 ) ) or {}
 end
 
 local function getVideoGameName( frame )
-	local v = frame:getParent().args[ 1 ]
-
-	return DATA.videoGames.getName( v ) or {}
+	return DATA.videoGames.getName( getArg( frame, 1 ) ) or {}
 end
 
-function D.ln( frame )
-	return getLanguage( frame ).index or ''
-end
+---------------------
+-- Wikitext interface
+---------------------
 
-function D.lang( frame )
-	return getLanguage( frame ).full or ''
-end
+local D = {}
 
 function D.rg( frame )
 	return getRegion( frame ).index or ''
@@ -59,20 +51,38 @@ function D.region( frame )
 	return getRegion( frame ).full or ''
 end
 
+function D.ln( frame )
+	return getLanguage( frame ).index or ''
+end
+
+function D.lang( frame )
+	return getLanguage( frame ).full or ''
+end
+
 function D.rgo( frame )
 	return getMedium( frame ).abbr or ''
 end
 
 function D.vg( frame )
-	local full = UTIL.trim( frame:getParent().args[ 'full' ] )
+	local full = UTIL.trim( getArg( frame, 'full' ) )
 
-	local link = UTIL.trim( frame:getParent().args[ 'link' ] )
+	local link = UTIL.trim( getArg( frame, 'link' ) )
 
 	local game = getVideoGameName( frame )
 	
 	return full
 		and ( link and game.full or UTIL.removeDab( game.full or '' ) )
 		or game.abbr
+end
+
+function D.name( frame )
+	local language = DATA.getLanguage(
+		UTIL.trim( getArg( frame, 2 ) ) or 'en'
+	)
+
+	return language
+		and DATA.getName( getArg( frame, 1 ) or '', language )
+		or '' -- case of invalid language: display empty
 end
 
 return D
