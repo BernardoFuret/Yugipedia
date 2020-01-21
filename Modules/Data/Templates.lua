@@ -29,10 +29,10 @@ local function getMedium( frame )
 	return DATA.getMedium( v ) or {}
 end
 
-local function getVideoGame( frame )
+local function getVideoGameName( frame )
 	local v = frame:getParent().args[ 1 ]
 
-	return DATA.getVideoGame( v ) or {}
+	return DATA.videoGames.getName( v ) or {}
 end
 
 function D.ln( frame )
@@ -68,7 +68,7 @@ function D.vg( frame )
 
 	local link = UTIL.trim( frame:getParent().args[ 'link' ] )
 
-	local game = getVideoGame( frame )
+	local game = getVideoGameName( frame )
 	
 	return full
 		and ( link and game.full or UTIL.removeDab( game.full or '' ) )
