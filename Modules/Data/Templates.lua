@@ -17,7 +17,7 @@ local function getRegion( frame )
 	return DATA.getRegion( getArg( frame, 1 ) ) or {}
 end
 
-local function getLanguage( v )
+local function getLanguage( frame )
 	return DATA.getLanguage( getArg( frame, 1 ) ) or {}
 end
 
