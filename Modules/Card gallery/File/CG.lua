@@ -19,11 +19,12 @@ local StringBuffer = require( 'Module:StringBuffer' );
 -------------
 -- Constants:
 -------------
-local CARD_BACK_TCG  = 'Back-EN.png';
-local CARD_BACK_JP   = 'Back-JP.png';
-local CARD_BACK_AE   = 'Back-AE.png';
-local CARD_BACK_KR   = 'Back-KR.png';
-local OFFICIAL_PROXY = DATA.getRelease( 'OP' );
+local CARD_BACK_TCG    = 'Back-EN.png';
+local CARD_BACK_JP     = 'Back-JP.png';
+local CARD_BACK_AE     = 'Back-AE.png';
+local CARD_BACK_KR     = 'Back-KR.png';
+local LANGUAGE_ENGLISH = DATA.getLanguage( 'EN' );
+local OFFICIAL_PROXY   = DATA.getRelease( 'OP' );
 
 ---------------
 -- Helper vars:
@@ -90,8 +91,8 @@ local function initSet( t )
 	end
 
 	t.set   = set;
-	t.setEn = UTIL.getName( set ) or set; --TODO: either UTIL.trim or... check later
-	t.setLn = UTIL.getName( set, t.parent:getLanguage().index );
+	t.setEn = DATA.getName( set, LANGUAGE_ENGLISH ) or set; --TODO: either UTIL.trim or... check later
+	t.setLn = DATA.getName( set, t.parent:getLanguage() );
 end
 
 -- @name initReleases
