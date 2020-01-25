@@ -295,8 +295,12 @@ end
 -- @name getName
 -- @description Gets the localized name of a card, set or character.
 -- @see [[Module:Name]]
-function U.getName( ... )
-	return require( 'Module:Name' ).main( ... );
+function U.getName( name, ln )
+	local DATA = require( 'Module:Data' )
+
+	local language = DATA.getLanguage( ln )
+
+	return DATA.getName( name:gsub( '#', '' ), language )
 end
 
 -- @name getImgName
