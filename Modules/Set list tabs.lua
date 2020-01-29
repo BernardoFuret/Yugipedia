@@ -7,8 +7,6 @@ regions on their respective set pages, using a tabber.
 @contact [[User talk:Becasita]]
 ]=]
 
--- TODO: handle cases of a single region entered.
-
 local DATA = require( 'Module:Data' )
 local UTIL = require( 'Module:Util' )
 
@@ -31,7 +29,7 @@ end
 local function generateNavbar( pagename )
 	return tostring(
 		mwHtmlCreate( 'div' )
-			:addClass( 'set-lists-tabber__tab-navbar' ) -- float:right; clear:both
+			:addClass( 'set-lists-tabber__tab-navbar' )
 			:wikitext( navbar{
 				':' .. pagename,
 				plain = 1,
@@ -76,13 +74,28 @@ local function generateContentFirst( fullpagename, frame )
 	return ret
 end
 
+local function printContent( listsContent )
+	local tabberContent = {}
+
+	for _, listData in ipairs( listsContent ) do
+		table.insert(
+			tabberContent,
+			table.concat{
+				listData.region, '=', listData.content, '|-|',
+			}
+		)
+	end
+
+	return table.concat( tabberContent )
+end
+
 local function main( regionsInput, frame )
 	reporter = Reporter( 'Set list tabs' )
 
-	local tabberContainer = mwHtmlCreate( 'div' )
-		:addClass( 'set-lists-tabber' ) -- margin-bottom: 5px; clear: both;
+	local listsContainer = mwHtmlCreate( 'div' )
+		:addClass( 'set-lists-tabber' )
 
-	local tabberContent = StringBuffer()
+	local listsContent = {}
 
 	local setPage = mw.title.getCurrentTitle().text
 
@@ -94,13 +107,10 @@ local function main( regionsInput, frame )
 		if region then
 			local setListPage = makeSetListPage( setPage, region )
 
-			local tabContent = StringBuffer()
-				:add( region.full:gsub( 'Worldwide ', '' ) )
-				:add( '=' )
-				:add( generateNavbar( setListPage ) )
-				:add( generateContent( setListPage, frame ) )
-
-			tabberContent:add( tabContent:toString() )
+			table.insert( listsContent, {
+				region = region.full:gsub( 'Worldwide ', '' ),
+				content = generateNavbar( setListPage ) .. generateContent( setListPage, frame ),
+			} )
 		else
 			local message = ( 'Invalid region: `%s`' ):format( regionInput )
 
@@ -112,16 +122,18 @@ local function main( regionsInput, frame )
 		end
 	end
 
-	tabberContainer
+	listsContainer
 		:wikitext(
 			reporter:dump(),
-			frame:extensionTag{
-				name = 'tabber',
-				content = tabberContent:flush( '|-|' ):toString(),
-			}
+			listsContent[ 2 ]
+				and frame:extensionTag{
+					name = 'tabber',
+					content = printContent( listsContent ),
+				}
+				or listsContent[ 1 ].content
 		)
 
-	return tostring( tabberContainer )
+	return tostring( listsContainer )
 end
 
 return setmetatable( {
