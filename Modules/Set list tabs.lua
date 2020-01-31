@@ -13,9 +13,7 @@ local UTIL = require( 'Module:Util' )
 local navbar = require( 'Module:Navbar' )._navbar
 
 local Reporter = require( 'Module:Reporter' )
-local StringBuffer = require( 'Module:StringBuffer' )
 
-local mwText = mw.text
 local mwHtmlCreate = mw.html.create
 
 local reporter;
@@ -101,7 +99,7 @@ local function main( regionsInput, frame )
 
 	generateContent = generateContentFirst
 	
-	for regionInput in mwText.gsplit( regionsInput, '%s*,%s*' ) do
+	for regionInput in mw.text.gsplit( regionsInput, '%s*,%s*' ) do
 		local region = DATA.getRegion( regionInput )
 
 		if region then
