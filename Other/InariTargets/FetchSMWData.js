@@ -1,7 +1,8 @@
 /**
- * For MW environment. Grab all Gizmek Inari, the Grain Storage Fox targets
+ * For MW environment. Grab all "Gizmek Inari, the Grain Storage Fox" targets
  * (https://yugipedia.com/wiki/Gizmek_Inari,_the_Grain_Storage_Fox)
  * @author Becasita
+ * TODO: filter Rituals
  */
 async function getSameATKDEF() {
 	const STATS = [
@@ -20,12 +21,22 @@ async function getSameATKDEF() {
 	for ( const stat of STATS ) {
 		const response = await api.get( {
 			action: 'ask',
-			query: `[[Medium::TCG||OCG]] [[ATK string::${stat}]] [[DEF string::${stat}]] [[Belongs to::Main Deck]] |?Attribute|?Type|?Stars string|?Summoning| limit = 500`,
+			query: `[[Medium::TCG||OCG]] [[ATK string::${stat}]] [[DEF string::${stat}]] [[Belongs to::Main Deck]] |?Attribute|?Type|?Stars string|?Summoning|?Primary type| limit = 500`,
 		} );
 
 		Object.entries( response.query.results ).forEach( ( [ monster, { printouts } ] ) => {
-			console.log( stat, monster );
+			if (
+				printouts.Summoning.some( c => c.match( /nomi\b/i ) )
+				||
+				printouts[ 'Primary type' ].some( t => t.fulltext.match( /ritual/i ) )
+			) {
+				console.log( 'Filtering', monster );
 
+				return;
+			}
+			
+			console.log( 'Pushing', monster );
+		
 			monsters.push( {
 				name: monster,
 				atkDef: stat,
@@ -39,5 +50,5 @@ async function getSameATKDEF() {
 
 	console.log( 'Done' );
 
-	window.__monsters = monsters;
+	window[ `__monsters${Date.now().toString( 36 )}` ] = monsters;
 }
