@@ -2,7 +2,6 @@
  * For MW environment. Grab all "Gizmek Inari, the Grain Storage Fox" targets
  * (https://yugipedia.com/wiki/Gizmek_Inari,_the_Grain_Storage_Fox)
  * @author Becasita
- * TODO: filter Rituals
  */
 async function getSameATKDEF() {
 	const STATS = [
