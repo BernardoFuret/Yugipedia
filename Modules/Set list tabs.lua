@@ -18,10 +18,26 @@ local mwHtmlCreate = mw.html.create
 
 local reporter;
 
-local function makeSetListPage( setPage, region )
+local SET_NAMES_SPECIAL_CASES = {
+	[ '2011' ] = true,
+	[ '2018' ] = true,
+	[ '2019' ] = true,
+	[ 'series' ] = true,
+}
+
+local function normalizeSetNameForLink( setPagename )
+	-- Remove the dab except for some special cases
+	local dab = UTIL.getDab( setPagename )
+
+	return SET_NAMES_SPECIAL_CASES[ dab ]
+		and setPagename
+		or UTIL.removeDab( setPagename )
+end
+
+local function makeSetListPage( setNameForLink, region ) -- TODO: special cases
 	local medium = DATA.getMedium( region.index )
 
-	return ( 'Set Card Lists:%s (%s-%s)' ):format( setPage, medium.abbr, region.index )
+	return ( 'Set Card Lists:%s (%s-%s)' ):format( setNameForLink, medium.abbr, region.index )
 end
 
 local function generateNavbar( pagename )
@@ -95,7 +111,9 @@ local function main( regionsInput, frame )
 
 	local listsContent = {}
 
-	local setPage = mw.title.getCurrentTitle().text
+	local setPagename = mw.title.getCurrentTitle().text
+
+	local setNameForLink = normalizeSetNameForLink( setPagename )
 
 	generateContent = generateContentFirst
 	
@@ -103,7 +121,7 @@ local function main( regionsInput, frame )
 		local region = DATA.getRegion( regionInput )
 
 		if region then
-			local setListPage = makeSetListPage( setPage, region )
+			local setListPage = makeSetListPage( setNameForLink, region )
 
 			table.insert( listsContent, {
 				region = region.full:gsub( 'Worldwide ', '' ),
