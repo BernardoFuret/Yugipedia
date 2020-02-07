@@ -137,10 +137,10 @@ local function main( arguments )
 	local setNameForLink = normalizeSetNameForLink( setPagename )
 
 	local container = mwHtmlCreate( 'div' )
-		:addClass( 'set-navbox' )
+		:addClass( 'set-navigation' )
 
 	local header = mwHtmlCreate( 'div' )
-		:addClass( 'set-navbox__header' )
+		:addClass( 'set-navigation__header' )
 		:wikitext( DATA.getName( setPagename, DATA.getLanguage( 'en' ) ) )
 
 	container:node( tostring( header ) )
@@ -150,7 +150,7 @@ local function main( arguments )
 
 		if entryArguments then
 			local row = mwHtmlCreate( 'div' )
-				:addClass( 'set-navbox__row' )
+				:addClass( 'set-navigation__row' )
 				:addClass( 'hlist' )
 
 			local dl = mwHtmlCreate( 'dl' )
