@@ -141,7 +141,7 @@ local function main( arguments )
 
 	local header = mwHtmlCreate( 'div' )
 		:addClass( 'set-navigation__header' )
-		:wikitext( DATA.getName( setPagename, DATA.getLanguage( 'en' ) ) )
+		:wikitext( DATA.getName( setPagename, DATA.getLanguage( 'en' ) ) or setPagename )
 
 	container:node( tostring( header ) )
 	
