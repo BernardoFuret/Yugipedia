@@ -1,0 +1,38 @@
+.set-navigation {
+	display: table;
+	margin: auto;
+	border: 1px solid #a2a9b1;
+	background: transparent;
+	box-sizing: border-box;
+	margin-bottom: 10px;
+	clear: none;
+	padding: 3px;
+	min-width: 18em;
+}
+
+.set-navigation > .set-navigation__row:nth-of-type(odd) {
+	background-color: #f7f7f7;
+}
+
+.set-navigation__header {
+	display: table-row;
+	text-align: center;
+	font-weight: bold;
+	font-style: italic;
+	background-color: #337C97;
+	color: white;
+}
+
+.set-navigation__row {
+	display: table-row;
+	line-height: 1.5em;
+	font-size: 88%;
+}
+
+.set-navigation .hlist dt {
+	margin-right: 0.5em;
+}
+
+.set-navigation__row.hlist dl {
+	padding: 0.15em 0;
+}
