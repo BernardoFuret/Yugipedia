@@ -172,7 +172,7 @@ local function main( arguments )
 					dl:node( tostring( dd ) )
 				else
 					local message = ( 'Invalid region `%s` provided on `%s` parameter!' ):format(
-						regionInput,
+						rg,
 						entry.parameter
 					)
 
@@ -191,7 +191,10 @@ local function main( arguments )
 
 	end
 
-	return tostring( container )
+	return tostring( mwHtmlCreate( 'div' )
+		:addClass( 'set-navigation-container' )
+		:wikitext( reporter:dump(), tostring( container ) )
+	)
 end
 
 return setmetatable( {
@@ -205,7 +208,7 @@ return setmetatable( {
 		return main( ... or {
 			[ 1 ] = 'Duelist Alliance',
 			[ 'lists' ] = 'EN,FR,DE,IT,PT,SP,JP,JA,KR',
-			[ '1e_galleries' ] = 'EN,FR,DE,IT,PT,SP,JP,JA,KR',
+			[ '1e_galleries' ] = 'EN,FR,DE,IT,PT,SP,JP,WRONG,JA,KR',
 			[ 'ue_galleries' ] = 'EN,FR,DE,IT,PT,SP,JP,JA,  KR',
 			[ 'le_galleries' ] = ' EN  ,FR ,DE,IT,PT,SP,JP,JA,AE,KR  ',
 			[ 'dt_galleries' ] = 'EN,JP',
