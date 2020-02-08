@@ -66,7 +66,7 @@ local function makeGalleriesLink( edition )
 	
 	return function --[[linkGalleries]]( setPagename, region, medium )
 		if region.full == REGION_JAPANESE.full or region.full == REGION_JAPANESE_ASIAN.full then
-			return ( '[[Set Card Lists:%s (%s-%s)|%s]]' )
+			return ( '[[Set Card Galleries:%s (%s-%s)|%s]]' )
 				:format(
 					setPagename,
 					medium.abbr,
