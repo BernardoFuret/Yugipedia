@@ -36,6 +36,15 @@ local SET_NAMES_SPECIAL_CASES = {
 	[ 'series' ] = true,
 }
 
+local REGION_JAPANESE = regionCache[ 'JP' ] or updateCache( regionCache, 'JP', DATA.getRegion( 'JP' ) )
+
+local REGION_JAPANESE_ASIAN = regionCache[ 'JA' ] or updateCache( regionCache, 'JA', DATA.getRegion( 'JA' ) )
+
+local IS_REGION_JP_OR_JA = {
+	[ REGION_JAPANESE.index ] = true,
+	[ REGION_JAPANESE_ASIAN.index ] = true,
+}
+
 local function normalizeSetNameForLink( setPagename )
 	-- Remove the dab except for some special cases
 	local dab = UTIL.getDab( setPagename )
@@ -59,22 +68,17 @@ local function linkLists( setPagename, region, medium )
 		)
 end
 
-local function makeGalleriesLink( edition )
-	local REGION_JAPANESE = regionCache[ 'jp' ] or updateCache( regionCache, 'jp', DATA.getRegion( 'jp' ) )
-
-	local REGION_JAPANESE_ASIAN = regionCache[ 'ja' ] or updateCache( regionCache, 'ja', DATA.getRegion( 'ja' ) )
-	
+local function makeGalleriesLink( edition )	
 	return function --[[linkGalleries]]( setPagename, region, medium )
-		if region.full == REGION_JAPANESE.full or region.full == REGION_JAPANESE_ASIAN.full then
-			return ( '[[Set Card Galleries:%s (%s-%s)|%s]]' )
+		return IS_REGION_JP_OR_JA[ region.index ]
+			and ( '[[Set Card Galleries:%s (%s-%s)|%s]]' )
 				:format(
 					setPagename,
 					medium.abbr,
 					region.index,
 					normalizeRegionFull( region )
 				)
-		else
-			return ( '[[Set Card Galleries:%s (%s-%s-%s)|%s]]' )
+			or ( '[[Set Card Galleries:%s (%s-%s-%s)|%s]]' )
 				:format(
 					setPagename,
 					medium.abbr,
@@ -82,7 +86,6 @@ local function makeGalleriesLink( edition )
 					edition.abbr,
 					normalizeRegionFull( region )
 				)
-		end
 	end
 end
 
