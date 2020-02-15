@@ -78,7 +78,7 @@ local function generateContentFirst( fullpagename, frame )
 		mwHtmlCreate( 'div' )
 			:addClass( 'set-list-tab' )
 			:attr( 'data-page', fullpagename )
-			:wikitext( success and content or table.concat{
+			:wikitext( '\n', success and content or table.concat{
 				'[[', fullpagename, ']]'
 			} )
 	)
