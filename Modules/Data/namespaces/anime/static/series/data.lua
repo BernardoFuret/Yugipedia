@@ -8,6 +8,7 @@ local normalize = {
 	['zx']   = 'zx', ['zexal']  = 'zx',
 	['av']   = 'av', ['arcv']   = 'av',
 	['vr']   = 'vr', ['vrains'] = 'vr',
+	['sv']   = 'sv', ['sevens'] = 'sv',
 
 	-- Movies:
 	['mov']  = 'mov',  ['pyramidoflight'] = 'mov', ['moviepyramidoflight'] = 'mov',  ['pol']  = 'mov',
@@ -51,6 +52,11 @@ local main = {
 		abbr  = 'VR',
 		page  = 'Yu-Gi-Oh! VRAINS',
 		label = 'Yu-Gi-Oh! VRAINS',
+	},
+	['sv'] = {
+		abbr  = 'SV',
+		page  = 'Yu-Gi-Oh! SEVENS',
+		label = 'Yu-Gi-Oh! SEVENS',
 	},
 
 	-- Movies:
