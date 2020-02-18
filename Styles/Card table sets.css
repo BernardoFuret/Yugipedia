@@ -1,6 +1,7 @@
 .cts td[title] {
 	white-space: nowrap;
 }
+
 .cts tbody td:nth-child(3),
 .cts :lang(fr),
 .cts :lang(de),
@@ -10,9 +11,19 @@
 	font-style: italic;
 }
 
-.cts__header--release { width: 4.5em; }
-.cts__header--number { width: 6em; }
+.cts__header--release {
+	width: 4.5em;
+}
+
+.cts__header--number {
+	min-width: 6em;
+}
+
 .cts__header--rarity {
 	min-width: 7em;
 	max-width: 12em;
+}
+
+.cts tr td:nth-child(2) {
+	white-space: nowrap;
 }
