@@ -62,6 +62,9 @@ local normalize = {
 	['kcsr'] = 'kcsr', ['kaibacorporationsuper']  = 'kcsr', ['kcs'] = 'kcsr',
 	['kcur'] = 'kcur', ['kaibacorporationultra']  = 'kcur', ['kcu'] = 'kcur',
 
+	-- Rush:
+	['rr'] = 'rr', ['rush'] = 'rr',
+
 	-- Other:
 	['hfr'] = 'hfr', ['holofoil']    = 'hfr',
 	['sfr'] = 'sfr', ['starfoil']    = 'sfr',
@@ -131,6 +134,9 @@ local main = {
 	['kcr']  = { abbr = 'KCR',  full = 'Kaiba Corporation Rare'       },
 	['kcsr'] = { abbr = 'KCSR', full = 'Kaiba Corporation Super Rare' },
 	['kcur'] = { abbr = 'KCUR', full = 'Kaiba Corporation Ultra Rare' },
+
+	-- Rush:
+	['rr'] = { abbr = 'RR', full = 'Rush Rare' },
 
 	-- Other:
 	['hfr'] = { abbr = 'HFR', full = 'Holofoil Rare'    },
