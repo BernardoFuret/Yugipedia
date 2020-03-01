@@ -70,10 +70,10 @@ local function initNumber( t )
 		return t:error( 'set abbreviation' );
 	end
 
-	if cardNumber and cardNumber:match( '^%w-%-%w-$' ) then
+	if cardNumber and cardNumber:match( '^[/%w]-%-%w-$' ) then
 		-- Input like «TLM-EN012».
 		t.number  = cardNumber:upper();
-		t.setAbbr = t.number:match( '^(%w-)%-%w-$' );
+		t.setAbbr = t.number:match( '^([/%w]-)%-%w-$' );
 	else
 		-- Input like «S1».
 		t.number  = nil;
@@ -256,10 +256,12 @@ function File:render()
 		return ('%s | File #%d'):format( getCardBack( self.parent:getRegion().index ), self.id );
 	end
 
+	local trimedSetAbbr = self.setAbbr:gsub( '/' , '' )
+
 	-- Build file:
 	local file = StringBuffer()
 		:add( UTIL.getImgName() )
-		:add( self.setAbbr )
+		:add( trimedSetAbbr )
 		:add( ( self.region or self.parent:getRegion() ).index )
 		:add( self.rarity and self.rarity.abbr )
 		:add( self.edition and self.edition.abbr )
