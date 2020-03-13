@@ -67,7 +67,8 @@
 					return m;
 				} else {
 					__removedNamesAndLores[ updateContentPages ][ `${$2}s` ].push( {
-						[ $1 ]: $3.replace( /^.*?=\s/m, '' ),
+						language: $1,
+						[ $2 ]: $3.replace( /^.*?=\s/m, '' ),
 					} );
 
 					return '';
