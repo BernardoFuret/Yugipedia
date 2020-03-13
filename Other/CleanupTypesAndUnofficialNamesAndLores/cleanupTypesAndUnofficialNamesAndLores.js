@@ -104,7 +104,7 @@
 	const getMembers = cmcontinue => api.get( {
 		action: "query",
 		list: "categorymembers",
-		cmtitle: "Category:TCG cards",
+		cmtitle: "Category:CardTable2 parameter tracking (type)",
 		cmlimit: "max",
 		format: "json",
 		cmcontinue: cmcontinue,
