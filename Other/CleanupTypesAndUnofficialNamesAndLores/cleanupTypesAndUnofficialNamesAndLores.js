@@ -58,7 +58,7 @@
 				`| types                 = ${types.filter( Boolean ).join( ' / ' )}`
 			)
 		;
-	}
+	};
 
 	const updateUnofficial = function( content ) {
 		return content
@@ -86,7 +86,7 @@
 				;
 			} )
 		;
-	}
+	};
 
 	const updateContent = ( pagename, content ) => {
 		__removedNamesAndLores.push( {
@@ -100,7 +100,7 @@
 		return updateUnofficial(
 			updateTypeParams( content )
 		);
-	}
+	};
 
 	const getMembers = cmcontinue => api.get( {
 		action: "query",
@@ -121,7 +121,7 @@
 		titles: pagename
 	} )
 		.then ( data => data.query.pages[ 0 ].revisions[ 0 ].content )
-		.catch( console.error.bind( console, "Error fetching content for", pagename ) )
+		.catch( console.error.bind( console, "Error fetching content for", quote( pagename ) ) )
 	;
 
 	const edit = ( pagename, content ) => api.postWithToken( "csrf", {
@@ -162,12 +162,12 @@
 
 			pageCount++;
 
-			console.log( "Getting content for", pagename );
+			console.log( "Getting content for", quote( pagename ) );
 
 			const content = await getContent( pagename );
 
 			if ( !content ) {
-				console.warn( "No content for", pagename );
+				console.warn( "No content for", quote( pagename ) );
 
 				__errors.push( {
 					pagename,
