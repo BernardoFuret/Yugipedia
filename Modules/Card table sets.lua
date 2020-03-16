@@ -149,7 +149,11 @@ local function createDataRow( region, language, line, lineno )
 		local message = ('No set name given at non-empty input line %d.')
 			:format( lineno )
 
-		reporter:addWarning( message )
+		local category = '((Card table sets)) transclusions with missing set name'
+
+		reporter
+			:addWarning( message )
+			:addCategory( category )
 	end
 
 	local tr = mwHtmlCreate( 'tr' )
@@ -161,7 +165,7 @@ local function createDataRow( region, language, line, lineno )
 		tr:node(
 			createCell(
 				'set-localized',
-				DATA.getName( setName, language )
+				setName and DATA.getName( setName, language )
 			)
 		)
 	end
