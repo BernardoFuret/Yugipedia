@@ -14,6 +14,7 @@ local P = {
 	bodystyle   = true,
 	
 	title       = true,
+	titleclass  = true,
 	titlestyle  = true,
 
 	above       = true,

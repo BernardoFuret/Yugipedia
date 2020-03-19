@@ -224,8 +224,8 @@ function ct._main( args )
 		mainWrapper
 			:tag( 'div' )
 				:addClass( 'heading' )
-				:addClass( args.titlestyle )
-				:cssText( args.bodystyle )
+				:addClass( args.titleclass )
+				:cssText( args.titlestyle )
 				:wikitext( args.title )
 	end
 
