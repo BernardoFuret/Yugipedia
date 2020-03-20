@@ -2,6 +2,10 @@
 	white-space: nowrap;
 }
 
+.cts th {
+	box-sizing: border-box;
+}
+
 .cts tbody td:nth-child(3),
 .cts :lang(fr),
 .cts :lang(de),
@@ -12,16 +16,16 @@
 }
 
 .cts__header--release {
-	width: 4.5em;
+	width: 6.5em;
 }
 
 .cts__header--number {
-	min-width: 6em;
+	min-width: 8em;
 }
 
 .cts__header--rarity {
-	min-width: 7em;
-	max-width: 12em;
+	min-width: 9em;
+	max-width: 14em;
 }
 
 .cts tr td:nth-child(2) {
