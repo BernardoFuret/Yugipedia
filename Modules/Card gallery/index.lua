@@ -111,7 +111,7 @@ end
 -- @description Builds the mediawiki section header.
 local function getMwSectionHeader()
 	return (
-		(_type or _title) and '== %s - %s ==' or '== %s =='
+		_type and '== %s - %s ==' or '== %s =='
 	):format(
 		(_type or _title) or _region.full, _region.full
 	);
