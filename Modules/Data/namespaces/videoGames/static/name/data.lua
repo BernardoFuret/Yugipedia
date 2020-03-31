@@ -18,6 +18,10 @@ local normalize = {
 	['gbi'] = 'sdd', ['dmi'] = 'sdd',   ['di'] = 'sdd',   ['di1'] = 'sdd',  ['international1'] = 'sdd', ['international'] = 'sdd', ['worldwide'] = 'sdd',  ['worldwideedition'] = 'sdd', ['sdd'] = 'sdd', ['worldwideeditionstairwaytodestinedduel']  = 'sdd', ['stairwaytodestinedduel'] = 'sdd',
 	['eds'] = 'eds', ['eternalduelistsoul'] = 'eds', ['eternalduelistssoul'] = 'eds',
 
+	-- Legacy of the Duelist:
+	['ld']  = 'ld',   ['lod']  = 'ld',   ['legacyofduelist'] = 'ld',
+	['ld2'] = 'lod2', ['lod2'] = 'lod2', ['ldle'] = 'lod2', ['linkevolution'] = 'lod2', ['legacyofduelistlinkevolution'] = 'lod2',
+
 	-- Power of Chaos:
 	['poc'] = 'poc', ['powerofchaos']      = 'poc', ['pc'] = 'poc', -- TODO: too generic (series). Useful?
 	['pcj'] = 'pcj', ['powerofchaosjoey']  = 'pcj', ['powerofchaosjoeypassion']  = 'pcj', ['joey']  = 'pcj', ['joeypassion']  = 'pcj',
@@ -70,9 +74,6 @@ local normalize = {
 	['gx1'] = 'gx1',  ['gx01'] = 'gx1',  ['duelacademy'] = 'gx1',   ['mezaseduelking'] = 'gx1',  ['awakenduelking'] = 'gx1',
 	['gx3'] = 'gx03', ['gx03'] = 'gx03', ['spiritcaller'] = 'gx03', ['spiritsummoner'] = 'gx03',
 
-	-- L:
-	['ld'] = 'ld', ['lod'] = 'ld', ['legacyofduelist'] = 'ld',
-
 	-- M:
 	['md']   = 'md',   ['millenniumduels'] = 'md', -- Check if correct abbr.
 	['mm']   = 'mm',   ['multimaster']     = 'mm', -- Check if correct abbr.
@@ -113,6 +114,10 @@ local main = {
 	['tsc'] = { abbr = 'TSC', full = 'Yu-Gi-Oh! The Sacred Cards'                                 },
 	['rod'] = { abbr = 'ROD', full = 'Yu-Gi-Oh! Reshef of Destruction'                            },
 	['sdd'] = { abbr = 'SDD', full = 'Yu-Gi-Oh! Worldwide Edition: Stairway to the Destined Duel' },
+
+	-- Legacy of the Duelist:
+	['lotd'] = { abbr = 'LD',   full = 'Yu-Gi-Oh! Legacy of the Duelist'                 },
+	['lod2'] = { abbr = 'LOD2', full = 'Yu-Gi-Oh! Legacy of the Duelist: Link Evolution' },
 
 	-- Power of Chaos:
 	['poc'] = { abbr = 'POC', full = 'Yu-Gi-Oh! Power of Chaos'                    },
@@ -158,7 +163,6 @@ local main = {
 	['5ddp'] = { abbr = '5DDP', full = "Yu-Gi-Oh! 5D's Decade Duels Plus"             },
 	['gx1']  = { abbr = 'GX1',  full = 'Yu-Gi-Oh! GX Duel Academy'                    },
 	['gx03'] = { abbr = 'GX03', full = 'Yu-Gi-Oh! GX Spirit Caller'                   },
-	['ld']   = { abbr = 'LD',   full = 'Yu-Gi-Oh! Legacy of the Duelist'              },
 	['mnst'] = { abbr = 'MNST', full = 'Yu-Gi-Oh! Monster Strike'                     },
 	['ntr']  = { abbr = 'NTR',  full = 'Yu-Gi-Oh! Nightmare Troubadour'               },
 	['tfk']  = { abbr = 'TFK',  full = 'Yu-Gi-Oh! The Falsebound Kingdom'             },
