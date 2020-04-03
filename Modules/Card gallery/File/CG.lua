@@ -256,12 +256,10 @@ function File:render()
 		return ('%s | File #%d'):format( getCardBack( self.parent:getRegion().index ), self.id );
 	end
 
-	local trimedSetAbbr = self.setAbbr:gsub( '/' , '' )
-
 	-- Build file:
 	local file = StringBuffer()
 		:add( UTIL.getImgName() )
-		:add( trimedSetAbbr )
+		:add( self.setAbbr )
 		:add( ( self.region or self.parent:getRegion() ).index )
 		:add( self.rarity and self.rarity.abbr )
 		:add( self.edition and self.edition.abbr )
@@ -307,8 +305,10 @@ function File:render()
 		:add( self.description )
 		:flush( '<br />' )
 	;
-	
-	return ('%s | %s'):format( file:toString(), caption:toString() );
+
+	local fileString = file:toString():gsub( '[/:]' , '' )
+
+	return ('%s | %s'):format( fileString, caption:toString() );
 end
 
 ----------
