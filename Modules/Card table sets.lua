@@ -39,7 +39,7 @@ local function validateRarities( rarities, lineno )
 			if rarity then
 				table.insert( validated, rarity.full )
 			else
-				local message = ('No such rarity for `%s`, at non-empty input line %d, at non-empty position %d.')
+				local message = ( 'No such rarity for `%s`, at non-empty input line %d, at non-empty position %d.' )
 					:format( r, lineno, position )
 
 				reporter:addError( message )
@@ -58,45 +58,6 @@ local function printRarities( rarities )
 	end
 
 	return table.concat( linked, '<br />' )
-end
-
-local function setSMWProps( cardNumber, setName, rarities, regionFull )
-	if not mw.smw then
-		reporter:addError( 'SMW is not available!' )
-
-		return
-	end
-
-	local setInfoProp = ('--- %s --- %s --- %s --- %s ---')
-		:format(
-			cardNumber,
-			setName,
-			table.concat( rarities, ',' ),
-			regionFull
-		)
-
-	local jsonRarities = {}
-
-	for _, rarity in ipairs( rarities ) do
-		table.insert( jsonRarities, '"' .. rarity .. '"' )
-	end
-
-	local setInfoJSONProp = ('{ "number": "%s", "name": "%s", "rarity": [%s], "region": "%s" }')
-		:format(
-			cardNumber,
-			setName,
-			table.concat( jsonRarities, ',' ),
-			regionFull
-		)
-
-	local setRes = mw.smw.set{
-		['Set information'] = setInfoProp,
-		['Set information (JSON)'] = setInfoJSONProp,
-	}
-
-	if not setRes then
-		reporter:addError( "Failed to set SMW properties for set information!" )
-	end
 end
 
 local function createHeader( id, text )
@@ -146,7 +107,7 @@ local function createDataRow( region, language, line, lineno )
 		or {}
 
 	if not setName then
-		local message = ('No set name given at non-empty input line %d.')
+		local message = ( 'No set name given at non-empty input line %d.' )
 			:format( lineno )
 
 		local category = '((Card table sets)) transclusions with missing set name'
@@ -171,8 +132,6 @@ local function createDataRow( region, language, line, lineno )
 	end
 
 	tr:node( createCell( 'rarity', printRarities( rarities ) ) )
-
-	setSMWProps( cardNumber or '', setName or '', rarities, region.full )
 
 	return tostring( tr )
 end
