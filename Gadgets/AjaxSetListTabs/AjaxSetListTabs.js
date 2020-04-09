@@ -27,15 +27,37 @@
 	function SetListLoader( $container ) {
 		this.$container = $container;
 		this.defaultContent = $container.html();
-		this.setListPagename = $container.data( 'page' );
+		this.setListFullpagename = $container.data( 'page' );
 		this.setListPagePath = [
 			/wiki/,
-			window.encodeURI( this.setListPagename )
+			window.encodeURI( this.setListFullpagename )
 		].join( '' );
 	}
 
 	SetListLoader.prototype.resetTimeoutTriesCounter = function() {
 		this.remainingTimeoutTries = 2;
+	};
+
+	SetListLoader.prototype.makePageRedLink = function() {
+		var href = [
+			'/index.php?title=',
+			window.encodeURI( this.setListFullpagename ),
+			'&action=edit&redlink=1'
+		].join( '' );
+
+		var title = [
+			this.setListFullpagename,
+			'(page does not exist)'
+		].join( ' ' );
+
+		var redLink = $( '<a>', {
+			href: href,
+			'class': 'new',
+			title: title,
+			text: this.setListFullpagename
+		} );
+
+		return $( '<p>' ).append( redLink );
 	};
 
 	SetListLoader.prototype.makeError = function() {
@@ -47,7 +69,7 @@
 
 		var $pageLink = $( '<a>', {
 			href: this.setListPagePath,
-			text: this.setListPagename
+			text: this.setListFullpagename
 		} );
 
 		var $tryAgainLink = $( '<a>', {
@@ -89,11 +111,9 @@
 		return getListData( this.setListPagePath )
 			.then( parseData )
 			[ 'catch' ]( function( jqXHR, textStatus, error ) {
-				console.warn(
-					'[Gadget]', '[AjaxSetListTabs]',
-					'Error loading', self.setListPagename,
-					'-', jqXHR, textStatus, error
-				);
+				if ( jqXHR.status === 404 ) {
+					return self.makePageRedLink();
+				}
 
 				if ( textStatus === 'timeout' && self.remainingTimeoutTries-- > 0 ) {
 					return new Promise( function( resolve ) {
@@ -102,6 +122,12 @@
 						.then( self.getHtml.bind( self ) )
 					;
 				}
+
+				console.warn(
+					'[Gadget]', '[AjaxSetListTabs]',
+					'Error loading', self.setListFullpagename,
+					'-', jqXHR, textStatus, error
+				);
 
 				return self.makeError();
 			} )
