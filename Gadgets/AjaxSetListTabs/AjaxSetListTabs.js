@@ -9,28 +9,34 @@
 
 	var LAST_LOG = '~~~~~';
 
-	var pagename = mw.config.get( 'wgPageName' );
-
-	var api;
-
-	function getListData( setListPage ) {
-		return api.get( {
-			action: 'parse',
-			title: pagename,
-			text: [ '{{:', '}}' ].join( setListPage )
+	function getListData( setListPagePath ) {
+		return $.ajax( {
+			url: setListPagePath,
+			dataType: "html"
 		} );
 	}
 
 	function parseData( data ) {
-		return $( $.parseHTML( data.parse.text[ '*' ] ) ).html();
+		return $( "<div>" )
+			.append( $.parseHTML( data ) )
+			.find( '.mw-parser-output > :not( :first-child )' )
+			.prop( 'outerHTML' )
+		;
 	}
 
 	function SetListLoader( $container ) {
 		this.$container = $container;
 		this.defaultContent = $container.html();
-		this.setListPage = $container.data( 'page' );
-		this.remainingTimeoutTries = 2;
+		this.setListPagename = $container.data( 'page' );
+		this.setListPagePath = [
+			/wiki/,
+			window.encodeURI( this.setListPagename )
+		].join( '' );
 	}
+
+	SetListLoader.prototype.resetTimeoutTriesCounter = function() {
+		this.remainingTimeoutTries = 2;
+	};
 
 	SetListLoader.prototype.makeError = function() {
 		var self = this;
@@ -40,8 +46,8 @@
 		} );
 
 		var $pageLink = $( '<a>', {
-			href: '/wiki/'.concat( this.setListPage ),
-			text: this.setListPage
+			href: this.setListPagePath,
+			text: this.setListPagename
 		} );
 
 		var $tryAgainLink = $( '<a>', {
@@ -80,18 +86,18 @@
 	SetListLoader.prototype.getHtml = function() {
 		var self = this;
 
-		return getListData( this.setListPage )
+		return getListData( this.setListPagePath )
 			.then( parseData )
-			[ 'catch' ]( function( err1, err2 ) {
+			[ 'catch' ]( function( jqXHR, textStatus, error ) {
 				console.warn(
 					'[Gadget]', '[AjaxSetListTabs]',
-					'Error loading', self.setListPage,
-					'-', err1, err2
+					'Error loading', self.setListPagename,
+					'-', jqXHR, textStatus, error
 				);
 
-				if ( err2.textStatus === 'timeout' && self.remainingTimeoutTries-- ) {
+				if ( textStatus === 'timeout' && self.remainingTimeoutTries-- > 0 ) {
 					return new Promise( function( resolve ) {
-						window.setTimeout( resolve, Math.random() * 1000 );
+						window.setTimeout( resolve, Math.random() * 5000 );
 					} )
 						.then( self.getHtml.bind( self ) )
 					;
@@ -107,6 +113,8 @@
 	};
 
 	SetListLoader.prototype.load = function() {
+		this.resetTimeoutTriesCounter();
+
 		this.getHtml()
 			.then( this.display.bind( this ) )
 		;
@@ -120,15 +128,7 @@
 		} );
 	}
 
-	function init() {
-		api = new mw.Api();
-
-		loadLists();
-	}
-
-	mw.hook( 'wikipage.content' ).add( function() {
-		mw.loader.using( 'mediawiki.api' ).then( init );
-	} );
+	mw.hook( 'wikipage.content' ).add( loadLists );
 
 	console.log( '[Gadget] AjaxSetListTabs last updated at', LAST_LOG );
 
