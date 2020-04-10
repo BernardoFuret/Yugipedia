@@ -12,12 +12,18 @@ local UTIL = require( 'Module:Util' )
 local Reporter = require( 'Module:Reporter' )
 local StringBuffer = require( 'Module:StringBuffer' )
 
+local DATA_REGIONS = DATA( 'region' )
+local DATA_LANGUAGES = DATA( 'language' )
+
 local LANGUAGE_ENGLISH = DATA.getLanguage( 'English' )
 
 local mwText = mw.text
 local mwHtmlCreate = mw.html.create
 
 local reporter;
+
+local KEY_DATE = 'SET_DATE'
+local KEY_NAME = 'SET_NAME'
 
 local function formatCardNumber( cardNumber )
 	return cardNumber:match( '?' )
@@ -60,6 +66,127 @@ local function printRarities( rarities )
 	return table.concat( linked, '<br />' )
 end
 
+local function getWikitextVarValue( frame, varName )
+	return UTIL.trim(
+		frame:callParserFunction{
+			name = '#var',
+			args = {
+				varName
+			}
+		}
+	)
+end
+
+local function setWikitextVarValue( frame, varName, value )
+	frame:callParserFunction{
+		name = '#vardefine',
+		args = {
+			varName, value or ''
+		}
+	}
+
+	return value
+end
+
+local function makeWikitextVarName( ... )
+	return table.concat( {
+		'$$', ...,
+	}, '-' )
+end
+
+local function getSetSmwInfo( frame, setName )
+	local info = {
+		[ KEY_DATE ] = {},
+		[ KEY_NAME ] = {},
+	}
+	
+	if not setName then
+		return info
+	end
+
+	local isCachedVarName = makeWikitextVarName( setName, 'setSmwInfoIsCached' )
+
+	if getWikitextVarValue( frame, isCachedVarName ) then
+		for _, region in pairs( DATA_REGIONS ) do
+			local varName = makeWikitextVarName( setName, KEY_DATE, region.index )
+
+			info[ KEY_DATE ][ region.index ] = getWikitextVarValue( frame, varName )
+		end
+
+		for _, language in pairs( DATA_LANGUAGES ) do
+			local varName = makeWikitextVarName( setName, KEY_NAME, language.index )
+
+			info[ KEY_NAME ][ language.index ] = getWikitextVarValue( frame, varName )
+		end
+
+		return info
+	end
+
+	setWikitextVarValue( frame, isCachedVarName, 1 )
+
+	local smwResult = mw.smw.ask{ -- TODO: the props to query should be generated automatically from DATA region and language
+		table.concat{ '[[', setName, ']]' },
+		'?Worldwide English release date#ISO',
+		'?English release date#ISO',
+		'?North American English release date#ISO',
+		'?European English release date#ISO',
+		'?Oceanic English release date#ISO',
+		'?French release date#ISO',
+		'?French-Canadian release date#ISO',
+		'?German release date#ISO',
+		'?Italian release date#ISO',
+		'?Portuguese release date#ISO',
+		'?Spanish release date#ISO',
+		'?Latin American Spanish release date#ISO',
+		'?Japanese release date#ISO',
+		'?Japanese-Asian release date#ISO',
+		'?Asian-English release date#ISO',
+		'?Chinese release date#ISO',
+		'?Korean release date#ISO',
+
+		'?English name',
+		'?French name',
+		'?German name',
+		'?Italian name',
+		'?Portuguese name',
+		'?Spanish name',
+		'?Japanese name',
+		'?Chinese name',
+		'?Korean name',
+		
+		mainlabel = '-',
+	}[ 1 ] or {}
+
+	for _, region in pairs( DATA_REGIONS ) do
+		local varName = makeWikitextVarName( setName, KEY_DATE, region.index )
+
+		local dateForRegion = smwResult[ table.concat{ region.full, ' release date' } ]
+
+		info[ KEY_DATE ][ region.index ] = setWikitextVarValue( frame, varName, dateForRegion
+			and dateForRegion[ 1 ]
+			or dateForRegion
+		)
+	end
+
+	for _, language in pairs( DATA_LANGUAGES ) do
+		local varName = makeWikitextVarName( setName, KEY_NAME, language.index )
+
+		local localizedName = smwResult[ table.concat{ language.full, ' name' } ]
+
+		info[ KEY_NAME ][ language.index ] = setWikitextVarValue( frame, varName, localizedName )
+	end
+
+	-- Special cases:
+	do
+		-- Fallback to `English release date`
+		local varName = makeWikitextVarName( setName, KEY_DATE, 'EN' )
+
+		info[ KEY_DATE ][ 'EN' ] = info[ KEY_DATE ][ 'EN' ] or setWikitextVarValue( frame, varName, smwResult[ 'English release date' ] )
+	end
+
+	return info
+end
+
 local function createHeader( id, text )
 	return tostring( mwHtmlCreate( 'th' )
 		:attr( 'scope', 'col' )
@@ -94,7 +221,7 @@ local function createCell( id, text )
 	)
 end
 
-local function createDataRow( region, language, line, lineno )
+local function createDataRow( frame, region, language, line, lineno )
 	local parts = mwText.split( line, '%s*;%s*' )
 
 	local cardNumber = UTIL.trim( parts[ 1 ] )
@@ -117,8 +244,10 @@ local function createDataRow( region, language, line, lineno )
 			:addCategory( category )
 	end
 
+	local setSmwInfo = getSetSmwInfo( frame, setName )
+
 	local tr = mwHtmlCreate( 'tr' )
-		:node( createCell( 'release', setName and DATA.getReleaseDate( setName, region ) ) )
+		:node( createCell( 'release', setSmwInfo[ KEY_DATE ][ region.index ] ) )
 		:node( createCell( 'number', cardNumber and formatCardNumber( cardNumber ) ) )
 		:node( createCell( 'set', setName and UTIL.italicLink( setName ) ) )
 
@@ -126,7 +255,7 @@ local function createDataRow( region, language, line, lineno )
 		tr:node(
 			createCell(
 				'set-localized',
-				setName and DATA.getName( setName, language )
+				setSmwInfo[ KEY_NAME ][ language.index ]
 			)
 		)
 	end
@@ -137,7 +266,7 @@ local function createDataRow( region, language, line, lineno )
 end
 
 
-local function main( regionInput, setsInput )
+local function main( frame, regionInput, setsInput )
 	reporter = Reporter( 'Card table sets' )
 
 	local region = DATA.getRegion( regionInput ) -- TODO: handle incorrect regions (necessary?)
@@ -158,7 +287,7 @@ local function main( regionInput, setsInput )
 			if UTIL.trim( line ) then
 				lineno = lineno + 1
 
-				setsTable:node( createDataRow( region, language, line, lineno ) )
+				setsTable:node( createDataRow( frame, region, language, line, lineno ) )
 			end
 		end
 	else
@@ -181,11 +310,18 @@ return setmetatable( {
 	main = function( frame )
 		local arguments = frame:getParent().args
 
-		return main( arguments[ 'region' ], arguments[ 1 ] )
+		return main( frame, arguments[ 'region' ], arguments[ 1 ] )
 	end
 }, {
-	__call = function( t, ... )
-		return main( ... )
+	__call = function( t, rg, list )
+		local testRg = 'EN'
+
+		local testList = [[
+TLM-KR012; The Lost Millennium; Super Rare, Ultimate Rare
+MVP1-ENSV4; Yu-Gi-Oh! The Dark Side of Dimensions Movie Pack Secret Edition; Ultra Rare
+MVP1-ENS55; Yu-Gi-Oh! The Dark Side of Dimensions Movie Pack Secret Edition; Secret Rare
+]]
+		return main( mw.getCurrentFrame(), rg or testRg, list or testList )
 	end,
 } )
 -- </pre>
