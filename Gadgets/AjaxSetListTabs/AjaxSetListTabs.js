@@ -12,15 +12,18 @@
 	function getListData( setListPagePath ) {
 		return $.ajax( {
 			url: setListPagePath,
-			dataType: "html"
+			dataType: 'html'
 		} );
 	}
 
 	function parseData( data ) {
-		return $( "<div>" )
+		return $( '<div>' )
 			.append( $.parseHTML( data ) )
-			.find( '.mw-parser-output > :not( :first-child )' )
-			.prop( 'outerHTML' )
+			.find( '#mw-content-text .mw-parser-output' )
+				.children()
+					.remove( ':first' )
+						.end()
+				.html()
 		;
 	}
 
