@@ -124,7 +124,7 @@ local function getSetSmwInfo( frame, setName )
 
 	setWikitextVarValue( frame, isCachedVarName, 1 )
 
-	local smwResult = mw.smw.ask{ -- TODO: the props to query should be generated automatically from DATA region and language
+	local smwResult = ( mw.smw.ask{ -- TODO: the props to query should be generated automatically from DATA region and language
 		table.concat{ '[[', setName, ']]' },
 		'?Worldwide English release date#ISO',
 		'?English release date#ISO',
@@ -155,7 +155,7 @@ local function getSetSmwInfo( frame, setName )
 		'?Korean name',
 		
 		mainlabel = '-',
-	}[ 1 ] or {}
+	} or {} )[ 1 ] or {}
 
 	for _, region in pairs( DATA_REGIONS ) do
 		local varName = makeWikitextVarName( setName, KEY_DATE, region.index )
@@ -320,6 +320,8 @@ return setmetatable( {
 TLM-KR012; The Lost Millennium; Super Rare, Ultimate Rare
 MVP1-ENSV4; Yu-Gi-Oh! The Dark Side of Dimensions Movie Pack Secret Edition; Ultra Rare
 MVP1-ENS55; Yu-Gi-Oh! The Dark Side of Dimensions Movie Pack Secret Edition; Secret Rare
+MVP1-ENS55; ; Secret Rare
+MVP1-ENS55; PAGE THAT DOESN'T EXIST; Secret Rare
 ]]
 		return main( mw.getCurrentFrame(), rg or testRg, list or testList )
 	end,
