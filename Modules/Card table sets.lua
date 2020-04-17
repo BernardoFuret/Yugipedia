@@ -274,6 +274,7 @@ local function main( frame, regionInput, setsInput )
 	local language = DATA.getLanguage( regionInput )
 
 	local setsTable = mwHtmlCreate( 'table' )
+		:attr( 'id', 'cts--' .. region.index )
 		:addClass( 'wikitable' )
 		:addClass( 'sortable' )
 		:addClass( 'card-list' )
