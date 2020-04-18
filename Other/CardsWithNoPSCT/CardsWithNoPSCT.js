@@ -14,6 +14,10 @@
 
 	const __mayHavePsctRelease = [];
 
+	const __promises = {};
+
+	let chainId = 0;
+
 	const REGIONS = [
 		'EN',
 		'NA',
@@ -24,12 +28,12 @@
 	const api = await mw.loader.using( 'mediawiki.api' ).then( () => new mw.Api() );
 
 	const sleep = ms => new Promise( r => window.setTimeout( r, ms ) );
-	
+
 	const getCategoryMembers = cmcontinue => api.get( {
 		action: 'query',
 		list: 'categorymembers',
 		cmtitle: 'Category:TCG cards',
-		cmlimit: '250',
+		cmlimit: '500',
 		cmcontinue: cmcontinue,
 	} );
 
@@ -73,6 +77,10 @@
 
 		loop:
 		do {
+			if ( window.STOP_SCRIPT ) {
+				break loop;
+			}
+
 			const cmResponse = await getCategoryMembers( continueToken );
 
 			// Update the continue token:
@@ -82,54 +90,72 @@
 
 			const members = cmResponse.query.categorymembers;
 
-			for ( const { title } of members ) {
-				if ( window.STOP_SCRIPT ) {
-					break loop;
-				}
-
-				console.log( 'Processing', title );
-
-				const $pageHtml = await getHtml( title );
-
-				if ( !$pageHtml ) {
-					console.error( 'No HTML for', title );
-
-					continue;
-				}
-
-				const $rgTables = $pageHtml
-					.find( REGIONS.map( rg => `#cts--${rg}` ).join() )
-				;
-
-				const rgDates = getNthCell( $rgTables, 'first-child' );
-
-				const rgSets = getNthCell( $rgTables, 'nth-child( 3 )' );
-
-				if ( !rgDates.some( dateIsAfter2011 ) ) {
-					__noPsctRelease.push( title );
-
-					if ( rgDates.includes( '' ) ) {
-						const setsWithNoDate = rgDates.reduce( ( acc, date, index ) => {
-							if ( !date ) {
-								acc.push( rgSets[ index ] );
+			( id => {
+				__promises[ id ] = Promise.resolve( members )
+					.then( async members => {
+						for ( const { title } of members ) {
+							if ( window.STOP_SCRIPT ) {
+								throw 'Halt!';
 							}
 
-							return acc;
-						}, [] );
+							console.log( 'Processing', title );
 
-						__mayHavePsctRelease.push( {
-							title,
-							setsWithNoDate
-						} );
-					}
-				}
+							const $pageHtml = await getHtml( title );
 
-				if ( !$rgTables.siblings( '#cts--AU' ).length ) {
-					__noOcRelease.push( title );
-				}
+							if ( !$pageHtml ) {
+								console.error( 'No HTML for', title );
 
-				await sleep( window.SCRIPT_LATENCY || 500 );
-			}
+								continue;
+							}
+
+							const $rgTables = $pageHtml
+								.find( REGIONS.map( rg => `#cts--${rg}` ).join() )
+							;
+
+							const rgDates = getNthCell( $rgTables, 'first-child' );
+
+							const rgSets = getNthCell( $rgTables, 'nth-child( 3 )' );
+
+							if ( !rgDates.some( dateIsAfter2011 ) ) {
+								__noPsctRelease.push( title );
+
+								if ( rgDates.includes( '' ) ) {
+									const setsWithNoDate = rgDates.reduce( ( acc, date, index ) => {
+										if ( !date ) {
+											acc.push( rgSets[ index ] );
+										}
+
+										return acc;
+									}, [] );
+
+									__mayHavePsctRelease.push( {
+										title,
+										setsWithNoDate
+									} );
+								}
+							}
+
+							if ( !$rgTables.siblings( '#cts--AU' ).length ) {
+								__noOcRelease.push( title );
+							}
+
+							await sleep( window.SCRIPT_LATENCY || 500 );
+						}
+					} )
+					.catch( err => {
+						if ( err === 'Halt!' ) {
+							console.log( 'Terminating' );
+
+							return;
+						}
+
+						console.error( 'Unknown error:', err );
+
+						__errors.push( { error: err } );	
+					} )
+					.finally( () => delete __promises[ id ] )
+				;
+			} )( chainId++ );
 
 			await sleep( 500 );
 
@@ -141,26 +167,28 @@
 		__errors.push( { error: e } );
 	}
 
-	const END_TIME = window.performance.now();
+	Promise.allSettled( Object.values( __promises ) ).then( () => {
+		const END_TIME = window.performance.now();
 
-	window[ `__errors$${Date.now().toString( 36 )}` ] = __errors;
+		window[ `__errors$${Date.now().toString( 36 )}` ] = __errors;
 
-	window[ `__noOcRelease$${Date.now().toString( 36 )}` ] = __noOcRelease;
+		window[ `__noOcRelease$${Date.now().toString( 36 )}` ] = __noOcRelease;
 
-	window[ `__noPsctRelease$${Date.now().toString( 36 )}` ] = __noPsctRelease;
+		window[ `__noPsctRelease$${Date.now().toString( 36 )}` ] = __noPsctRelease;
 
-	window[ `__mayHavePsctRelease$${Date.now().toString( 36 )}` ] = __mayHavePsctRelease;
+		window[ `__mayHavePsctRelease$${Date.now().toString( 36 )}` ] = __mayHavePsctRelease;
 
-	console.log( window.STOP_SCRIPT ? 'Stopped!' : 'All done!' );
+		console.log( window.STOP_SCRIPT ? 'Stopped!' : 'All done!' );
 
-	console.log( 'Took', END_TIME - START_TIME );
+		console.log( 'Took', END_TIME - START_TIME );
+	} );
 
 } )( window, window.jQuery, window.mediaWiki, ( ( window, $ ) => {
 	"use strict";
 
 	const win = window.open();
 
-	const doWrite = ( args, color = 'black' ) => win.document.write(
+	const doWrite = ( args, color = 'black' ) => window.DEBUG && win.document.write(
 		$( '<pre>', {
 			html: args.map( arg => typeof arg !== 'string'
 				? JSON.stringify( arg, null, '  ' )
