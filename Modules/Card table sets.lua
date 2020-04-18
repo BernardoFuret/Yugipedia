@@ -31,39 +31,46 @@ local function formatCardNumber( cardNumber )
 		or UTIL.link( cardNumber )
 end
 
-local function validateRarities( rarities, lineno )
-	local validated = {}
+local function linkRarities( rarities, lineno )
+	local linked = {}
 
 	local position = 0
 
+	local nonEmptyposition = 0
+
 	for _, r in ipairs( rarities ) do
+		position = position + 1
+
 		if UTIL.trim( r ) then
-			position = position + 1
+			nonEmptyposition = nonEmptyposition + 1
 
 			local rarity = DATA.getRarity( r )
 
 			if rarity then
-				table.insert( validated, rarity.full )
+				table.insert( linked, UTIL.link( rarity.full ) )
 			else
 				local message = ( 'No such rarity for `%s`, at non-empty input line %d, at non-empty position %d.' )
-					:format( r, lineno, position )
+					:format( r, lineno, nonEmptyposition )
 
-				reporter:addError( message )
+				local category = '((Card table sets)) transclusions with invalid rarities'
+
+				reporter
+					:addError( message )
+					:addCategory( category )
 			end
+		else
+			local message = ( 'Empty rarity input, at non-empty input line %d, at position %d.' )
+				:format( lineno, position )
+
+			local category = '((Card table sets)) transclusions with empty rarities'
+
+			reporter
+				:addError( message )
+				:addCategory( category )
 		end
 	end
 
-	return validated
-end
-
-local function printRarities( rarities )
-	local linked = {}
-
-	for _, rarity in ipairs( rarities ) do
-		table.insert( linked, UTIL.link( rarity ) )
-	end
-
-	return table.concat( linked, '<br />' )
+	return linked
 end
 
 local function getWikitextVarValue( frame, varName )
@@ -99,7 +106,7 @@ local function getSetSmwInfo( frame, setName )
 		[ KEY_DATE ] = {},
 		[ KEY_NAME ] = {},
 	}
-	
+
 	if not setName then
 		return info
 	end
@@ -153,7 +160,7 @@ local function getSetSmwInfo( frame, setName )
 		'?Japanese name',
 		'?Chinese name',
 		'?Korean name',
-		
+
 		mainlabel = '-',
 	} or {} )[ 1 ] or {}
 
@@ -227,14 +234,13 @@ local function createDataRow( frame, region, language, line, lineno )
 	local cardNumber = UTIL.trim( parts[ 1 ] )
 	local setName = UTIL.trim( parts[ 2 ] )
 	local rarities = UTIL.trim( parts[ 3 ] )
-		and validateRarities(
+		and linkRarities(
 			mwText.split( parts[ 3 ], '%s*,%s*' ),
 			lineno
 		)
-		or {}
 
 	if not setName then
-		local message = ( 'No set name given at non-empty input line %d.' )
+		local message = ( 'No set name provided at non-empty input line %d.' )
 			:format( lineno )
 
 		local category = '((Card table sets)) transclusions with missing set name'
@@ -243,6 +249,18 @@ local function createDataRow( frame, region, language, line, lineno )
 			:addWarning( message )
 			:addCategory( category )
 	end
+
+	if not rarities then
+		local message = ( 'No rarities provided at non-empty input line %d.' )
+			:format( lineno )
+
+		local category = '((Card table sets)) transclusions with missing rarities'
+
+		reporter
+			:addWarning( message )
+			:addCategory( category )
+	end
+
 
 	local setSmwInfo = getSetSmwInfo( frame, setName )
 
@@ -260,7 +278,7 @@ local function createDataRow( frame, region, language, line, lineno )
 		)
 	end
 
-	tr:node( createCell( 'rarity', printRarities( rarities ) ) )
+	tr:node( createCell( 'rarity', rarities and table.concat( rarities, '<br />' ) ) )
 
 	return tostring( tr )
 end
@@ -292,7 +310,7 @@ local function main( frame, regionInput, setsInput )
 			end
 		end
 	else
-		local message = 'No input given for the sets.'
+		local message = 'No input provided for the sets.'
 
 		local category = '((Card table sets)) transclusions with no input (((1)))'
 
@@ -321,8 +339,15 @@ return setmetatable( {
 TLM-KR012; The Lost Millennium; Super Rare, Ultimate Rare
 MVP1-ENSV4; Yu-Gi-Oh! The Dark Side of Dimensions Movie Pack Secret Edition; Ultra Rare
 MVP1-ENS55; Yu-Gi-Oh! The Dark Side of Dimensions Movie Pack Secret Edition; Secret Rare
+
 MVP1-ENS55; ; Secret Rare
 MVP1-ENS55; PAGE THAT DOESN'T EXIST; Secret Rare
+
+MVP1-ENS55; LOB; Invalid Rare
+
+MVP1-ENS55; LOB; 
+; LOB; SR, , R
+
 ]]
 		return main( mw.getCurrentFrame(), rg or testRg, list or testList )
 	end,
