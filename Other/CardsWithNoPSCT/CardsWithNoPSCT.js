@@ -41,7 +41,7 @@
 		.then( data => data.text() )
 		.then( textToHtml )
 		.catch( err => {
-			console.warn( 'Error getting HTML for ', title, err );
+			console.warn( 'Error getting HTML for', title, err );
 
 			__errors.push( {
 				title,
@@ -78,7 +78,7 @@
 			// Update the continue token:
 			continueToken = cmResponse.continue?.cmcontinue;
 
-			console.log( 'Next batch: ', continueToken );
+			console.log( 'Next batch:', continueToken );
 
 			const members = cmResponse.query.categorymembers;
 
@@ -87,12 +87,12 @@
 					break loop;
 				}
 
-				console.log( 'Processing ', title );
+				console.log( 'Processing', title );
 
 				const $pageHtml = await getHtml( title );
 
 				if ( !$pageHtml ) {
-					console.error( 'No HTML for ', title );
+					console.error( 'No HTML for', title );
 
 					continue;
 				}
@@ -136,7 +136,7 @@
 		} while ( continueToken );
 
 	} catch ( e ) {
-		console.error( 'Something wrong happened: ', e );
+		console.error( 'Something wrong happened:', e );
 
 		__errors.push( { error: e } );
 	}
