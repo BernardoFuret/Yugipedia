@@ -18,6 +18,8 @@
 
 	let chainId = 0;
 
+	let processedPages = 0;
+
 	const REGIONS = [
 		'EN',
 		'NA',
@@ -153,7 +155,11 @@
 
 						__errors.push( { error: err } );	
 					} )
-					.finally( () => delete __promises[ id ] )
+					.finally( () => {
+						processedPages++;
+
+						delete __promises[ id ]
+					} );
 				;
 			} )( chainId++ );
 
@@ -178,9 +184,13 @@
 
 		window[ `__mayHavePsctRelease$${Date.now().toString( 36 )}` ] = __mayHavePsctRelease;
 
+		window.DEBUG = true;
+
 		console.log( window.STOP_SCRIPT ? 'Stopped!' : 'All done!' );
 
 		console.log( 'Took', END_TIME - START_TIME );
+
+		console.log( 'Processed', processedPages, 'pages' );
 	} );
 
 } )( window, window.jQuery, window.mediaWiki, ( ( window, $ ) => {
