@@ -137,7 +137,11 @@
 								}
 							}
 
-							if ( !$rgTables.siblings( '#cts--AU' ).length ) {
+							if (
+								!$rgTables.siblings( '#cts--EN' ).length
+								&&
+								!$rgTables.siblings( '#cts--AU' ).length
+							) {
 								__noOcRelease.push( title );
 							}
 
