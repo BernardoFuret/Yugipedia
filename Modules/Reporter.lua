@@ -9,6 +9,13 @@
 local mwHtmlCreate = mw.html.create
 
 --[[Doc
+@function isMainNs
+]]
+local function isMainNs()
+	return mw.title.getCurrentTitle().namespace == 0
+end
+
+--[[Doc
 @class Reporter
 @description Stores and provides an interface to manage module info.
 @exportable
@@ -111,7 +118,7 @@ local function formatCategory( name, sortkey )
 end
 
 --[[Doc
-@method Reporter dumpCategories
+@function dumpCategories
 ]]
 local function dumpCategories( self )
 	local categories = {
@@ -172,7 +179,7 @@ end
 function Reporter:dump()
 	return table.concat{
 		'<div class="reporter">',
-		dumpCategories( self ),
+		isMainNs() and dumpCategories( self ) or '',
 		self._warnings.exists and dumpWarnings( self ) or '',
 		self._errors.exists and dumpErrors( self ) or '',
 		'</div>',
