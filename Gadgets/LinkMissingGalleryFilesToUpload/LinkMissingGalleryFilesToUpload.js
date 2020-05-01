@@ -26,7 +26,9 @@
 			}
 		} );
 
-		mw.hook( 'ext.gadget.LinkMissingGalleryFilesToUpload' ).fire();
+		window.requestAnimationFrame( function() {
+			mw.hook( 'ext.gadget.LinkMissingGalleryFilesToUpload' ).fire();
+		} );
 	}
 
 	mw.hook( 'wikipage.content' ).add( linkEmptyGalleries );
