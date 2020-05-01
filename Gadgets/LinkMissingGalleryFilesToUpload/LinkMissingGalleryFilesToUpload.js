@@ -10,13 +10,12 @@
 
 	function linkEmptyGalleries( $content ) {
 		$content.find( '.thumb' ).each( function() {
-			var $this = $( this );
+			var $thisThumb = $( this );
 
-			if ( !$this.children().length ) {
-				// Is an empty gallery box.
-				var missingFileName = $this.text();
+			if ( !$thisThumb.children().length ) {
+				var missingFileName = $thisThumb.text();
 				
-				$this.text( '' ).append(
+				$thisThumb.text( '' ).append(
 					$( '<a>', {
 						'class': 'noFile',
 						href: '/index.php?title=Special:Upload&wpDestFile=' + missingFileName,
@@ -26,9 +25,7 @@
 			}
 		} );
 
-		window.requestAnimationFrame( function() {
-			mw.hook( 'ext.gadget.LinkMissingGalleryFilesToUpload' ).fire();
-		} );
+		mw.hook( 'ext.gadget.LinkMissingGalleryFilesToUpload' ).fire( $content );
 	}
 
 	mw.hook( 'wikipage.content' ).add( linkEmptyGalleries );

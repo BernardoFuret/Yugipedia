@@ -32,16 +32,16 @@
 		;
 	}
 
-	function updateUploadLinks() {
-		$( '.noFile' ).each( function( i, noFile ) {
-			var $noFile = $( noFile );
+	function updateUploadLinks( $content ) {
+		$content.find( '.noFile' ).each( function() {
+			var $thisNoFile = $( this );
 
 			var cardName = config.wgNamespaceNumber === NS.CARD_GALLERY
 				? config.wgTitle
-				: getCardName( $noFile )
+				: getCardName( $thisNoFile )
 			;
 
-			$noFile.attr( 'href', function( i, href ) {
+			$thisNoFile.attr( 'href', function( i, href ) {
 				return [
 					href,
 					[
@@ -56,9 +56,9 @@
 	function fillUploadForm() {
 		var name = new URL( window.location.href ).searchParams.get( urlSearchParameter );
 
-		$( '#wpUploadDescription' ).val( // TODO: pre loads for anime / manga /etc..
+		$( '#wpUploadDescription' ).val( // TODO: pre loads for anime / manga /etc.. // <pre>
 			name && '{{OCG-TCG card image\n| name = ' + name + '\n}}'
-		);
+		); // </pre>
 	}
 
 	if ( Object.values( NS ).includes( config.wgNamespaceNumber ) ) {
