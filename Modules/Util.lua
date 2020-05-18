@@ -16,13 +16,13 @@ or simply remove them.
 @description Variable to hold the library to be exported.
 @exportable
 ]]
-local U = {};
+local U = {}
 
 -------------
 -- Functions:
 -------------
 -- mw functions:
-local mwTextTrim = mw.text.trim;
+local mwTextTrim = mw.text.trim
 
 --[[Doc
 @function U bold
@@ -32,7 +32,7 @@ local mwTextTrim = mw.text.trim;
 @todo Escape ' ?
 ]]
 function U.bold( s )
-	return ("'''%s'''"):format( s );
+	return ("'''%s'''"):format( s )
 end
 
 --[[Doc
@@ -43,7 +43,7 @@ end
 @todo Escape ' ?
 ]]
 function U.italic( s )
-	return ("''%s''"):format( s );
+	return ("''%s''"):format( s )
 end
 
 --[=[Doc
@@ -56,19 +56,18 @@ Also normalizes the space between the dab and the rest.
 @see [[#U.removeDab]]
 ]=]
 function U.italicNoDab( s )
-	local dab = U.getDab( s );
-	local noDab = U.removeDab( s );
+	local dab = U.getDab( s )
+	local noDab = U.removeDab( s )
 	return table.concat( {
 		("''%s''"):format( noDab ),
 		dab ~= '' and ("(%s)"):format( dab ) or nil
-	}, ' ' );
+	}, ' ' )
 end
 
 --[=[Doc
 @function U trim
 @description Trims white space from front and tail of string.
-Returns nil if only whitespace. Also normalizes the space between
-the dab and the rest.
+Returns nil if only whitespace.
 @parameter {string|nil} s String to trim.
 @return {string|nil} Trimmed `s`. If `s` ends up being only whitespace
 or `s` is `nil`, it returns `nil`.
@@ -76,7 +75,7 @@ or `s` is `nil`, it returns `nil`.
 ]=]
 function U.trim( s )
 	if s and not s:match( '^%s*$' ) then
-		return mwTextTrim( s );
+		return mwTextTrim( s )
 	end
 end
 
@@ -87,11 +86,11 @@ end
 @return {number} Number of elements in the table.
 ]]
 function U.count( t )
-	local counter = 0;
+	local counter = 0
 	for key, value in pairs( t ) do
-		counter = counter + 1;
+		counter = counter + 1
 	end
-	return counter;
+	return counter
 end
 
 --[[Doc
@@ -106,7 +105,7 @@ function U.link( page, label )
 	return ('[[%s|%s]]'):format(
 		page:gsub( '#', '' ),
 		label or U.removeDab( page )
-	);
+	)
 end
 
 --[[Doc
@@ -135,7 +134,7 @@ end
 @return {string} Dab for `title`.
 ]]
 function U.getDab( title )
-	return title:match( '%(([^%(]*)%)%s*$' ) or '';
+	return title:match( '%(([^%(]*)%)%s*$' ) or ''
 end
 
 --[[Doc
@@ -145,7 +144,7 @@ end
 @return {string} `title` with its dab removed.
 ]]
 function U.removeDab( title )
-	return title:gsub( '%s*%(([^%(]*)%)%s*$', '' );
+	return title:gsub( '%s*%(([^%(]*)%)%s*$', '' )
 end
 
 --[[Doc
@@ -156,7 +155,7 @@ end
 @return {boolean} If `toCompare` and `compareTo` have the same type. 
 ]]
 local function isSomething( toCompare, compareTo )
-	return type( toCompare ) == type( compareTo );
+	return type( toCompare ) == type( compareTo )
 end
 
 --[=[Doc
@@ -167,7 +166,7 @@ end
 @see [[#isSomething]] 
 ]=]
 function U.isBoolean( v )
-	return isSomething( v, true );
+	return isSomething( v, true )
 end
 
 --[=[Doc
@@ -178,7 +177,7 @@ end
 @see [[#isSomething]] 
 ]=]
 function U.isFunction( v )
-	return isSomething( v, function() end );
+	return isSomething( v, function() end )
 end
 
 --[=[Doc
@@ -189,7 +188,7 @@ end
 @see [[#isSomething]] 
 ]=]
 function U.isNil( v )
-	return isSomething( v, nil );
+	return isSomething( v, nil )
 end
 
 --[=[Doc
@@ -200,7 +199,7 @@ end
 @see [[#isSomething]] 
 ]=]
 function U.isNumber( v )
-	return isSomething( v, 1 );
+	return isSomething( v, 1 )
 end
 
 --[=[Doc
@@ -211,7 +210,7 @@ end
 @see [[#isSomething]] 
 ]=]
 function U.isString( v )
-	return isSomething( v, '' );
+	return isSomething( v, '' )
 end
 
 --[=[Doc
@@ -222,7 +221,7 @@ end
 @see [[#isSomething]] 
 ]=]
 function U.isTable( v )
-	return isSomething( v, {} );
+	return isSomething( v, {} )
 end
 
 --[[Doc
@@ -237,7 +236,7 @@ function U.isEmpty( v )
 		U.isString( v ) and mwTextTrim( v ) == ''
 		or
 		U.isTable( v ) and U.count( v ) == 0
-	);
+	)
 end
 
 -- @name validate
@@ -269,7 +268,7 @@ function U.wrapInQuotes( name, ln )
 	return (ln ~= 'ja' and ln ~= 'zh')
 		and table.concat( { '"', name, '"' } )
 		or  table.concat( { '「', name, '」' } )
-	;
+	
 end
 
 --[[Doc
@@ -277,9 +276,10 @@ end
 @description
 @parameter {string} v
 @return {string}
+@todo deprecated. remove later.
 ]]
 function U.formatParameter( v )
-	return ('&#123;&#123;&#123;%s&#125;&#125;&#125;'):format( v );
+	return ('&#123;&#123;&#123;%s&#125;&#125;&#125;'):format( v )
 end
 
 --[[function U.processArgs( frame, ... )
@@ -287,13 +287,15 @@ end
 end]]
 -- @name getArgs
 -- @description Parses arguments.
+-- @todo: deprecated. remove later.
 -- @see [[Module:Arguments]]
 function U.getArgs( ... )
-	return require( 'Module:Arguments' ).getArgs( ... );
+	return require( 'Module:Arguments' ).getArgs( ... )
 end
 
 -- @name getName
 -- @description Gets the localized name of a card, set or character.
+-- @todo: deprecated. remove later.
 -- @see [[Module:Name]]
 function U.getName( name, ln )
 	local DATA = require( 'Module:Data' )
@@ -305,9 +307,10 @@ end
 
 -- @name getImgName
 -- @description Gets the localized name of a card, set or character.
+-- @todo: deprecated. remove later.
 -- @see [[Module:Name]]
 function U.getImgName( ... )
-	return require( 'Module:Card image name' ).main( ... );
+	return require( 'Module:Card image name' ).main( ... )
 end
 
 ----------
@@ -316,5 +319,5 @@ end
 --[[Doc
 @exports Util library (`U`).
 ]]
-return U;
+return U
 -- </pre>
