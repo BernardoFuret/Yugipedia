@@ -1,7 +1,7 @@
 /**
  * Highlight namespaces, certain pages and logs on
  * [[Special:RecentChanges]] and [[Special:Contributions]].
- * Based on https://runescape.wikia.com/wiki/MediaWiki:Gadget-ColorRC.css
+ * Based on https://runescape.wiki/w/MediaWiki:Gadget-ColorRC.css
  */
 /* MediaWiki, JS and CSS pages - Light Blue. */
 .mw-special-Recentchanges .mw-changeslist-title[title^="MediaWiki:"]:first-of-type,
