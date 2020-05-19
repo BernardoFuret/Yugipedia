@@ -2,7 +2,8 @@
 <https://yugipedia.com/wiki/Yugipedia>
 
 # About
-I'm a sysadmin (even though I don't have time to dedicate to this) and a wiki admin at Yugipedia.
+I'm a sysadmin and a wiki admin at Yugipedia.
+
 I'll be posting here some code to be used on Yugipedia, for whatever purpose.  
 
 # License
