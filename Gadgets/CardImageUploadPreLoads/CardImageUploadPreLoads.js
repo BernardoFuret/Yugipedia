@@ -4,6 +4,7 @@
  * @author Becasita
  * @contact [[User:Becasita]]
  */
+// TODO: pre loads for anime / manga / etc..
 ( function _gadgetCardImageUploadPreLoads( window, $, mw, console ) {
 	"use strict";
 
@@ -20,8 +21,6 @@
 		CARD_GALLERY: config.wgNamespaceIds.card_gallery,
 		SET_CARD_GALLERIES: config.wgNamespaceIds.set_card_galleries,
 	};
-
-	var urlSearchParameter = '__cardName';
 
 	function getCardName( $noFile ) {
 		return $noFile.parents( '.gallerybox' )
@@ -41,32 +40,22 @@
 				: getCardName( $thisNoFile )
 			;
 
-			$thisNoFile.attr( 'href', function( i, href ) {
-				return [
-					href,
-					[
-						urlSearchParameter,
-						window.encodeURIComponent( cardName ),
-					].join( '=' ),
-				].join( '&' );
-			} );
+			if ( cardName ) {
+				$thisNoFile.attr( 'href', function( i, href ) {
+					return [
+						href,
+						[
+							'wpUploadDescription', // <pre>
+							window.encodeURIComponent( '{{OCG-TCG card image\n| name = ' + cardName + '\n}}' ),
+						].join( '=' ), // </pre>
+					].join( '&' );
+				} );
+			}
 		} );
-	}
-
-	function fillUploadForm() {
-		var name = new URL( window.location.href ).searchParams.get( urlSearchParameter );
-
-		$( '#wpUploadDescription' ).val( // TODO: pre loads for anime / manga /etc.. // <pre>
-			name && '{{OCG-TCG card image\n| name = ' + name + '\n}}'
-		); // </pre>
 	}
 
 	if ( Object.values( NS ).includes( config.wgNamespaceNumber ) ) {
 		mw.hook( 'ext.gadget.LinkMissingGalleryFilesToUpload' ).add( updateUploadLinks );
-	}
-
-	if ( config.wgPageName === 'Special:Upload' ) {
-		$( fillUploadForm );
 	}
 
 	console.log( '[Gadget] CardImageUploadPreLoads last updated at', LAST_LOG );
