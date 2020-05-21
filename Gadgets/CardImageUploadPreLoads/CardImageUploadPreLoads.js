@@ -12,7 +12,6 @@
 
 	var config = mw.config.get( [
 		'wgNamespaceNumber',
-		'wgPageName',
 		'wgTitle',
 		'wgNamespaceIds',
 	] );
