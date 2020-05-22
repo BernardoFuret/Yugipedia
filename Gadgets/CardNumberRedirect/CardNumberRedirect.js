@@ -37,25 +37,27 @@
 			}
 		} )();
 
-		var regex = /^[ \t]*([\d\-\w]{5,10})[ \t]*;[ \t]*(.*?)(;|\/\/|$)/gm;
+		var regex = /^[ \t]*([\d\-\w]{5,10})[ \t]*;[ \t]*(.*?)[ \t]*(;|\/\/|$)/gm;
 
 		var redirectsMap = {};
 
 		content.replace( regex, function( match, $1, $2 ) {
-			redirectsMap[ $1.trim() ] = $2.trim();
+			redirectsMap[ $1 ] = $2;
 		} );
 
 		return redirectsMap;
 	}
 
 	function redirect( number, name ) {
+		var nameWithoutHash = name.replace( /#/g, '' );
+
 		return api
 			.postWithToken( 'csrf', {
 				action: 'edit',
 				title: number,
 				createonly: true,
-				text: '#REDIRECT [[' + name + ']] {{R from card number}}',
-				summary: 'Creating redirects: Redirected page to [[' + name + ']].',
+				text: '#REDIRECT [[' + nameWithoutHash + ']] {{R from card number}}',
+				summary: 'Creating redirects: Redirected page to [[' + nameWithoutHash + ']].',
 				bot: true,
 			} )
 			.done( function() {
@@ -80,9 +82,7 @@
 			if ( redirectMap.hasOwnProperty( cardNumber ) ) {
 				( function( number, name ) {
 					chain = chain.then( function() {
-						return new Promise( function( resolve ) {
-							redirect( number, name ).always( resolve );
-						} );
+						return redirect( number, name );
 					} );
 
 					chain = chain.then( function() {
@@ -93,7 +93,6 @@
 				} )( cardNumber, redirectMap[ cardNumber ] );
 			}
 		}
-
 
 		chain.then( function() {
 			console.log( '[Gadget][CardNumberRedirect] - All done!' );
