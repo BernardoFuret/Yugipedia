@@ -208,14 +208,6 @@ local function parseValues( rawValues )
 end
 
 -- NOTE: interpolation
---[[local function interpolateWith( rawValue )
-	local values = mwTextSplit( rawValue, '%s*,%s*' )
-
-	return function( n )
-		return values[ tonumber( n ) ] or ''
-	end
-end--]]
-
 local function handleInterpolation( value, template, default )
 	--[[DOC
 if row.desc==''                        => row.desc
@@ -225,7 +217,7 @@ if row.desc==nil and default.desc~=nil => default.desc
 if row.desc==nil and default.desc==nil => nil
 	--]]
 	if not UTIL.trim( value ) then
-		return value or default -- this will result in returning empty string or default
+		return value or default -- this will result in returning empty string or default; TODO: returning empty string will add trailing space for description
 	end
 
 	if not template then
@@ -334,10 +326,38 @@ local function createDataRow( row, globalData ) -- TODO: refactor: extract funct
 			LANGUAGE_ENGLISH.index
 		) or ''
 
-		local printedName = row.options[ "printed-name" ] -- TODO: should only be considered if there's a cardNameInput?
+		local printedNameInput = row.options[ 'printed-name' ]
+
+		local printedNameValidated = UTIL.trim( printedNameInput )
+
+		if printedNameInput and not printedNameValidated then
+			local message = ( 'Empty `printed-name` is not allowed, at line %d.' )
+				:format( row.lineno )
+
+			local category = '((Set list)) transclusions with empty printed-name'
+
+			reporter
+				:addError( message )
+				:addCategory( category )
+		end
+
+		if printedNameValidated and not cardNameInput then
+			local message = ( 'Cannot use `printed-name` option when there isn\'t a card name, at line %d.' )
+				:format( row.lineno )
+
+			local category = '((Set list)) transclusions with printed-name but no card name'
+
+			reporter
+				:addError( message )
+				:addCategory( category )
+
+			printedNameValidated = nil
+		end
+
+		local printedName = printedNameValidated
 			and table.concat{
 				'(as ',
-				UTIL.wrapInQuotes( row.options[ "printed-name" ], LANGUAGE_ENGLISH ),
+				UTIL.wrapInQuotes( printedNameValidated, LANGUAGE_ENGLISH ),
 				')',
 			}
 
@@ -350,7 +370,7 @@ local function createDataRow( row, globalData ) -- TODO: refactor: extract funct
 		local cardNameCellContent = StringBuffer()
 			:add( cardName )
 			:add( languageIsEnglish and printedName or nil )
-			:add( description )
+			:add( UTIL.trim( description ) )
 			:flush( ' ' )
 			:toString()
 
@@ -417,7 +437,7 @@ local function createDataRow( row, globalData ) -- TODO: refactor: extract funct
 		local qtyNumber = tonumber( qtyInput )
 
 		if qtyInput and not qtyNumber then
-			local message = ( 'Invalid quantity value at line %d. `%s` cannot be parsed as a number.' )
+			local message = ( 'Invalid quantity value at line %d. Cannot parse `%s` as a number.' )
 				:format( row.lineno, qtyInput )
 
 			local category = '((Set list)) transclusions with invalid quantity values'
@@ -557,8 +577,9 @@ return setmetatable( {
 				YZ09-JP001; Gagaga Head; ; ; 2 // @Volume::9
 				YZ??-JP???; Gagaga Body // description:: ; @Some notes::Here, the description is inputted as empty, preventing the default description and interpolation.
 				YZ01-JP001;  // @Volume:: ; @Some notes::Here, the Volume is inputted as empty, preventing the default volume and interpolation.
-				YZ01-JP001; ; ; ; 2 // @Some notes:No name, default rarities, default print, but quantity.
-				          ; Gagaga Neck; ; Reprint // printed-name::Super Shiny Utopia;
+				YZ01-JP001; ; ; ; 2 // @Some notes::No name, default rarities, default print, but quantity.
+				          ; ; ; Reprint; 2 // @Some notes::No name, but still using printed-name.; printed-name::Some name
+				          ; Gagaga Neck; ; Reprint // printed-name::; @Some notes::Empty printed-name
 			]=],
 			[ 'region' ]   = 'JP',
 			[ 'rarities' ] = 'UR',
@@ -572,3 +593,4 @@ return setmetatable( {
 		return main( mw.getCurrentFrame(), arguments or defaultTestArguments )
 	end,
 } )
+-- </pre>
