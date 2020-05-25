@@ -7,15 +7,13 @@
 TODO:
 - Cleanup
 - Refactor: split responsibilities more strictly;
-- Check unused code;
-- condense option parsing (review syntax) (parse arguments.columns as options);
 - Sort and display columns in alphabetical order
 - Validate default quantity as a number
 - Keep header parameter? What to do with it?
+- Allow add handlers to parameters? 
 
 - What's not being tracked:
 -- Validation of row options (admissible values, including columns)
--- If there are incompatibilities in values: no card name, but there is printed-name (this is allowed for now)
 ]=]
 
 local DATA = require( 'Module:Data' )
@@ -31,7 +29,7 @@ local mwHtmlCreate = mw.html.create
 local mwTextGsplit = mwText.gsplit
 local mwTextSplit = mwText.split
 
-local reporter;
+local reporter
 
 local parameters = { -- TODO: split to own module
 	region = {
@@ -90,7 +88,7 @@ local function validateArguments( args ) -- TODO: split to own module
 				:addCategory( category )
 
 		-- Empty parameter that is not allowed to be empty:
-		elseif --[[arg and]] not UTIL.trim( arg ) and not parameters[ param ].allowEmpty then
+		elseif not UTIL.trim( arg ) and not parameters[ param ].allowEmpty then
 			local message = ( 'Empty parameter `%s`!' )
 				:format( param )
 
@@ -176,11 +174,11 @@ local function parseRarities( rawRarities, lineno ) -- NOTE: this may not be cla
 	return rarities
 end
 
-local function parseOptions( rawOptions, handler ) -- TODO: check and disallow: `::value`
-	local handler = handler or function( container, key, value )
-		container[ key ] = value
-	end
+local function parseOptionsHandler( container, key, value )
+	container[ key ] = value
+end
 
+local function parseOptions( rawOptions, handler ) -- TODO: check and disallow: `::value`
 	local options = {}
 
 	for optionPairString in mwTextGsplit( rawOptions, '%s*;%s*' ) do
@@ -193,8 +191,7 @@ local function parseOptions( rawOptions, handler ) -- TODO: check and disallow: 
 
 			local optionValue = optionPair[ 2 ] or ''
 
-			handler( options, optionKey, optionValue )
---			options[ optionKey ] = optionValue
+			( handler or parseOptionsHandler )( options, optionKey, optionValue )
 		else
 			-- TODO: empty option; not allowed
 		end
@@ -217,7 +214,7 @@ if row.desc==nil and default.desc~=nil => default.desc
 if row.desc==nil and default.desc==nil => nil
 	--]]
 	if not UTIL.trim( value ) then
-		return value or default -- this will result in returning empty string or default; TODO: returning empty string will add trailing space for description
+		return value or default -- this will result in returning empty string or default
 	end
 
 	if not template then
@@ -355,13 +352,9 @@ local function createDataRow( row, globalData ) -- TODO: refactor: extract funct
 		end
 
 		local printedName = printedNameValidated
-			and table.concat{
-				'(as ',
-				UTIL.wrapInQuotes( printedNameValidated, LANGUAGE_ENGLISH ),
-				')',
-			}
+			and ( '(as %s)' ):format( UTIL.wrapInQuotes( printedNameValidated, LANGUAGE_ENGLISH ) )
 
-		local description = handleInterpolation( -- TODO: should only be considered if there's a cardNameInput? Or if the user adds it, it should be added? Display default or blank if there isn't a cardNameInput
+		local description = handleInterpolation( -- TODO: should only be considered if there's a cardNameInput? Or if the user adds it, it should be added? Display default or blank if there isn't a cardNameInput?
 			row.options.description,
 			globalData[ '$description' ],
 			globalData.description
@@ -533,7 +526,6 @@ local function main( frame, rawArguments )
 			if entry then
 				lineno = lineno + 1
 
-				-- TODO: split to parseRowToData(); parseDataToHtml ?
 				local rowPair = mwTextSplit( entry, '%s*//%s*' )
 
 				local rowValues = parseValues( rowPair[ 1 ] )
@@ -580,6 +572,7 @@ return setmetatable( {
 				YZ01-JP001; ; ; ; 2 // @Some notes::No name, default rarities, default print, but quantity.
 				          ; ; ; Reprint; 2 // @Some notes::No name, but still using printed-name.; printed-name::Some name
 				          ; Gagaga Neck; ; Reprint // printed-name::; @Some notes::Empty printed-name
+				SS04-ENA04; Winged Dragon, Guardian of the Fortress #1;; Speed Duel Debut // @Some notes::Test names with hash
 			]=],
 			[ 'region' ]   = 'JP',
 			[ 'rarities' ] = 'UR',
