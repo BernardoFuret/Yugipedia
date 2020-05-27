@@ -257,15 +257,23 @@ local function createDataRow( frame, region, language, line, lineno )
 		local category = '((Card table sets)) transclusions with missing rarities'
 
 		reporter
-			:addWarning( message )
+--			:addWarning( message )
 			:addCategory( category )
 	end
 
 
 	local setSmwInfo = getSetSmwInfo( frame, setName )
 
+	local releaseDate = setSmwInfo[ KEY_DATE ][ region.index ]
+
+	if not releaseDate then
+		local category = '((Card table sets)) transclusions with missing release dates'
+
+		reporter:addCategory( category )
+	end
+
 	local tr = mwHtmlCreate( 'tr' )
-		:node( createCell( 'release', setSmwInfo[ KEY_DATE ][ region.index ] ) )
+		:node( createCell( 'release', releaseDate ) )
 		:node( createCell( 'number', cardNumber and formatCardNumber( cardNumber ) ) )
 		:node( createCell( 'set', setName and UTIL.italicLink( setName ) ) )
 
