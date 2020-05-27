@@ -11,6 +11,7 @@ TODO:
 - Validate default quantity as a number
 - Keep header parameter? What to do with it?
 - Allow add handlers to parameters? 
+- If no localized name was found, printed-name will still display. Is it fine?
 
 - What's not being tracked:
 -- Validation of row options (admissible values, including columns)
@@ -352,7 +353,12 @@ local function createDataRow( row, globalData ) -- TODO: refactor: extract funct
 		end
 
 		local printedName = printedNameValidated
-			and ( '(as %s)' ):format( UTIL.wrapInQuotes( printedNameValidated, LANGUAGE_ENGLISH ) )
+			and ( '(as %s)' ):format(
+				UTIL.wrapInQuotes(
+					printedNameValidated,
+					globalData.language.index
+				)
+			)
 
 		local description = handleInterpolation( -- TODO: should only be considered if there's a cardNameInput? Or if the user adds it, it should be added? Display default or blank if there isn't a cardNameInput?
 			row.options.description,
