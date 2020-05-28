@@ -378,7 +378,10 @@ local function createDataRow( row, globalData ) -- TODO: refactor: extract funct
 		if not languageIsEnglish then
 			local cardLocalizedName = cardNameInput
 				and UTIL.wrapInQuotes(
-					DATA.getName( cardNameInput, globalData.language ),
+					DATA.getName(
+						cardNameInput:gsub( '#', '' ),
+						globalData.language
+					),
 					globalData.language.index
 				)
 
