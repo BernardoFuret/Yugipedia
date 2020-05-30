@@ -113,7 +113,13 @@ local function getSetSmwInfo( frame, setName )
 
 	local isCachedVarName = makeWikitextVarName( setName, 'setSmwInfoIsCached' )
 
+	local missingSetPageVarName = makeWikitextVarName( setName, 'pageIsMissing' )
+
 	if getWikitextVarValue( frame, isCachedVarName ) then
+		if getWikitextVarValue( frame, missingSetPageVarName ) then
+			return info
+		end
+
 		for _, region in pairs( DATA_REGIONS ) do
 			local varName = makeWikitextVarName( setName, KEY_DATE, region.index )
 
@@ -133,6 +139,8 @@ local function getSetSmwInfo( frame, setName )
 
 	local smwResult = ( mw.smw.ask{ -- TODO: the props to query should be generated automatically from DATA region and language
 		table.concat{ '[[', setName, ']]' },
+		'?Page type',
+
 		'?Worldwide English release date#ISO',
 		'?English release date#ISO',
 		'?North American English release date#ISO',
@@ -163,6 +171,16 @@ local function getSetSmwInfo( frame, setName )
 
 		mainlabel = '-',
 	} or {} )[ 1 ] or {}
+
+	if not smwResult[ 'Page type' ] then
+		setWikitextVarValue( frame, missingSetPageVarName, 1 )
+
+		local category = '((Card table sets)) transclusions with set names without a page'
+
+		reporter:addCategory( category )
+
+		return info
+	end
 
 	for _, region in pairs( DATA_REGIONS ) do
 		local varName = makeWikitextVarName( setName, KEY_DATE, region.index )
