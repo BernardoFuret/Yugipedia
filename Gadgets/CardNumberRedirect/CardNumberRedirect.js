@@ -63,7 +63,7 @@
 			.done( function() {
 				console.log( '[Gadget][CardNumberRedirect] - redirected', number, 'to', name );
 			} )
-			.fail(
+			[ 'catch' ](
 				console.error.bind(
 					console,
 					'[Gadget][CardNumberRedirect] - Error creating redirect to',
