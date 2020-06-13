@@ -52,7 +52,7 @@ local function linkRarities( rarities, lineno )
 				local message = ( 'No such rarity for `%s`, at non-empty input line %d, at non-empty position %d.' )
 					:format( r, lineno, nonEmptyposition )
 
-				local category = '((Card table sets)) transclusions with invalid rarities'
+				local category = 'transclusions with invalid rarities'
 
 				reporter
 					:addError( message )
@@ -62,7 +62,7 @@ local function linkRarities( rarities, lineno )
 			local message = ( 'Empty rarity input, at non-empty input line %d, at position %d.' )
 				:format( lineno, position )
 
-			local category = '((Card table sets)) transclusions with empty rarities'
+			local category = 'transclusions with empty rarities'
 
 			reporter
 				:addError( message )
@@ -175,7 +175,7 @@ local function getSetSmwInfo( frame, setName )
 	if not smwResult[ 'Page type' ] then
 		setWikitextVarValue( frame, missingSetPageVarName, 1 )
 
-		local category = '((Card table sets)) transclusions with set names without a page'
+		local category = 'transclusions with set names without a page'
 
 		reporter:addCategory( category )
 
@@ -261,7 +261,7 @@ local function createDataRow( frame, region, language, line, lineno )
 		local message = ( 'No set name provided at non-empty input line %d.' )
 			:format( lineno )
 
-		local category = '((Card table sets)) transclusions with missing set name'
+		local category = 'transclusions with missing set name'
 
 		reporter
 			:addWarning( message )
@@ -272,7 +272,7 @@ local function createDataRow( frame, region, language, line, lineno )
 		local message = ( 'No rarities provided at non-empty input line %d.' )
 			:format( lineno )
 
-		local category = '((Card table sets)) transclusions with missing rarities'
+		local category = 'transclusions with missing rarities'
 
 		reporter
 --			:addWarning( message )
@@ -285,7 +285,7 @@ local function createDataRow( frame, region, language, line, lineno )
 	local releaseDate = setSmwInfo[ KEY_DATE ][ region.index ]
 
 	if not releaseDate then
-		local category = '((Card table sets)) transclusions with missing release dates'
+		local category = 'transclusions with missing release dates'
 
 		reporter:addCategory( category )
 	end
@@ -338,7 +338,7 @@ local function main( frame, regionInput, setsInput )
 	else
 		local message = 'No input provided for the sets.'
 
-		local category = '((Card table sets)) transclusions with no input (((1)))'
+		local category = 'transclusions with no input (((1)))'
 
 		reporter
 			:addError( message )

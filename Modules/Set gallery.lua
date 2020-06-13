@@ -79,7 +79,7 @@ local function validateArguments( args ) -- TODO: split to own module
 			local message = ( 'Invalid parameter `%s`!' )
 				:format( param )
 
-			local category = '((Set gallery)) transclusions with invalid parameters'
+			local category = 'transclusions with invalid parameters'
 
 			reporter
 				:addError( message )
@@ -90,7 +90,7 @@ local function validateArguments( args ) -- TODO: split to own module
 			local message = ( 'Empty parameter `%s`!' )
 				:format( param )
 
-			local category = '((Set gallery)) transclusions with empty parameters'
+			local category = 'transclusions with empty parameters'
 
 			reporter
 				:addError( message )
@@ -109,7 +109,7 @@ local function validateArguments( args ) -- TODO: split to own module
 				local message = ( 'Missing required parameter `%s`!' ) -- TODO: for `1` it might not be obivous to the editor what's missing
 					:format( param )
 
-				local category = '((Set gallery)) transclusions with missing required parameters' 
+				local category = 'transclusions with missing required parameters' 
 
 				reporter
 					:addError( message )
@@ -130,7 +130,7 @@ local function validateRarity( rawRaritiy )
 		local message = ( 'No such rarity for `%s`, at parameter `region`.' )
 			:format( rawRaritiy )
 
-		local category = '((Set gallery)) transclusions with invalid rarities'
+		local category = 'transclusions with invalid rarities'
 
 		reporter
 			:addError( message )
@@ -303,7 +303,7 @@ local function createDataEntry( row, globalData )
 			local message = ( 'Missing card number at file number `%s`!' )
 				:format( row.lineno )
 
-			local category = '((Set gallery)) transclusions with missing card number'
+			local category = 'transclusions with missing card number'
 
 			reporter
 				:addError( message )
@@ -334,7 +334,7 @@ local function createDataEntry( row, globalData )
 			local message = ( 'Missing card name at file number `%s`!' )
 				:format( row.lineno )
 
-			local category = '((Set gallery)) transclusions with missing card name'
+			local category = 'transclusions with missing card name'
 
 			reporter
 				:addError( message )
@@ -392,7 +392,7 @@ local function createDataEntry( row, globalData )
 			local message = ( 'Empty `extension` is not allowed, at line %d.' )
 				:format( row.lineno )
 
-			local category = '((Set gallery)) transclusions with empty extension'
+			local category = 'transclusions with empty extension'
 
 			reporter
 				:addWarning( message )
@@ -412,7 +412,7 @@ local function createDataEntry( row, globalData )
 			local message = ( 'Empty `printed-name` is not allowed, at line %d.' )
 				:format( row.lineno )
 
-			local category = '((Set gallery)) transclusions with empty printed-name'
+			local category = 'transclusions with empty printed-name'
 
 			reporter
 				:addWarning( message )

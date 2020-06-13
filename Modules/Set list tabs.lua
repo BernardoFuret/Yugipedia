@@ -130,7 +130,7 @@ local function main( regionsInput, frame )
 		else
 			local message = ( 'Invalid region: `%s`' ):format( regionInput )
 
-			local category = '((Set list tabs)) transclusions with invalid regions'
+			local category = 'transclusions with invalid regions'
 
 			reporter
 				:addError( message )

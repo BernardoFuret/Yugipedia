@@ -179,7 +179,7 @@ local function main( arguments )
 						entry.parameter
 					)
 
-					local category = '((Set navigation)) transclusions with invalid regions'
+					local category = 'transclusions with invalid regions'
 
 					reporter
 						:addError( message )

@@ -82,7 +82,7 @@ local function validateArguments( args ) -- TODO: split to own module
 			local message = ( 'Invalid parameter `%s`!' )
 				:format( param )
 
-			local category = '((Set list)) transclusions with invalid parameters'
+			local category = 'transclusions with invalid parameters'
 
 			reporter
 				:addError( message )
@@ -93,7 +93,7 @@ local function validateArguments( args ) -- TODO: split to own module
 			local message = ( 'Empty parameter `%s`!' )
 				:format( param )
 
-			local category = '((Set list)) transclusions with empty parameters'
+			local category = 'transclusions with empty parameters'
 
 			reporter
 				:addError( message )
@@ -112,7 +112,7 @@ local function validateArguments( args ) -- TODO: split to own module
 				local message = ( 'Missing required parameter `%s`!' ) -- TODO: for `1` it might not be obivous to the editor what's missing
 					:format( param )
 
-				local category = '((Set list)) transclusions with missing required parameters' 
+				local category = 'transclusions with missing required parameters' 
 
 				reporter
 					:addError( message )
@@ -154,7 +154,7 @@ local function parseRarities( rawRarities, lineno ) -- NOTE: this may not be cla
 				local message = ( 'No such rarity for `%s`, at non-empty input line %d, at non-empty position %d.' )
 					:format( rawRaritiy, lineno, nonEmptyposition )
 
-				local category = '((Set list)) transclusions with invalid rarities'
+				local category = 'transclusions with invalid rarities'
 
 				reporter
 					:addError( message )
@@ -164,7 +164,7 @@ local function parseRarities( rawRarities, lineno ) -- NOTE: this may not be cla
 			local message = ( 'Empty rarity input, at non-empty input line %d, at position %d.' )
 				:format( lineno, position )
 
-			local category = '((Set list)) transclusions with empty rarities'
+			local category = 'transclusions with empty rarities'
 
 			reporter
 				:addError( message )
@@ -332,7 +332,7 @@ local function createDataRow( row, globalData ) -- TODO: refactor: extract funct
 			local message = ( 'Empty `printed-name` is not allowed, at line %d.' )
 				:format( row.lineno )
 
-			local category = '((Set list)) transclusions with empty printed-name'
+			local category = 'transclusions with empty printed-name'
 
 			reporter
 				:addError( message )
@@ -343,7 +343,7 @@ local function createDataRow( row, globalData ) -- TODO: refactor: extract funct
 			local message = ( 'Cannot use `printed-name` option when there isn\'t a card name, at line %d.' )
 				:format( row.lineno )
 
-			local category = '((Set list)) transclusions with printed-name but no card name'
+			local category = 'transclusions with printed-name but no card name'
 
 			reporter
 				:addError( message )
@@ -442,7 +442,7 @@ local function createDataRow( row, globalData ) -- TODO: refactor: extract funct
 			local message = ( 'Invalid quantity value at line %d. Cannot parse `%s` as a number.' )
 				:format( row.lineno, qtyInput )
 
-			local category = '((Set list)) transclusions with invalid quantity values'
+			local category = 'transclusions with invalid quantity values'
 
 			reporter
 				:addError( message )
@@ -506,7 +506,7 @@ local function main( frame, rawArguments )
 		local message = ( 'Invalid `region` provided: `%s`!' )
 			:format( regionInput )
 
-		local category = '((Set list)) transclusions with invalid region'
+		local category = 'transclusions with invalid region'
 
 		reporter
 			:addError( message )

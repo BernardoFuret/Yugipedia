@@ -8,11 +8,13 @@
 
 local mwHtmlCreate = mw.html.create
 
+local namespace = mw.title.getCurrentTitle().namespace
+
 --[[Doc
 @function isMainNs
 ]]
 local function isMainNs()
-	return mw.title.getCurrentTitle().namespace == 0
+	return namespace == 0
 end
 
 --[[Doc
@@ -48,18 +50,9 @@ end
 @return {Reporter} `self`
 ]]
 function Reporter:setTitle( title )
-	self._title = title ~= nil and tostring( title ) or '' -- TODO: default to better name? Escape title? Accept nil to avoid default category?
+	self._title = tostring( title or '' ) -- TODO: default to better name? Escape title? Accept nil to avoid default category?
 
 	return self
-end
-
---[[Doc
-@method Reporter getTitle
-@description Gets the instance title.
-@return {string} The instance title.
-]]
-function Reporter:getTitle()
-	return self._title
 end
 
 --[[Doc
@@ -106,15 +99,9 @@ function Reporter:addError( message )
 	return self
 end
 
-local function formatCategory( name, sortkey )
-	return ( sortkey
-		and table.concat{
-			'[[Category:', name, '|', sortkey, ']]'
-		}
-		or table.concat{
-			'[[Category:', name, ']]' 
-		}
-	)
+local function formatCategory( self, name, sortkey )
+	return ( '[[Category:((%s)) %s|%s]]' )
+		:format( self._title, name, sortkey or '' )
 end
 
 --[[Doc
@@ -126,13 +113,14 @@ local function dumpCategories( self )
 			self._warnings.exists
 			or
 			self._errors.exists
-		) and table.concat{
-			'[[Category:((', self._title, ')) transclusions to be checked]]'
-		},
+		) and formatCategory( self, 'transclusions to be checked', ' ' )
 	}
 
 	for index, categoryPair in ipairs( self._categories ) do
-		table.insert( categories, formatCategory( categoryPair[ 1 ], categoryPair[ 2 ] ) )
+		table.insert(
+			categories,
+			formatCategory( self, categoryPair[ 1 ], categoryPair[ 2 ] )
+		)
 	end
 
 	return table.concat( categories )
@@ -147,11 +135,7 @@ local function dumpWarnings( self )
 		:tag( 'ul' )
 
 	for _, warning in ipairs( self._warnings ) do
-		container:node(
-			tostring( mwHtmlCreate( 'li' )
-				:wikitext( warning )
-			)
-		)
+		container:tag( 'li' ):wikitext( warning )
 	end
 
 	return tostring( container:allDone() )
@@ -166,24 +150,21 @@ local function dumpErrors( self )
 		:tag( 'ul' )
 
 	for _, err in ipairs( self._errors ) do
-		container:node(
-			tostring( mwHtmlCreate( 'li' )
-				:wikitext( err )
-			)
-		)
+		container:tag( 'li' ):wikitext( err )
 	end
 
 	return tostring( container:allDone() )
 end
 
+--[[Doc
+@method Reporter dump
+]]
 function Reporter:dump()
-	return table.concat{
-		'<div class="reporter">',
-		isMainNs() and dumpCategories( self ) or '',
-		self._warnings.exists and dumpWarnings( self ) or '',
-		self._errors.exists and dumpErrors( self ) or '',
-		'</div>',
-	}
+	return mwHtmlCreate( 'div' )
+		:addClass( 'reporter' )
+		:node( isMainNs() and dumpCategories( self ) )
+		:node( self._errors.exists and dumpErrors( self ) )
+		:node( self._warnings.exists and dumpWarnings( self ) )
 end
 
 --[=[Doc
@@ -191,13 +172,13 @@ end
 @see [[#Reporter.new]]
 ]=]
 return setmetatable( Reporter, {
-	__call = function( t, ... )
+	__call = function( t, title )
 		assert(
 			t == Reporter,
 			'Cannot apply Reporter constructor except to itself'
 		)
 
-		return Reporter.new( ... )
+		return Reporter.new( title )
 	end
 } )
 -- </pre>
