@@ -100,8 +100,8 @@ function Reporter:addError( message )
 end
 
 local function formatCategory( self, name, sortkey )
-	return ( '[[Category:((%s)) %s|%s]]' )
-		:format( self._title, name, sortkey or '' )
+	return ( sortkey and '[[Category:((%s)) %s|%s]]' or '[[Category:((%s)) %s]]' )
+		:format( self._title, name, sortkey )
 end
 
 --[[Doc
@@ -160,11 +160,12 @@ end
 @method Reporter dump
 ]]
 function Reporter:dump()
-	return mwHtmlCreate( 'div' )
+	return tostring( mwHtmlCreate( 'div' )
 		:addClass( 'reporter' )
-		:node( isMainNs() and dumpCategories( self ) )
+		:wikitext( isMainNs() and dumpCategories( self ) or nil )
 		:node( self._errors.exists and dumpErrors( self ) )
 		:node( self._warnings.exists and dumpWarnings( self ) )
+	)
 end
 
 --[=[Doc
