@@ -34,6 +34,8 @@ end
 local function linkRarities( rarities, lineno )
 	local linked = {}
 
+	local duplicated = {}
+
 	local position = 0
 
 	local nonEmptyposition = 0
@@ -47,7 +49,29 @@ local function linkRarities( rarities, lineno )
 			local rarity = DATA.getRarity( r )
 
 			if rarity then
-				table.insert( linked, UTIL.link( rarity.full ) )
+				if duplicated[ rarity.full ] then
+					local message = ( 'Duplicate rarity `%s` (same as `%s`, at position `%d`), at non-empty input line %d, at non-empty position %d.' )
+						:format(
+							r,
+							duplicated[ rarity.full ].input,
+							duplicated[ rarity.full ].position,
+							lineno,
+							nonEmptyposition
+						)
+
+					local category = 'transclusions with duplicate rarities'
+
+					reporter
+						:addError( message )
+						:addCategory( category )
+				else
+					duplicated[ rarity.full ] = {
+						input = r,
+						position = nonEmptyposition,
+					}
+
+					table.insert( linked, UTIL.link( rarity.full ) )
+				end
 			else
 				local message = ( 'No such rarity for `%s`, at non-empty input line %d, at non-empty position %d.' )
 					:format( r, lineno, nonEmptyposition )
@@ -371,7 +395,9 @@ MVP1-ENS55; PAGE THAT DOESN'T EXIST; Secret Rare
 
 MVP1-ENS55; LOB; Invalid Rare
 
-MVP1-ENS55; LOB; 
+MVP1-ENS55; LOB; Rare, R, r
+
+MVP1-ENS55; LOB;
 ; LOB; SR, , R
 
 ]]
