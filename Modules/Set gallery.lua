@@ -127,7 +127,7 @@ local function validateRarity( rawRaritiy )
 	local rarity = DATA.getRarity( rawRaritiy )
 
 	if not rarity then
-		local message = ( 'No such rarity for `%s`, at parameter `region`.' )
+		local message = ( 'No such rarity for `%s`, at parameter `rarity`.' )
 			:format( rawRaritiy )
 
 		local category = 'transclusions with invalid rarities'
@@ -143,9 +143,9 @@ end
 local function getRegion()
 	local index = PAGENAME:match( 'CG%-(%a+)%-?' )
 
-	local language = DATA.getRegion( index ) -- TODO: handle erroneous language (nil)?
+	local region = DATA.getRegion( index ) -- TODO: handle erroneous region (nil)?
 
-	return language
+	return region
 end
 
 local function getEdition()
@@ -451,7 +451,7 @@ local function main( frame, rawArguments )
 	-- NOTE: init args
 	local globalData = validateArguments( rawArguments )
 
-	globalData.rarity = globalData.rarity and validateRarity( globalData.rarity, 0 ) -- TODO: find better place for this. Pass correct location instead of mock lineno
+	globalData.rarity = globalData.rarity and validateRarity( globalData.rarity ) -- TODO: find better place for this.
 
 	globalData.region = getRegion()
 
