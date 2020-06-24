@@ -1,7 +1,7 @@
 -- <pre>
 return setmetatable( {}, {
 	__index = function( self, templateName )
-		local loadedModule = require( 'Module:CardCollection/modules/' .. templateName )
+		local loadedModule = require( 'Module:Card collection/modules/' .. templateName )
 
 		rawset( self, templateName, loadedModule )
 

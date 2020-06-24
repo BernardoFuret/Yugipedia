@@ -1,6 +1,6 @@
 -- <pre>
 --[=[Doc
-@module CardCollection/DefaultHandlers
+@module Card collection/DefaultHandlers
 @description 
 @author [[User:Becasita]]
 @contact [[User talk:Becasita]]
@@ -17,7 +17,7 @@ function DefaultHandlers:new( name, reporter )
 	local data = {
 		name = name,
 		reporter = reporter,
-		utils = require( 'Module:CardCollection/Utils' )( name, reporter ), -- TODO: add require( 'Module:CardCollection/Utils' ) to the metatable?
+		utils = require( 'Module:Card collection/Utils' )( name, reporter ), -- TODO: add require( 'Module:Card collection/Utils' ) to the metatable?
 	}
 
 	return setmetatable( data, {

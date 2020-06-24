@@ -1,6 +1,6 @@
 -- <pre>
 --[=[Doc
-@module CardCollection/Parser
+@module Card collection/Parser
 @description 
 @author [[User:Becasita]]
 @contact [[User talk:Becasita]]
@@ -10,7 +10,7 @@ local UTIL = require( 'Module:Util' )
 
 local Reporter = require( 'Module:Reporter' )
 
-local DefaultHandlers = require( 'Module:CardCollection/DefaultHandlers' )
+local DefaultHandlers = require( 'Module:Card collection/DefaultHandlers' )
 
 local mwText = mw.text
 local mwTextGsplit = mwText.gsplit
@@ -18,7 +18,7 @@ local mwTextSplit = mwText.split
 
 local function makeDependenciesPath( root, dependency )
 	return table.concat( {
-		'Module:CardCollection',
+		'Module:Card collection',
 		'modules',
 		root,
 		dependency,
@@ -53,9 +53,9 @@ end
 local function parseRowEntry( handlers, entry, lineno ) -- TODO: have this on utils?
 	local rowPair = mwTextSplit( entry, '%s*//%s*' )
 
-	local rowValues = --[[CardCollection.parseValues--]]handlers.utils:parseValues( rowPair[ 1 ] ) -- TODO: have these methods on DefaultHandlers?
+	local rowValues = handlers.utils:parseValues( rowPair[ 1 ] )
 
-	local rowOptions = --[[CardCollection.parseOptions--]]handlers.utils:parseOptions( rowPair[ 2 ] or '' )
+	local rowOptions = handlers.utils:parseOptions( rowPair[ 2 ] or '' )
 
 	return {
 		raw = entry,
@@ -83,7 +83,7 @@ function Parser:parse( arguments ) -- TODO: pass frame here?
 
 	local handlers = self.handlers( self.name, reporter )
 
-	local globalData = --[[CardCollection.validateArguments--]]handlers.utils:validateArguments( self.parameters, arguments )
+	local globalData = handlers.utils:validateArguments( self.parameters, arguments )
 
 	globalData = handlers:initData( globalData ) or globalData -- TODO: for internal use in modules: split here.
 
@@ -127,7 +127,7 @@ return setmetatable( Parser, {
 	__call = function( t, name )
 		assert(
 			t == Parser,
-			'Cannot apply Parser constructor except to itself'
+			'Cannot apply Card collection/Parser constructor except to itself'
 		)
 
 		return Parser.new( name )

@@ -1,7 +1,7 @@
 -- <pre>
 --[=[Doc
-@module CardCollection/Utils
-@description Util functions for concrete CardCollection modules.
+@module Card collection/Utils
+@description Util functions for concrete Card collection modules.
 @author [[User:Becasita]]
 @contact [[User talk:Becasita]]
 ]=]
@@ -158,7 +158,7 @@ return setmetatable( Utils, {
 	__call = function( t, reporter )
 		assert(
 			t == Utils,
-			'Cannot apply CardCollection/Utils constructor except to itself'
+			'Cannot apply Card collection/Utils constructor except to itself'
 		)
 
 		return Utils.new( reporter )
