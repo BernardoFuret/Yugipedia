@@ -155,13 +155,13 @@ if row.desc==nil and default.desc==nil => nil
 end
 
 return setmetatable( Utils, {
-	__call = function( t, reporter )
+	__call = function( t, name, reporter )
 		assert(
 			t == Utils,
 			'Cannot apply Card collection/Utils constructor except to itself'
 		)
 
-		return Utils.new( reporter )
+		return Utils.new( name, reporter )
 	end
-} );
+} )
 -- </pre>

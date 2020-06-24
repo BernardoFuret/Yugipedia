@@ -72,8 +72,8 @@ end
 the `__call` metamethod to allow instantiation.
 ]]
 return setmetatable( DefaultHandlers, {
-	__call = function( self, reporter )
-		return self:new( reporter )
+	__call = function( self, name, reporter ) -- TODO: test passing `DefaultHandlers.new`
+		return self:new( name, reporter )
 	end
 } )
 -- </pre>
