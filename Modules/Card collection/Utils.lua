@@ -20,10 +20,11 @@ end
 local Utils = {}
 Utils.__index = Utils
 
-function Utils.new( name, reporter )
+function Utils.new( name, reporter, frame )
 	local data = {
 		name = name,
 		reporter = reporter,
+		frame = frame,
 	}
 
 	return setmetatable( data, Utils )
@@ -155,13 +156,13 @@ if row.desc==nil and default.desc==nil => nil
 end
 
 return setmetatable( Utils, {
-	__call = function( t, name, reporter )
+	__call = function( t, name, reporter, frame )
 		assert(
 			t == Utils,
 			'Cannot apply Card collection/Utils constructor except to itself'
 		)
 
-		return Utils.new( name, reporter )
+		return Utils.new( name, reporter, frame )
 	end
 } )
 -- </pre>

@@ -13,11 +13,12 @@ local DefaultHandlers = {}
 @description 
 @return 
 ]]
-function DefaultHandlers:new( name, reporter )
+function DefaultHandlers:new( name, reporter, frame )
 	local data = {
 		name = name,
 		reporter = reporter,
-		utils = require( 'Module:Card collection/Utils' )( name, reporter ), -- TODO: add require( 'Module:Card collection/Utils' ) to the metatable?
+		frame = frame,
+		utils = require( 'Module:Card collection/Utils' )( name, reporter, frame ), -- TODO: add require( 'Module:Card collection/Utils' ) to the metatable?
 	}
 
 	return setmetatable( data, {
@@ -72,8 +73,8 @@ end
 the `__call` metamethod to allow instantiation.
 ]]
 return setmetatable( DefaultHandlers, {
-	__call = function( self, name, reporter ) -- TODO: test passing `DefaultHandlers.new`
-		return self:new( name, reporter )
+	__call = function( self, name, reporter, frame ) -- TODO: test passing `DefaultHandlers.new`
+		return self:new( name, reporter, frame )
 	end
 } )
 -- </pre>

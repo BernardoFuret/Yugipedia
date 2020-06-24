@@ -65,8 +65,8 @@ local function parseRowEntry( handlers, entry, lineno ) -- TODO: have this on ut
 	}
 end
 
-local Parser = {};
-Parser.__index = Parser;
+local Parser = {}
+Parser.__index = Parser
 
 function Parser.new( name )
 	local data = {
@@ -78,10 +78,10 @@ function Parser.new( name )
 	return setmetatable( data, Parser )
 end
 
-function Parser:parse( arguments ) -- TODO: pass frame here?
+function Parser:parse( frame, arguments )
 	local reporter = Reporter( self.name )
 
-	local handlers = self.handlers( self.name, reporter )
+	local handlers = self.handlers( self.name, reporter, frame )
 
 	local globalData = handlers.utils:validateArguments( self.parameters, arguments )
 
