@@ -213,9 +213,9 @@ end
 local function errorEntry( lineno, region )
 	return ( 'Back-%s.png | File number %d\n' ):format(
 		( {
-			JP = true,
-			AE = true,
-			KR = true,
+			JP = 'JP',
+			AE = 'AE',
+			KR = 'KR',
 		} )[ region.index ] or 'EN',
 		lineno
 	)
