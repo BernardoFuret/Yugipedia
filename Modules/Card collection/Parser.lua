@@ -81,7 +81,7 @@ end
 function Parser:parse( frame, arguments )
 	local reporter = Reporter( self.name )
 
-	local handlers = self.handlers( self.name, reporter, frame )
+	local handlers = self.handlers:new( self.name, reporter, frame )
 
 	local globalData = handlers.utils:validateArguments( self.parameters, arguments )
 
