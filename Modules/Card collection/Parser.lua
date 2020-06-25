@@ -109,7 +109,7 @@ function Parser:parse( frame, arguments )
 		end
 	end
 
-	local wrapper = mwHtmlCreate( 'div' )
+	local wrapper = mw.html.create( 'div' )
 		:addClass( handlers.utils:makeCssClass() )
 
 	local allStructures = { handlers:finalize( mainStructure, globalData ) }

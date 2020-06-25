@@ -109,7 +109,7 @@ function Utils:parseOptions( rawOptions, handler ) -- TODO: check and disallow: 
 end
 
 local function makeCssClassName( v )
-	return v:lower():gsub( '%s+', '-' )
+	return ( v:lower():gsub( '%s+', '-' ) )
 end
 
 function Utils:makeCssClass( ... )
