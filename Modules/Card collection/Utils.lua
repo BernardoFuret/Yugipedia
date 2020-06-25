@@ -114,7 +114,7 @@ end
 
 function Utils:makeCssClass( ... )
 	local names = {
-		self.name,
+		makeCssClassName( self.name ),
 	}
 
 	for _, name in ipairs{ ... } do
