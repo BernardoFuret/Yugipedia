@@ -37,7 +37,7 @@ local function validateRarity( rawRaritiy )
 	local rarity = DATA.getRarity( rawRaritiy )
 
 	if not rarity then
-		local message = ( 'No such rarity for `%s`, at parameter `rarity`.' )
+		local message = ( 'No such rarity for `%s` at parameter `rarity`.' )
 			:format( rawRaritiy )
 
 		local category = 'transclusions with invalid rarities'
@@ -186,7 +186,7 @@ function handlers:handleRow( row, globalData )
 
 			caption.cardNumber = cardNumber
 		else
-			local message = ( 'Missing card number at file number `%s`!' )
+			local message = ( 'Missing card number at file number %d!' )
 				:format( row.lineno )
 
 			local category = 'transclusions with missing card number'
@@ -217,7 +217,7 @@ function handlers:handleRow( row, globalData )
 				)
 			end
 		else
-			local message = ( 'Missing card name at file number `%s`!' )
+			local message = ( 'Missing card name at file number %d!' )
 				:format( row.lineno )
 
 			local category = 'transclusions with missing card name'
@@ -239,7 +239,7 @@ function handlers:handleRow( row, globalData )
 		local rarityValidated = DATA.getRarity( rarityInput )
 
 		if rarityInput and not rarityValidated then
-			local message = ( 'No such rarity for `%s`, at file number %d.' )
+			local message = ( 'No such rarity for `%s` at file number %d!' ) -- TODO: merge with validateRarity
 				:format( rarityInput, row.lineno )
 
 			self.reporter:addError( message )
@@ -275,13 +275,13 @@ function handlers:handleRow( row, globalData )
 		local extensionValidated = UTIL.trim( extenisonInput ) 
 
 		if extenisonInput and not extensionValidated then
-			local message = ( 'Empty `extension` is not allowed, at line %d.' )
+			local message = ( 'Empty `extension` is not allowed at line %d!' )
 				:format( row.lineno )
 
 			local category = 'transclusions with empty extension'
 
 			self.reporter
-				:addWarning( message )
+				:addError( message )
 				:addCategory( category )
 		end
 
@@ -295,13 +295,13 @@ function handlers:handleRow( row, globalData )
 		local printedNameValidated = UTIL.trim( printedNameInput )
 
 		if printedNameInput and not printedNameValidated then
-			local message = ( 'Empty `printed-name` is not allowed, at line %d.' )
+			local message = ( 'Empty `printed-name` is not allowed at line %d.' )
 				:format( row.lineno )
 
 			local category = 'transclusions with empty printed-name'
 
 			self.reporter
-				:addWarning( message )
+				:addError( message )
 				:addCategory( category )
 		end
 
