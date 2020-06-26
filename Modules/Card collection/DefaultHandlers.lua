@@ -69,12 +69,7 @@ function DefaultHandlers:finalize( mainStructure, globalData )
 end
 
 --[[Doc
-@exports The `DefaultHandlers` class, with
-the `__call` metamethod to allow instantiation.
+@exports The `DefaultHandlers` class.
 ]]
-return setmetatable( DefaultHandlers, {
-	__call = function( self, name, reporter, frame ) -- TODO: test passing `DefaultHandlers.new`
-		return self:new( name, reporter, frame )
-	end
-} )
+return DefaultHandlers
 -- </pre>
