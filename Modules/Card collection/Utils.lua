@@ -13,8 +13,8 @@ local mwText = mw.text
 local mwTextGsplit = mwText.gsplit
 local mwTextSplit = mwText.split
 
-local function identity( ... )
-	return ...
+local function identity( self, argument )
+	return argument
 end
 
 local Utils = {}
@@ -33,11 +33,11 @@ end
 function Utils:validateArguments( parameters, arguments )
 	local validated = {}
 
-	for param, arg in pairs( arguments ) do
+	for parameter, argument in pairs( arguments ) do
 		-- Invalid parameter:
-		if not parameters[ param ] then
+		if not parameters[ parameter ] then
 			local message = ( 'Invalid parameter `%s`!' )
-				:format( param )
+				:format( parameter )
 
 			local category = 'transclusions with invalid parameters'
 
@@ -46,9 +46,9 @@ function Utils:validateArguments( parameters, arguments )
 				:addCategory( category )
 
 		-- Empty parameter that is not allowed to be empty:
-		elseif not UTIL.trim( arg ) and not parameters[ param ].allowEmpty then
+		elseif not UTIL.trim( argument ) and not parameters[ parameter ].allowEmpty then
 			local message = ( 'Empty parameter `%s`!' )
-				:format( param )
+				:format( parameter )
 
 			local category = 'transclusions with empty parameters'
 
@@ -58,15 +58,15 @@ function Utils:validateArguments( parameters, arguments )
 
 		-- Valid parameter with valid argument:
 		else
-			validated[ param ] = ( parameters[ param ].handler or identity )( --[[self,]] arg )
+			validated[ parameter ] = ( parameters[ parameter ].handler or identity )( self, argument )
 		end
 	end
 
-	for param, definition in pairs( parameters ) do
-		if not validated[ param ] then
+	for parameter, definition in pairs( parameters ) do
+		if not validated[ parameter ] then
 			if definition.required then
 				local message = ( 'Missing required parameter `%s`!' ) -- TODO: for `1` it might not be obivous to the editor what's missing
-					:format( param )
+					:format( parameter )
 
 				local category = 'transclusions with missing required parameters' 
 
@@ -75,7 +75,7 @@ function Utils:validateArguments( parameters, arguments )
 					:addCategory( category )
 			end
 
-			validated[ param ] = definition.default
+			validated[ parameter ] = definition.default
 		end
 	end
 
