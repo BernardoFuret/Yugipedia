@@ -1,9 +1,41 @@
 -- <pre>
--- TODO: allow passing handlers here (problem: define self and data access)
+
+local DATA = require( 'Module:Data' )
+
+local CardCollectionUtils = require( 'Module:Card collection/Utils' )
+
+local function columnsHandler( columns, columnName, columnValue )
+	local columnName, interpolation = columnName:gsub( '^%$', '' )
+
+	columns[ columnName ] = columns[ columnName ] or {}
+
+	if interpolation ~= 0 then
+		columns[ columnName ].template = columnValue
+	else
+		columns[ columnName ].default = columnValue
+	end
+end
+
 return {
 	region = {
 		required = true,
 		default = 'EN',
+		handler = function( self, rawRegion )
+			local region = DATA.getRegion( rawRegion )
+
+			if not region then
+				local message = ( 'Invalid `region` provided: `%s`!' )
+					:format( rawRegion )
+
+				local category = 'transclusions with invalid region'
+
+				self.reporter
+					:addError( message )
+					:addCategory( category )
+			end
+
+			return region or DATA.getRegion( 'EN' )
+		end,
 	},
 
 	header = {},
@@ -24,10 +56,14 @@ return {
 
 	options = {
 		default = '',
---		handler = require( 'Module:CardCollection/handlers' ).utils.parseOptions,
+		handler = CardCollectionUtils.parseOptions,
 	},
 
-	columns = {},
+	columns = {
+		handler = function( self, rawColumns )
+			return CardCollectionUtils.parseOptions( self, rawColumns, columnsHandler )
+		end,
+	},
 
 	[ 1 ] = {
 		required = true,

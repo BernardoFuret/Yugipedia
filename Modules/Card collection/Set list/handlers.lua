@@ -21,8 +21,6 @@ local UTIL = require( 'Module:Util' )
 
 local StringBuffer = require( 'Module:StringBuffer' )
 
-local REGION_ENGLISH = DATA.getRegion( 'English' )
-
 local LANGUAGE_ENGLISH = DATA.getLanguage( 'English' )
 
 local mwHtmlCreate = mw.html.create
@@ -143,25 +141,6 @@ local handlers = {}
 
 function handlers:initData( globalData )
 	globalData.rarities = parseRarities( globalData.rarities, 0 )
-
-	globalData.options = self.utils:parseOptions( globalData.options )
-
-	globalData.columns = self.utils:parseOptions( globalData.columns, columnsHandler )
-
-	local region = DATA.getRegion( globalData.region )
-
-	if not region then
-		local message = ( 'Invalid `region` provided: `%s`!' )
-			:format( globalData.region )
-
-		local category = 'transclusions with invalid region'
-
-		self.reporter
-			:addError( message )
-			:addCategory( category )
-	end
-
-	globalData.region = region or REGION_ENGLISH
 
 	globalData.language = DATA.getLanguage( globalData.region.index )
 end
