@@ -44,7 +44,7 @@ return {
 		default = '',
 	},
 
-	print = {
+	[ 'print' ] = {
 		allowEmpty = true,
 	},
 
