@@ -13,14 +13,6 @@ local mwText = mw.text
 local mwTextGsplit = mwText.gsplit
 local mwTextSplit = mwText.split
 
-local function identity( self, argument )
-	return argument
-end
-
-local function handleArgument( self, definition, argument )
-	return ( definition.handler or identity )( self, argument or definition.default )
-end
-
 local Utils = {}
 Utils.__index = Utils
 
@@ -59,6 +51,10 @@ function Utils:validateArguments( parameters, arguments )
 			self.reporter
 				:addError( message )
 				:addCategory( category )
+
+		-- Valid parameter with valid argument:
+		else
+			validated[ param ] = arg
 		end
 	end
 
@@ -74,9 +70,9 @@ function Utils:validateArguments( parameters, arguments )
 					:addError( message )
 					:addCategory( category )
 			end
-		end
 
-		validated[ parameter ] = handleArgument( self, definition, arguments[ parameter ] )
+			validated[ param ] = definition.default
+		end
 	end
 
 	return validated
