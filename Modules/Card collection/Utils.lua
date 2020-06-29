@@ -17,6 +17,10 @@ local function identity( self, argument )
 	return argument
 end
 
+local function handleArgument( self, definition, argument )
+	return ( definition.handler or identity )( self, argument or definition.default )
+end
+
 local Utils = {}
 Utils.__index = Utils
 
@@ -56,9 +60,11 @@ function Utils:validateArguments( parameters, arguments )
 				:addError( message )
 				:addCategory( category )
 
+			validated[ parameter ] = handleArgument( self, parameters[ parameter ] )
+
 		-- Valid parameter with valid argument:
 		else
-			validated[ parameter ] = ( parameters[ parameter ].handler or identity )( self, argument )
+			validated[ parameter ] = handleArgument( self, parameters[ parameter ], argument )
 		end
 	end
 
@@ -75,7 +81,7 @@ function Utils:validateArguments( parameters, arguments )
 					:addCategory( category )
 			end
 
-			validated[ parameter ] = definition.default
+			validated[ parameter ] = handleArgument( self, parameters[ parameter ] )
 		end
 	end
 
