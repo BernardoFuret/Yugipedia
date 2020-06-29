@@ -30,8 +30,10 @@ function Utils:validateArguments( parameters, arguments )
 	local validated = {}
 
 	for parameter, argument in pairs( arguments ) do
+		local schema = parameters[ parameter ]
+
 		-- Invalid parameter:
-		if not parameters[ parameter ] then
+		if not schema then
 			local message = ( 'Invalid parameter `%s`!' )
 				:format( parameter )
 
@@ -42,7 +44,7 @@ function Utils:validateArguments( parameters, arguments )
 				:addCategory( category )
 
 		-- Empty parameter that is not allowed to be empty:
-		elseif not UTIL.trim( argument ) and not parameters[ parameter ].allowEmpty then
+		elseif not UTIL.trim( argument ) and not schema.allowEmpty then
 			local message = ( 'Empty parameter `%s`!' )
 				:format( parameter )
 
@@ -54,13 +56,13 @@ function Utils:validateArguments( parameters, arguments )
 
 		-- Valid parameter with valid argument:
 		else
-			validated[ param ] = arg
+			validated[ parameter ] = argument
 		end
 	end
 
-	for parameter, definition in pairs( parameters ) do
+	for parameter, schema in pairs( parameters ) do
 		if not validated[ parameter ] then
-			if definition.required then
+			if schema.required then
 				local message = ( 'Missing required parameter `%s`!' ) -- TODO: for `1` it might not be obivous to the editor what's missing
 					:format( parameter )
 
@@ -71,7 +73,7 @@ function Utils:validateArguments( parameters, arguments )
 					:addCategory( category )
 			end
 
-			validated[ param ] = definition.default
+			validated[ parameter ] = schema.default
 		end
 	end
 
