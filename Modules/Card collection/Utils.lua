@@ -59,12 +59,6 @@ function Utils:validateArguments( parameters, arguments )
 			self.reporter
 				:addError( message )
 				:addCategory( category )
-
-			validated[ parameter ] = handleArgument( self, parameters[ parameter ] )
-
-		-- Valid parameter with valid argument:
-		else
-			validated[ parameter ] = handleArgument( self, parameters[ parameter ], argument )
 		end
 	end
 
@@ -80,9 +74,9 @@ function Utils:validateArguments( parameters, arguments )
 					:addError( message )
 					:addCategory( category )
 			end
-
-			validated[ parameter ] = handleArgument( self, parameters[ parameter ] )
 		end
+
+		validated[ parameter ] = handleArgument( self, definition, arguments[ parameter ] )
 	end
 
 	return validated
