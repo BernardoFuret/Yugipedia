@@ -5,7 +5,10 @@
 @author [[User:Becasita]]
 @contact [[User talk:Becasita]]
 ]=]
--- TODO: better name for this module
+-- TODO:
+-- * better name for this module
+-- * on the parameters schema, track parameters that cannot be empty,
+-- but have an empty default value?
 
 local UTIL = require( 'Module:Util' )
 
@@ -54,16 +57,27 @@ function Utils:validateArguments( parameters, arguments )
 				:addError( message )
 				:addCategory( category )
 
+			validated[ parameter ] = schema.default
+
 		-- Valid parameter with valid argument:
 		else
 			validated[ parameter ] = argument
 		end
 	end
 
+	local schemaErrors = {}
+
 	for parameter, schema in pairs( parameters ) do
-		if not validated[ parameter ] then
+		if schema.required and not schema.default then
+			local message = ( 'No default value for required parameter `%s`!' )
+				:format( parameter )
+		
+			table.insert( schemaErrors, message )
+		end
+
+		if not arguments[ parameter ] then
 			if schema.required then
-				local message = ( 'Missing required parameter `%s`!' ) -- TODO: for `1` it might not be obivous to the editor what's missing
+				local message = ( 'Missing required parameter `%s`!' ) -- TODO: for `1` it might not be obvious to the editor what's missing
 					:format( parameter )
 
 				local category = 'transclusions with missing required parameters' 
@@ -75,6 +89,10 @@ function Utils:validateArguments( parameters, arguments )
 
 			validated[ parameter ] = schema.default
 		end
+	end
+
+	if schemaErrors[ 1 ] then
+		error( table.concat( schemaErrors, '<br />' ) )
 	end
 
 	return validated
