@@ -28,7 +28,7 @@ local LANGUAGE_ENGLISH = DATA.getLanguage( 'English' )
 local mwHtmlCreate = mw.html.create
 local mwTextGsplit = mw.text.gsplit
 
-local function parseRarities( rawRarities, lineno ) -- TODO: lineno, on argument check
+local function parseRarities( self, rawRarities, lineno ) -- TODO: lineno, on argument check. General function?
 	local rarities = {}
 
 	if not UTIL.trim( rawRarities ) then
@@ -57,7 +57,7 @@ local function parseRarities( rawRarities, lineno ) -- TODO: lineno, on argument
 
 				local category = 'transclusions with invalid rarities'
 
-				reporter -- TODO: reference this reporter: add a self parameter that contains { reporter }
+				self.reporter
 					:addError( message )
 					:addCategory( category )
 			end
@@ -67,7 +67,7 @@ local function parseRarities( rawRarities, lineno ) -- TODO: lineno, on argument
 
 			local category = 'transclusions with empty rarities'
 
-			reporter
+			self.reporter
 				:addError( message )
 				:addCategory( category )
 		end
@@ -142,7 +142,7 @@ end
 local handlers = {}
 
 function handlers:initData( globalData )
-	globalData.rarities = parseRarities( globalData.rarities, 0 )
+	globalData.rarities = parseRarities( self, globalData.rarities, 0 )
 
 	globalData.options = self.utils:parseOptions( globalData.options )
 
@@ -290,7 +290,7 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 	do
 		local raritiesInput = row.values[ valuesIndex ]
 
-		local linkedRarities = parseRarities( raritiesInput or '', row.lineno )
+		local linkedRarities = parseRarities( self, raritiesInput or '', row.lineno )
 
 		rowTr:node(
 			createCell(

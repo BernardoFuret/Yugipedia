@@ -33,7 +33,7 @@ local TAG_BR = '<br />'
 
 local mwTextSplit = mw.text.split
 
-local function validateRarity( rawRaritiy )
+local function validateRarity( self, rawRaritiy )
 	local rarity = DATA.getRarity( rawRaritiy )
 
 	if not rarity then
@@ -42,7 +42,7 @@ local function validateRarity( rawRaritiy )
 
 		local category = 'transclusions with invalid rarities'
 
-		reporter -- TODO: reference this reporter: add a self parameter that contains { reporter }
+		self.reporter
 			:addError( message )
 			:addCategory( category )
 	end
@@ -144,7 +144,7 @@ end
 local handlers = {}
 
 function handlers:initData( globalData )
-	globalData.rarity = globalData.rarity and validateRarity( globalData.rarity )
+	globalData.rarity = globalData.rarity and validateRarity( self, globalData.rarity )
 
 	globalData.region = getRegion()
 
