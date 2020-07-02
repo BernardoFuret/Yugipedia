@@ -9,8 +9,8 @@ TODO:
 - Refactor: split responsibilities more strictly;
 - Sort and display columns in alphabetical order?
 - Validate default quantity as a number
-- Keep header parameter? What to do with it?
-- Allow add handlers to parameters? 
+- A list of only invalid and empty rarities on an entry will
+generate error messages, but will default to general rarities.
 
 - What's not being tracked:
 -- Validation of row options (admissible values, including columns)
@@ -28,7 +28,7 @@ local LANGUAGE_ENGLISH = DATA.getLanguage( 'English' )
 local mwHtmlCreate = mw.html.create
 local mwTextGsplit = mw.text.gsplit
 
-local function parseRarities( self, rawRarities, lineno ) -- TODO: lineno, on argument check. General function?
+local function parseRarities( self, rawRarities, location )
 	local rarities = {}
 
 	if not UTIL.trim( rawRarities ) then
@@ -52,8 +52,8 @@ local function parseRarities( self, rawRarities, lineno ) -- TODO: lineno, on ar
 			if rarity then
 				table.insert( rarities, UTIL.link( rarity.full ) )
 			else
-				local message = ( 'No such rarity for `%s`, at non-empty input line %d, at non-empty position %d.' )
-					:format( rawRaritiy, lineno, nonEmptyposition )
+				local message = ( 'No such rarity for `%s`, at %s, at non-empty position %d.' )
+					:format( rawRaritiy, location, nonEmptyposition )
 
 				local category = 'transclusions with invalid rarities'
 
@@ -62,8 +62,8 @@ local function parseRarities( self, rawRarities, lineno ) -- TODO: lineno, on ar
 					:addCategory( category )
 			end
 		else
-			local message = ( 'Empty rarity input, at non-empty input line %d, at position %d.' )
-				:format( lineno, position )
+			local message = ( 'Empty rarity input, at %s, at position %d.' )
+				:format( location, position )
 
 			local category = 'transclusions with empty rarities'
 
@@ -142,7 +142,7 @@ end
 local handlers = {}
 
 function handlers:initData( globalData )
-	globalData.rarities = parseRarities( self, globalData.rarities, 0 )
+	globalData.rarities = parseRarities( self, globalData.rarities, 'parameter `rarities`' )
 
 	globalData.options = self.utils:parseOptions( globalData.options )
 
@@ -290,7 +290,11 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 	do
 		local raritiesInput = row.values[ valuesIndex ]
 
-		local linkedRarities = parseRarities( self, raritiesInput or '', row.lineno )
+		local linkedRarities = parseRarities(
+			self,
+			raritiesInput or '',
+			( 'line %d' ):format( row.lineno )
+		)
 
 		rowTr:node(
 			createCell(
