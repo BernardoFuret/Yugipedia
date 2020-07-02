@@ -5,8 +5,6 @@ return {
 		default = 'EN',
 	},
 
-	header = {},
-
 	rarities = {
 		default = '',
 	},

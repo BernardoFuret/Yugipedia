@@ -1,8 +1,5 @@
 -- <pre>
--- TODO: allow passing handlers here (problem: define self and data access)
 return {
-	header = {},
-
 	abbr = {},
 
 	rarity = {},
