@@ -7,9 +7,7 @@
 TODO:
 - Cleanup
 - Refactor: split responsibilities more strictly;
-- Add header parameter?
 - Interpolation should return nil instead of empty string
-- Merge with set list (metamodule)
 
 - Printed-name if no localized name was found (will display after the English name).
 ]=]
@@ -134,9 +132,9 @@ local function captionToString( caption )
 		:toString()
 end
 
-local function processNotes( notes )
+local function processNotes( self, notes )
 	return tostring( mw.html.create( 'div' )
-		:addClass( 'set-gallery__notes' )
+		:addClass( self.utils:makeCssClass( 'notes' ) )
 		:wikitext( notes )
 	)
 end
@@ -156,9 +154,9 @@ end
 function handlers:initStructure( globalData )
 	return mw.html.create( 'gallery' )
 		:attr{
-			heights = "175px",
-			position= "center",
-			captionalign="center",
+			heights = '175px',
+			position = 'center',
+			captionalign ='center',
 		}
 		:newline()
 end
@@ -324,7 +322,7 @@ function handlers:handleRow( row, globalData )
 end
 
 function handlers:finalize( mainStructure, globalData )
-	return processNotes( globalData.notes ), self.frame:preprocess( tostring( mainStructure ) )
+	return processNotes( self, globalData.notes ), self.frame:preprocess( tostring( mainStructure ) )
 end
 
 return handlers

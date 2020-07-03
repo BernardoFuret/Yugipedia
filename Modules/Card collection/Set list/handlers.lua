@@ -88,46 +88,48 @@ local function columnsHandler( columns, columnName, columnValue )
 	end
 end
 
-local function createHeader( id, text )
+local function createHeader( self, id, text )
+	local cssClass = self.utils:makeCssClass( 'main', 'header' )
+
 	return tostring( mwHtmlCreate( 'th' )
 		:attr( 'scope', 'col' )
-		:addClass( 'set-list__main__header' )
-		:addClass( 'set-list__main__header--' .. id )
+		:addClass( cssClass )
+		:addClass( ( '%s--%s' ):format( cssClass, id ) )
 		:wikitext( text )
 	)
 end
 
-local function createHeaderRow( globalData )
+local function createHeaderRow( self, globalData )
 	local headerTr = mwHtmlCreate( 'tr' )
 
 	if not globalData.options.noabbr then
-		headerTr:node( createHeader( 'card-number', 'Card number' ) )
+		headerTr:node( createHeader( self, 'card-number', 'Card number' ) )
 	end
 
 	if globalData.language.index == LANGUAGE_ENGLISH.index then
-		headerTr:node( createHeader( 'name', 'Name' ) )
+		headerTr:node( createHeader( self, 'name', 'Name' ) )
 	else
 		headerTr
-			:node( createHeader( 'name', 'English name' ) )
-			:node( createHeader( 'localized-name', globalData.language.full .. ' name' ) )
+			:node( createHeader( self, 'name', 'English name' ) )
+			:node( createHeader( self, 'localized-name', globalData.language.full .. ' name' ) )
 	end
 
 	headerTr
-		:node( createHeader( 'rarity', 'Rarity' ) )
-		:node( createHeader( 'category', 'Category' ) )
+		:node( createHeader( self, 'rarity', 'Rarity' ) )
+		:node( createHeader( self, 'category', 'Category' ) )
 
 	if globalData.print then
-		headerTr:node( createHeader( 'print', 'Print' ) )
+		headerTr:node( createHeader( self, 'print', 'Print' ) )
 	end
 
 	if globalData.qty then
-		headerTr:node( createHeader( 'quantity', 'Quantity' ) )
+		headerTr:node( createHeader( self, 'quantity', 'Quantity' ) )
 	end
 
 	for columnName, _ in pairs( globalData.columns ) do
 		local columnId = columnName:lower():gsub( '%s+', '-' )
 
-		headerTr:node( createHeader( columnId, columnName ) )
+		headerTr:node( createHeader( self, columnId, columnName ) )
 	end
 
 	return tostring( headerTr )
@@ -171,7 +173,7 @@ function handlers:initStructure( globalData )
 		:addClass( 'wikitable' )
 		:addClass( 'sortable' )
 		:addClass( 'card-list' )
-		:node( createHeaderRow( globalData ) )
+		:node( createHeaderRow( self, globalData ) )
 end
 
 function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functions
