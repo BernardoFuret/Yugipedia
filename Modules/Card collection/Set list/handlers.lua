@@ -28,6 +28,25 @@ local LANGUAGE_ENGLISH = DATA.getLanguage( 'English' )
 local mwHtmlCreate = mw.html.create
 local mwTextGsplit = mw.text.gsplit
 
+local function getRegion( self, rawRegion )
+	local region = DATA.getRegion( rawRegion )
+
+	if not region then
+		local message = ( 'Invalid `region` provided: `%s`!' )
+			:format( rawRegion )
+
+		local category = 'transclusions with invalid region'
+
+		self.reporter
+			:addError( message )
+			:addCategory( category )
+
+		return REGION_ENGLISH
+	end
+
+	return region
+end
+
 local function parseRarities( self, rawRarities, location )
 	local rarities = {}
 
@@ -150,20 +169,7 @@ function handlers:initData( globalData )
 
 	globalData.columns = self.utils:parseOptions( globalData.columns, 'parameter `columns`', columnsHandler )
 
-	local region = DATA.getRegion( globalData.region )
-
-	if not region then
-		local message = ( 'Invalid `region` provided: `%s`!' )
-			:format( globalData.region )
-
-		local category = 'transclusions with invalid region'
-
-		self.reporter
-			:addError( message )
-			:addCategory( category )
-	end
-
-	globalData.region = region or REGION_ENGLISH
+	globalData.region = getRegion( self, globalData.region )
 
 	globalData.language = DATA.getLanguage( globalData.region.index )
 end
