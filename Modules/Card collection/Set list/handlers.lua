@@ -260,7 +260,7 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 		local cardNameCellContent = StringBuffer()
 			:add( cardName )
 			:add( languageIsEnglish and printedName or nil )
-			:add( UTIL.trim( description ) )
+			:add( description )
 			:flush( ' ' )
 			:toString()
 

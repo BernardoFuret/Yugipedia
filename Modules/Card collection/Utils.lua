@@ -161,14 +161,17 @@ end
 
 function Utils:handleInterpolation( value, template, default )
 	--[[DOC
-if row.desc==''                        => row.desc
-if row.desc~=nil and $desc==nil        => row.desc
-if row.desc~=nil and $desc~=nil        => interpolate row.desc in $desc
-if row.desc==nil and default.desc~=nil => default.desc
-if row.desc==nil and default.desc==nil => nil
+value    = row.desc 
+template = $desc not empty
+default  = default.desc
+
+if row.desc==empty                    => nil
+if row.desc==nil                      => trim default.desc
+if row.desc~=empty|nil and $desc==nil => row.desc
+if row.desc~=empty|nil and $desc~=nil => interpolate row.desc in $desc
 	--]]
 	if not UTIL.trim( value ) then
-		return value or default -- this will result in returning empty string or default TODO: trim this?
+		return UTIL.trim( value or default )
 	end
 
 	if not template then

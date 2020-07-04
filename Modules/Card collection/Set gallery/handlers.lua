@@ -127,7 +127,7 @@ local function captionToString( caption )
 		:flush( TAG_BR )
 		:add( printedNameContent )
 		:flush( ' ' )
-		:add( UTIL.trim( caption.description ) )
+		:add( caption.description )
 		:flush( TAG_BR )
 		:toString()
 end
@@ -308,7 +308,7 @@ function handlers:handleRow( row, globalData )
 
 	-- Description:
 	do
-		caption.description = self.utils:handleInterpolation( -- TODO: UTIL.trim( description ) here or on caption stringify?
+		caption.description = self.utils:handleInterpolation(
 			row.options.description,
 			globalData[ '$description' ],
 			globalData.description
