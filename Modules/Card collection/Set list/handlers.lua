@@ -329,7 +329,7 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 
 	-- Quantity:
 	if globalData.qty then
-		local qtyInput = row.values[ valuesIndex ]
+		local qtyInput = UTIL.trim( row.values[ valuesIndex ] )
 
 		local qtyNumber = tonumber( qtyInput )
 
