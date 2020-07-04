@@ -104,6 +104,10 @@ end
 
 function Utils:parseOptions( rawOptions, location, handler ) -- TODO: check and disallow: `::value`
 	local options = {}
+	
+	if not UTIL.trim( rawOptions ) then
+		return options
+	end
 
 	local position = 0
 
