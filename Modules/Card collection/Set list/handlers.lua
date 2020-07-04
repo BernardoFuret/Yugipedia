@@ -216,7 +216,7 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 		local cardName = cardNameInput and UTIL.wrapInQuotes(
 			UTIL.link(
 				cardNameInput,
-				cardNameInput:match( 'Token%s%(' ) and cardName
+				cardNameInput:match( 'Token%s%(' ) and cardNameInput
 			),
 			LANGUAGE_ENGLISH.index
 		) or ''
