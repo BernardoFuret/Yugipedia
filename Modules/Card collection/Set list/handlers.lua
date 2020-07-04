@@ -146,9 +146,9 @@ local handlers = {}
 function handlers:initData( globalData )
 	globalData.rarities = parseRarities( self, globalData.rarities, 'parameter `rarities`' )
 
-	globalData.options = self.utils:parseOptions( globalData.options )
+	globalData.options = self.utils:parseOptions( globalData.options, 'parameter `options`' )
 
-	globalData.columns = self.utils:parseOptions( globalData.columns, columnsHandler )
+	globalData.columns = self.utils:parseOptions( globalData.columns, 'parameter `columns`', columnsHandler )
 
 	local region = DATA.getRegion( globalData.region )
 

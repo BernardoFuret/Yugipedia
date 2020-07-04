@@ -102,10 +102,14 @@ local function parseOptionsHandler( container, key, value )
 	container[ key ] = value
 end
 
-function Utils:parseOptions( rawOptions, handler ) -- TODO: check and disallow: `::value`
+function Utils:parseOptions( rawOptions, location, handler ) -- TODO: check and disallow: `::value`
 	local options = {}
 
+	local position = 0
+
 	for optionPairString in mwTextGsplit( rawOptions, '%s*;%s*' ) do
+		position = position + 1
+
 		local optionPairString = UTIL.trim( optionPairString )
 
 		if optionPairString then -- TODO: check if :: is used more than once?
@@ -117,7 +121,14 @@ function Utils:parseOptions( rawOptions, handler ) -- TODO: check and disallow: 
 
 			( handler or parseOptionsHandler )( options, optionKey, optionValue )
 		else
-			-- TODO: empty option; not allowed
+			local message = ( 'Empty option, at %s, at position %d.' )
+				:format( location, position )
+
+			local category = 'transclusions with empty options'
+
+			self.reporter
+				:addError( message )
+				:addCategory( category )
 		end
 	end
 

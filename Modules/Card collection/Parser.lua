@@ -55,7 +55,10 @@ local function parseRowEntry( handlers, entry, lineno ) -- TODO: have this on ut
 
 	local rowValues = handlers.utils:parseValues( rowPair[ 1 ] )
 
-	local rowOptions = handlers.utils:parseOptions( rowPair[ 2 ] or '' )
+	local rowOptions = handlers.utils:parseOptions(
+		rowPair[ 2 ] or '',
+		( 'line %d' ):format( lineno )
+	)
 
 	return {
 		raw = entry,
