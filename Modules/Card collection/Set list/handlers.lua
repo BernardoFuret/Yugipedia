@@ -52,7 +52,7 @@ local function parseRarities( self, rawRarities, location )
 			if rarity then
 				table.insert( rarities, UTIL.link( rarity.full ) )
 			else
-				local message = ( 'No such rarity for `%s`, at %s, at non-empty position %d.' )
+				local message = ( 'No such rarity for `%s`, at %s, at non-empty position %d!' )
 					:format( rawRaritiy, location, nonEmptyposition )
 
 				local category = 'transclusions with invalid rarities'
@@ -62,7 +62,7 @@ local function parseRarities( self, rawRarities, location )
 					:addCategory( category )
 			end
 		else
-			local message = ( 'Empty rarity input, at %s, at position %d.' )
+			local message = ( 'Empty rarity input, at %s, at position %d!' )
 				:format( location, position )
 
 			local category = 'transclusions with empty rarities'
@@ -220,7 +220,7 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 		local printedNameValidated = UTIL.trim( printedNameInput )
 
 		if printedNameInput and not printedNameValidated then
-			local message = ( 'Empty `printed-name` is not allowed, at line %d.' )
+			local message = ( 'Empty `printed-name` is not allowed at line %d!' )
 				:format( row.lineno )
 
 			local category = 'transclusions with empty printed-name'
@@ -231,7 +231,7 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 		end
 
 		if printedNameValidated and not cardNameInput then
-			local message = ( 'Cannot use `printed-name` option when there isn\'t a card name, at line %d.' )
+			local message = ( 'Cannot use `printed-name` option when there isn\'t a card name, at line %d!' )
 				:format( row.lineno )
 
 			local category = 'transclusions with printed-name but no card name'
@@ -334,7 +334,7 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 		local qtyNumber = tonumber( qtyInput )
 
 		if qtyInput and not qtyNumber then
-			local message = ( 'Invalid quantity value at line %d. Cannot parse `%s` as a number.' )
+			local message = ( 'Invalid quantity value at line %d! Cannot parse `%s` as a number!' )
 				:format( row.lineno, qtyInput )
 
 			local category = 'transclusions with invalid quantity values'

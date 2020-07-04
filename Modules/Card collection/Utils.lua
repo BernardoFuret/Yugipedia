@@ -125,7 +125,7 @@ function Utils:parseOptions( rawOptions, location, handler ) -- TODO: check and 
 
 			( handler or parseOptionsHandler )( options, optionKey, optionValue )
 		else
-			local message = ( 'Empty option, at %s, at position %d.' )
+			local message = ( 'Empty option, at %s, at position %d!' )
 				:format( location, position )
 
 			local category = 'transclusions with empty options'
