@@ -95,6 +95,25 @@ local function parseRarities( self, rawRarities, location )
 	return rarities
 end
 
+local function getQty( self, rawQty, location, default )
+	local qty = tonumber( rawQty )
+
+	if UTIL.trim( rawQty ) and not qty then
+		local message = ( 'Invalid quantity value at %s! Cannot parse `%s` as a number!' )
+			:format( location, rawQty )
+
+		local category = 'transclusions with invalid quantity values'
+
+		self.reporter
+			:addError( message )
+			:addCategory( category )
+
+		return ''
+	end
+
+	return qty or default
+end
+
 local function columnsHandler( columns, columnName, columnValue )
 	local columnName, interpolation = columnName:gsub( '^%$', '' )
 
@@ -163,15 +182,17 @@ end
 local handlers = {}
 
 function handlers:initData( globalData )
+	globalData.region = getRegion( self, globalData.region )
+
+	globalData.language = DATA.getLanguage( globalData.region.index )
+
 	globalData.rarities = parseRarities( self, globalData.rarities, 'parameter `rarities`' )
+
+	globalData.qty = getQty( self, globalData.qty, 'parameter `qty`', globalData.qty )
 
 	globalData.options = self.utils:parseOptions( globalData.options, 'parameter `options`' )
 
 	globalData.columns = self.utils:parseOptions( globalData.columns, 'parameter `columns`', columnsHandler )
-
-	globalData.region = getRegion( self, globalData.region )
-
-	globalData.language = DATA.getLanguage( globalData.region.index )
 end
 
 function handlers:initStructure( globalData )
@@ -300,7 +321,7 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 
 		local linkedRarities = parseRarities(
 			self,
-			raritiesInput or '',
+			raritiesInput,
 			( 'line %d' ):format( row.lineno )
 		)
 
@@ -335,24 +356,16 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 
 	-- Quantity:
 	if globalData.qty then
-		local qtyInput = UTIL.trim( row.values[ valuesIndex ] )
+		local qtyInput = row.values[ valuesIndex ]
 
-		local qtyNumber = tonumber( qtyInput )
+		local qtyNumber = getQty(
+			self,
+			qtyInput,
+			( 'line %d' ):format( row.lineno ),
+			globalData.qty
+		)
 
-		if qtyInput and not qtyNumber then
-			local message = ( 'Invalid quantity value at line %d! Cannot parse `%s` as a number!' )
-				:format( row.lineno, qtyInput )
-
-			local category = 'transclusions with invalid quantity values'
-
-			self.reporter
-				:addError( message )
-				:addCategory( category )
-
-			qtyInput = ''
-		end
-
-		rowTr:node( createCell( qtyInput or globalData.qty ) )
+		rowTr:node( createCell( qtyNumber ) )
 
 		valuesIndex = valuesIndex + 1
 	end
