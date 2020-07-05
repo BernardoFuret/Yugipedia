@@ -13,7 +13,9 @@ return {
 		allowEmpty = true,
 	},
 
-	qty = {},
+	qty = {
+		allowEmpty = true,
+	},
 
 	description = {},
 
