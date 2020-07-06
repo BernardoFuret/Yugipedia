@@ -31,18 +31,26 @@ local TAG_BR = '<br />'
 
 local mwTextSplit = mw.text.split
 
-local function validateRarity( self, rawRaritiy )
+local function validateRarity( self, rawRaritiy, location )
+	if not UTIL.trim( rawRaritiy ) then
+		return
+	end
+
 	local rarity = DATA.getRarity( rawRaritiy )
 
 	if not rarity then
-		local message = ( 'No such rarity for `%s` at parameter `rarity`.' )
-			:format( rawRaritiy )
+		local message = ( 'No such rarity for `%s` at %s!' )
+			:format( rawRaritiy, location )
 
 		local category = 'transclusions with invalid rarities'
 
 		self.reporter
 			:addError( message )
 			:addCategory( category )
+
+		return {
+			err = true
+		}
 	end
 
 	return rarity
@@ -142,7 +150,7 @@ end
 local handlers = {}
 
 function handlers:initData( globalData )
-	globalData.rarity = globalData.rarity and validateRarity( self, globalData.rarity )
+	globalData.rarity = validateRarity( self, globalData.rarity, 'parameter `rarity`' )
 
 	globalData.region = getRegion()
 
@@ -234,17 +242,16 @@ function handlers:handleRow( row, globalData )
 	do
 		local rarityInput = UTIL.trim( row.values[ valuesIndex ] )
 
-		local rarityValidated = DATA.getRarity( rarityInput )
+		local rarityValidated = validateRarity(
+			self,
+			rarityInput,
+			( 'file number %d' ):format( row.lineno )
+		)
 
-		if rarityInput and not rarityValidated then
-			local message = ( 'No such rarity for `%s` at file number %d!' ) -- TODO: merge with validateRarity
-				:format( rarityInput, row.lineno )
-
-			self.reporter:addError( message )
-
+		if ( rarityValidated or globalData.rarity or {} ).err then
 			return errorEntry( row.lineno, globalData.region ) 
 		end
-		
+
 		rarityValidated = rarityValidated or globalData.rarity or RARITY_COMMON
 
 		file.rarity = rarityValidated
