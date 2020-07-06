@@ -7,7 +7,6 @@
 TODO:
 - Cleanup
 - Refactor: split responsibilities more strictly;
-- Interpolation should return nil instead of empty string
 
 - Printed-name if no localized name was found (will display after the English name).
 ]=]
@@ -20,12 +19,7 @@ local StringBuffer = require( 'Module:StringBuffer' )
 local LANGUAGE_ENGLISH = DATA.getLanguage( 'English' )
 local RARITY_COMMON = DATA.getRarity( 'Common' )
 
-local currentTitle = mw.title.getCurrentTitle()
-
-local NS = currentTitle.nsText
-local PAGENAME = NS == 'Module'
-	and 'Sneak Peek Participation Cards: Series 6 (TCG-EN-LE)'
-	or currentTitle.text
+local PAGENAME = mw.title.getCurrentTitle().text
 
 local TAG_BR = '<br />'
 
