@@ -133,7 +133,7 @@ end
 local function initRarity( t )
 	t.rarity = DATA.getRarity( _standard[ 3 ] );
 
-	if not t.flags.isOP and not t.rarity then
+	if not t.file and not t.flags.isOP and not t.rarity then
 		return t:error( 'rarity' );
 	end
 end
@@ -145,7 +145,7 @@ local function initEdition( t )
 
 	t.edition = DATA.getEdition( edition );
 
-	if not hasNoEdition( t ) and not t.edition then
+	if not t.file and not hasNoEdition( t ) and not t.edition then
 		return t:error( 'edition' );
 	end
 end
@@ -181,19 +181,44 @@ local function initOptions( t )
 
 	-- Description:
 	t.description = _options[ 'description' ];
+
+	-- Description:
+	t.file = _options[ 'file' ];
 end
 
 -- @name init
 -- @description Initializes the attributes of the File instance.
 local function init( t )
+	initOptions( t );
 	initNumber( t );
 	initSet( t );
 	initReleases( t );
 	initRarity( t );
 	initEdition( t );
 	initAlt( t );
-	initOptions( t );
 	return t;
+end
+
+local function buildFile( t )
+	local file = StringBuffer()
+		:add( UTIL.getImgName() )
+		:add( t.setAbbr )
+		:add( ( t.region or t.parent:getRegion() ).index )
+		:add( t.rarity and t.rarity.abbr )
+		:add( t.edition and t.edition.abbr )
+
+	for _, release in ipairs( t.releases ) do
+		file:add( release.abbr )
+	end
+
+	file
+		:add( t.flags.isOP and OFFICIAL_PROXY.abbr )
+		:add( t.alt )
+		:flush( '-' )
+		:add( t.extension )
+		:flush( '.' )
+	
+	return file:toString()
 end
 
 --------------
@@ -257,25 +282,7 @@ function File:render()
 	end
 
 	-- Build file:
-	local file = StringBuffer()
-		:add( UTIL.getImgName() )
-		:add( self.setAbbr )
-		:add( ( self.region or self.parent:getRegion() ).index )
-		:add( self.rarity and self.rarity.abbr )
-		:add( self.edition and self.edition.abbr )
-	;
-
-	for _, release in ipairs( self.releases ) do
-		file:add( release.abbr );
-	end
-
-	file
-		:add( self.flags.isOP and OFFICIAL_PROXY.abbr )
-		:add( self.alt )
-		:flush( '-' )
-		:add( self.extension )
-		:flush( '.' )
-	;
+	local file = ( self.file or buildFile( self ) ):gsub( '[/:]' , '' )
 
 	-- Build caption:
 	local caption = StringBuffer()
@@ -306,9 +313,7 @@ function File:render()
 		:flush( '<br />' )
 	;
 
-	local fileString = file:toString():gsub( '[/:]' , '' )
-
-	return ('%s | %s'):format( fileString, caption:toString() );
+	return ('%s | %s'):format( file, caption:toString() );
 end
 
 ----------
