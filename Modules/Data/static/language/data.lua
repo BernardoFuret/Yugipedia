@@ -10,7 +10,7 @@ local normalize = {
 	['SP'] = 'es',
 	['JP'] = 'ja', ['JA'] = 'ja',
 	['AE'] = 'en',
-	['TC'] = 'zh',
+	['SC'] = 'zh', ['TC'] = 'zh',
 	['KR'] = 'ko',
 }
 

@@ -15,7 +15,7 @@ local normalize = {
 
 	['JP']  = 'ocg', ['JA'] = 'ocg',
 	['AE']  = 'ocg',
-	['TC']  = 'ocg',
+	['SC']  = 'ocg', ['TC'] = 'ocg',
 	['KR']  = 'ocg',
 }
 

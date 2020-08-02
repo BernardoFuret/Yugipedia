@@ -42,7 +42,10 @@ local normalize = {
 	-- Asian English (AE):
 	['ae'] = 'ae', ['asianenglish'] = 'ae', ['englishasian'] = 'ae',
 
-	-- Chinese (TC):
+	-- Simplified Chinese (SC):
+	['sc'] = 'sc', ['simplifiedchinese'] = 'sc',
+
+	-- Traditional Chinese (TC):
 	['tc'] = 'tc', ['zh'] = 'tc', ['ch'] = 'tc', ['chinese'] = 'tc', ['traditionalchinese'] = 'tc',
 
 	-- Korean (KR):
@@ -64,6 +67,7 @@ local main = {
 	[ 'jp' ] = { index = 'JP', full = 'Japanese'               },
 	[ 'ja' ] = { index = 'JA', full = 'Japanese-Asian'         },
 	[ 'ae' ] = { index = 'AE', full = 'Asian-English'          },
+	[ 'sc' ] = { index = 'SC', full = 'Simplified Chinese'     },
 	[ 'tc' ] = { index = 'TC', full = 'Chinese'                },
 	[ 'kr' ] = { index = 'KR', full = 'Korean'                 },
 }
