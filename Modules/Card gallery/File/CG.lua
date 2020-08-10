@@ -45,7 +45,7 @@ local _standard, _releases, _options;
 -- @description Boolean indicating if the file doesn't have an edition.
 local function hasNoEdition( t )
 	local rg = t.parent:getRegion().index;
-	return rg == 'JP' or rg == 'JA' or rg == 'TC';
+	return rg == 'JP' or rg == 'JA' or rg == 'TC' or rg == 'SC';
 end
 
 -- @description Decides what kind of card backing to present.
