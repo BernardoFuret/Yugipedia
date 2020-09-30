@@ -36,13 +36,19 @@ local SET_NAMES_SPECIAL_CASES = {
 	[ 'series' ] = true,
 }
 
-local REGION_JAPANESE = regionCache[ 'JP' ] or updateCache( regionCache, 'JP', DATA.getRegion( 'JP' ) )
+local REGION_JAPANESE = updateCache( regionCache, 'JP', DATA.getRegion( 'JP' ) )
 
-local REGION_JAPANESE_ASIAN = regionCache[ 'JA' ] or updateCache( regionCache, 'JA', DATA.getRegion( 'JA' ) )
+local REGION_JAPANESE_ASIAN = updateCache( regionCache, 'JA', DATA.getRegion( 'JA' ) )
 
-local IS_REGION_JP_OR_JA = {
+local REGION_SIMPLIFIED_CHINESE = updateCache( regionCache, 'SC', DATA.getRegion( 'SC' ) )
+
+local REGION_TRADITIONAL_CHINESE = updateCache( regionCache, 'TC', DATA.getRegion( 'TC' ) )
+
+local IS_REGION_WITHOUT_EDITION = {
 	[ REGION_JAPANESE.index ] = true,
 	[ REGION_JAPANESE_ASIAN.index ] = true,
+	[ REGION_SIMPLIFIED_CHINESE.index ] = true,
+	[ REGION_TRADITIONAL_CHINESE.index ] = true,
 }
 
 local function normalizeSetNameForLink( setPagename )
@@ -70,7 +76,7 @@ end
 
 local function makeGalleriesLink( edition )	
 	return function --[[linkGalleries]]( setPagename, region, medium )
-		return IS_REGION_JP_OR_JA[ region.index ]
+		return IS_REGION_WITHOUT_EDITION[ region.index ]
 			and ( '[[Set Card Galleries:%s (%s-%s)|%s]]' )
 				:format(
 					setPagename,
