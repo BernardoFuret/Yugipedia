@@ -18,7 +18,7 @@
 				$thisThumb.text( '' ).append(
 					$( '<a>', {
 						'class': 'noFile',
-						href: '/index.php?title=Special:Upload&wpDestFile=' + missingFileName,
+						href: '/index.php?title=Special:Upload&wpDestFile=' + encodeURIComponent( missingFileName ),
 						text: missingFileName
 					} )
 				);
