@@ -180,7 +180,8 @@ local function getSetSmwInfo( frame, setName )
 		'?Japanese release date#ISO',
 		'?Japanese-Asian release date#ISO',
 		'?Asian-English release date#ISO',
-		'?Chinese release date#ISO',
+		'?Simplified Chinese release date#ISO',
+		'?Traditional Chinese release date#ISO',
 		'?Korean release date#ISO',
 
 		'?English name',
@@ -190,7 +191,8 @@ local function getSetSmwInfo( frame, setName )
 		'?Portuguese name',
 		'?Spanish name',
 		'?Japanese name',
-		'?Chinese name',
+		'?Simplified Chinese name',
+		'?Traditional Chinese name',
 		'?Korean name',
 
 		mainlabel = '-',
