@@ -1,7 +1,8 @@
 -- <pre>
 return require( 'Module:Card collection/Parser' )( 'Set list' )
+
 --[==[Test
-{
+p:test{
 	[ 1 ] = [=[
 		YZ01-JP001; Kachi Kochi Dragon; ; Reprint; 2
 		YZ02-JP001; Number 50: Blackship of Corn; ; Reprint // @Volume::2
