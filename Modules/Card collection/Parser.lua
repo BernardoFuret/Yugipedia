@@ -126,6 +126,10 @@ function Parser:parse( frame, arguments )
 	return tostring( wrapper )
 end
 
+function Parser:test( arguments )
+	return self:parse( mw.getCurrentFrame(), arguments )
+end
+
 return setmetatable( Parser, {
 	__call = function( t, name )
 		assert(
