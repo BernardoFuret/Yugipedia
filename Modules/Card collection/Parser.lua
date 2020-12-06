@@ -127,7 +127,7 @@ function Parser:parse( frame, arguments )
 end
 
 function Parser:test( arguments )
-	return self:parse( mw.getCurrentFrame(), arguments )
+	return mw.log( self:parse( mw.getCurrentFrame(), arguments ) )
 end
 
 return setmetatable( Parser, {
