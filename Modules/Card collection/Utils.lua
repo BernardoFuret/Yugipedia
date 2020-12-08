@@ -102,8 +102,10 @@ local function parseOptionsHandler( container, key, value )
 	container[ key ] = value
 end
 
-function Utils:parseOptions( rawOptions, location, handler ) -- TODO: check and disallow: `::value`
-	local options = {}
+function Utils:parseOptions( rawOptions, location, config ) -- TODO: check and disallow: `::value`
+	local config = config or {}
+
+	local options = config.initial or {}
 	
 	if not UTIL.trim( rawOptions ) then
 		return options
@@ -123,7 +125,7 @@ function Utils:parseOptions( rawOptions, location, handler ) -- TODO: check and 
 
 			local optionValue = optionPair[ 2 ] or ''
 
-			( handler or parseOptionsHandler )( options, optionKey, optionValue )
+			( config.handler or parseOptionsHandler )( options, optionKey, optionValue )
 		else
 			local message = ( 'Empty option, at %s, at position %d!' )
 				:format( location, position )
