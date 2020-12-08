@@ -27,6 +27,8 @@ return {
 
 	columns = {},
 
+	[ '$columns' ] = {},
+
 	[ 1 ] = {
 		required = true,
 		default = '',

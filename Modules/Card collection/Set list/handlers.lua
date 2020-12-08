@@ -114,16 +114,16 @@ local function getQty( self, rawQty, location, default )
 	return qty or default
 end
 
+local function columnsTemplatesHandler( columns, columnName, columnValue )
+	columns[ columnName ] = {
+		template = columnValue,
+	}
+end
+
 local function columnsHandler( columns, columnName, columnValue )
-	local columnName, interpolation = columnName:gsub( '^%$', '' )
-
 	columns[ columnName ] = columns[ columnName ] or {}
-
-	if interpolation ~= 0 then
-		columns[ columnName ].template = columnValue
-	else
-		columns[ columnName ].default = columnValue
-	end
+	
+	columns[ columnName ].default = columnValue
 end
 
 local function createHeader( self, id, text )
@@ -192,7 +192,14 @@ function handlers:initData( globalData )
 
 	globalData.options = self.utils:parseOptions( globalData.options, 'parameter `options`' )
 
-	globalData.columns = self.utils:parseOptions( globalData.columns, 'parameter `columns`', columnsHandler )
+	local columnsTemplates = self.utils:parseOptions( globalData[ '$columns' ], 'parameter `columns`', {
+		handler = columnsTemplatesHandler,
+	} )
+
+	globalData.columns = self.utils:parseOptions( globalData.columns, 'parameter `columns`', {
+		initial = columnsTemplates,
+		handler = columnsHandler,
+	} )
 end
 
 function handlers:initStructure( globalData )
@@ -278,7 +285,7 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 				)
 			)
 
-		local description = self.utils:handleInterpolation( -- TODO: should only be considered if there's a cardNameInput? Or if the user adds it, it should be added? Display default or blank if there isn't a cardNameInput?
+		local description = self.utils:handleInterpolation(
 			row.options.description,
 			globalData[ '$description' ],
 			globalData.description
