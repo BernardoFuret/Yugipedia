@@ -50,11 +50,11 @@ local function linkRarities( rarities, lineno )
 
 			if rarity then
 				if duplicated[ rarity.full ] then
-					local message = ( 'Duplicate rarity `%s` (same as `%s`, at position `%d`), at non-empty input line %d, at non-empty position %d.' )
+					local message = ( 'Duplicate rarity `%s` (same as `%s`, at non-empty position `%d`), at non-empty input line %d, at non-empty position %d.' )
 						:format(
 							r,
 							duplicated[ rarity.full ].input,
-							duplicated[ rarity.full ].position,
+							duplicated[ rarity.full ].nonEmptyposition,
 							lineno,
 							nonEmptyposition
 						)
@@ -67,7 +67,7 @@ local function linkRarities( rarities, lineno )
 				else
 					duplicated[ rarity.full ] = {
 						input = r,
-						position = nonEmptyposition,
+						nonEmptyposition = nonEmptyposition,
 					}
 
 					table.insert( linked, UTIL.link( rarity.full ) )
