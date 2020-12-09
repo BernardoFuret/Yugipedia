@@ -1,7 +1,8 @@
 -- <pre>
 return require( 'Module:Card collection/Parser' )( 'Set gallery' )
+
 --[==[Test
-{
+p:test{
 	[ 1 ] = [=[
 		REDU-ENSP1; Noble Knight Gawayn
 		ABYR-ENSP1; Ignoble Knight of Black Laundsallyn // description::Abyss Rising
@@ -16,11 +17,11 @@ return require( 'Module:Card collection/Parser' )( 'Set gallery' )
 		            Duelist Kingdom (card) // abbr::YGLD
 		YGLD-ENA10; Winged Dragon, Guardian of the Fortress #1; Common; CCC
 	]=],
---			[ 'abbr' ]   = 'B01',
+--	[ 'abbr' ]   = 'B01',
 	[ 'rarity' ] = 'UR',
 	[ 'alt' ] = 'AB',
-	[ 'description' ]  = "''[[Return of the Duelist]]'' (default desc)", 
+	[ 'description' ]  = "''[[Return of the Duelist]]'' (default desc)",
 	[ '$description' ] = "''[[$1]]''",
-} 
+}
 --]==]
 -- </pre>
