@@ -25,7 +25,7 @@ p:test{
 	[ 'print' ]    = 'New',
 	[ 'qty' ]      = '1',
 	[ 'columns' ]  = '$Volume::[[Yu-Gi-Oh! ZEXAL Volume $1 promotional card|Volume $1]]; Volume::[[Yu-Gi-Oh! ZEXAL Volume 1 promotional card|Volume 1 (default)]]; Some notes;',
-	[ 'description' ]  = 'Default desc', 
+	[ 'description' ]  = 'Default desc',
 	[ '$description' ] = 'Bold: <b>$1</b>; Italics: <i>$2</i>',
 }
 --]==]
