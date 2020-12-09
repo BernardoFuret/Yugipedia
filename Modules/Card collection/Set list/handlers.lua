@@ -9,7 +9,7 @@ TODO:
 - Refactor: split responsibilities more strictly;
 - Sort and display columns in alphabetical order?
 - Validate default quantity as a number
-- A list of only invalid and empty rarities on an entry will
+- An input of only invalid and empty rarities on an entry will
 generate error messages, but will default to general rarities.
 
 - What's not being tracked:
@@ -54,6 +54,8 @@ local function parseRarities( self, rawRarities, location )
 		return rarities
 	end
 
+	local duplicated = {}
+
 	local position = 0
 
 	local nonEmptyposition = 0
@@ -69,7 +71,29 @@ local function parseRarities( self, rawRarities, location )
 			local rarity = DATA.getRarity( rawRaritiy )
 
 			if rarity then
-				table.insert( rarities, UTIL.link( rarity.full ) )
+				if duplicated[ rarity.full ] then
+					local message = ( 'Duplicate rarity `%s` (same as `%s`, at non-empty position `%d`), at %s, at non-empty position %d!' )
+						:format(
+							rawRaritiy,
+							duplicated[ rarity.full ].input,
+							duplicated[ rarity.full ].nonEmptyposition,
+							location,
+							nonEmptyposition
+						)
+
+					local category = 'transclusions with duplicate rarities'
+
+					self.reporter
+						:addError( message )
+						:addCategory( category )
+				else
+					duplicated[ rarity.full ] = {
+						input = rawRaritiy,
+						nonEmptyposition = nonEmptyposition,
+					}
+
+					table.insert( rarities, UTIL.link( rarity.full ) )
+				end
 			else
 				local message = ( 'No such rarity for `%s`, at %s, at non-empty position %d!' )
 					:format( rawRaritiy, location, nonEmptyposition )
