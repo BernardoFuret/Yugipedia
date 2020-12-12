@@ -163,7 +163,7 @@ function handlers:initStructure( globalData )
 		:newline()
 end
 
-function handlers:handleRow( row, globalData )
+function handlers:handleEntry( entry, globalData )
 	local file = {
 		region = globalData.region,
 		edition = globalData.edition,
@@ -176,10 +176,10 @@ function handlers:handleRow( row, globalData )
 	local valuesIndex = 1
 
 	-- Card number (and abbr):
-	if row.options.abbr or globalData.abbr then
-		file.abbr = row.options.abbr or globalData.abbr
+	if entry.options.abbr or globalData.abbr then
+		file.abbr = entry.options.abbr or globalData.abbr
 	else
-		local cardNumber = UTIL.trim( row.values[ valuesIndex ] )
+		local cardNumber = UTIL.trim( entry.values[ valuesIndex ] )
 
 		if cardNumber then
 			file.abbr = mwTextSplit( cardNumber, '%-' )[ 1 ]:gsub( '/', '' )
@@ -187,7 +187,7 @@ function handlers:handleRow( row, globalData )
 			caption.cardNumber = cardNumber
 		else
 			local message = ( 'Missing card number at file number %d!' )
-				:format( row.lineno )
+				:format( entry.lineno )
 
 			local category = 'transclusions with missing card number'
 
@@ -195,7 +195,7 @@ function handlers:handleRow( row, globalData )
 				:addError( message )
 				:addCategory( category )
 
-			return errorEntry( row.lineno, globalData.region ) 
+			return errorEntry( entry.lineno, globalData.region ) 
 		end
 
 		valuesIndex = valuesIndex + 1
@@ -203,7 +203,7 @@ function handlers:handleRow( row, globalData )
 
 	-- Card name (English and localized):
 	do
-		local cardName = UTIL.trim( row.values[ valuesIndex ] )
+		local cardName = UTIL.trim( entry.values[ valuesIndex ] )
 
 		if cardName then
 			file.name = cardName
@@ -218,7 +218,7 @@ function handlers:handleRow( row, globalData )
 			end
 		else
 			local message = ( 'Missing card name at file number %d!' )
-				:format( row.lineno )
+				:format( entry.lineno )
 
 			local category = 'transclusions with missing card name'
 
@@ -226,7 +226,7 @@ function handlers:handleRow( row, globalData )
 				:addError( message )
 				:addCategory( category )
 
-			return errorEntry( row.lineno, globalData.region ) 
+			return errorEntry( entry.lineno, globalData.region ) 
 		end
 
 		valuesIndex = valuesIndex + 1
@@ -234,16 +234,16 @@ function handlers:handleRow( row, globalData )
 
 	-- Rarity:
 	do
-		local rarityInput = UTIL.trim( row.values[ valuesIndex ] )
+		local rarityInput = UTIL.trim( entry.values[ valuesIndex ] )
 
 		local rarityValidated = validateRarity(
 			self,
 			rarityInput,
-			( 'file number %d' ):format( row.lineno )
+			( 'file number %d' ):format( entry.lineno )
 		)
 
 		if ( rarityValidated or globalData.rarity or {} ).err then
-			return errorEntry( row.lineno, globalData.region ) 
+			return errorEntry( entry.lineno, globalData.region ) 
 		end
 
 		rarityValidated = rarityValidated or globalData.rarity or RARITY_COMMON
@@ -257,25 +257,25 @@ function handlers:handleRow( row, globalData )
 
 	-- Alt:
 	do
-		file.alt = UTIL.trim( row.values[ valuesIndex ] ) or globalData.alt
+		file.alt = UTIL.trim( entry.values[ valuesIndex ] ) or globalData.alt
 
 		valuesIndex = valuesIndex + 1
 	end
 
 	-- File:
 	do
-		file.file = row.options.file
+		file.file = entry.options.file
 	end
 
 	-- Extension:
 	do -- TODO: this and other options should be validated programmatically    
-		local extenisonInput = row.options.extension
+		local extenisonInput = entry.options.extension
 
 		local extensionValidated = UTIL.trim( extenisonInput ) 
 
 		if extenisonInput and not extensionValidated then
 			local message = ( 'Empty `extension` is not allowed at line %d!' )
-				:format( row.lineno )
+				:format( entry.lineno )
 
 			local category = 'transclusions with empty extension'
 
@@ -289,13 +289,13 @@ function handlers:handleRow( row, globalData )
 
 	-- Printed name:
 	do
-		local printedNameInput = row.options[ 'printed-name' ]
+		local printedNameInput = entry.options[ 'printed-name' ]
 
 		local printedNameValidated = UTIL.trim( printedNameInput )
 
 		if printedNameInput and not printedNameValidated then
 			local message = ( 'Empty `printed-name` is not allowed at line %d.' )
-				:format( row.lineno )
+				:format( entry.lineno )
 
 			local category = 'transclusions with empty printed-name'
 
@@ -310,7 +310,7 @@ function handlers:handleRow( row, globalData )
 	-- Description:
 	do
 		caption.description = self.utils:handleInterpolation(
-			row.options.description,
+			entry.options.description,
 			globalData[ '$description' ],
 			globalData.description
 		)

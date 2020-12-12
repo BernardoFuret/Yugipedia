@@ -13,7 +13,7 @@ TODO:
 generate error messages, but will default to general rarities.
 
 - What's not being tracked:
--- Validation of row options (admissible values, including columns)
+-- Validation of entry options (admissible values, including columns)
 ]=]
 
 local DATA = require( 'Module:Data' )
@@ -234,7 +234,7 @@ function handlers:initStructure( globalData )
 		:node( createHeaderRow( self, globalData ) )
 end
 
-function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functions
+function handlers:handleEntry( entry, globalData ) -- TODO: refactor: extract functions
 	local rowTr = mwHtmlCreate( 'tr' )
 
 	local valuesIndex = 1
@@ -243,9 +243,9 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 
 	-- Card number:
 	if not globalData.options.noabbr then
-		local cardNumberInput = UTIL.trim( row.values[ valuesIndex ] )
+		local cardNumberInput = UTIL.trim( entry.values[ valuesIndex ] )
 
-		cardNameInput = UTIL.trim( row.values[ valuesIndex + 1 ] ) -- TODO: move to outer scope (all *Input )
+		cardNameInput = UTIL.trim( entry.values[ valuesIndex + 1 ] ) -- TODO: move to outer scope (all *Input )
 
 		local cardNumberContent = cardNumberInput
 			and ( ( cardNumberInput:match( '?' ) or not cardNameInput )
@@ -263,7 +263,7 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 	do
 		local languageIsEnglish = globalData.language.index == LANGUAGE_ENGLISH.index
 
-		cardNameInput = UTIL.trim( row.values[ valuesIndex ] ) -- TODO: move to outer scope (all *Input )
+		cardNameInput = UTIL.trim( entry.values[ valuesIndex ] ) -- TODO: move to outer scope (all *Input )
 
 		local cardName = cardNameInput and UTIL.wrapInQuotes(
 			UTIL.link(
@@ -273,13 +273,13 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 			LANGUAGE_ENGLISH.index
 		) or ''
 
-		local printedNameInput = row.options[ 'printed-name' ]
+		local printedNameInput = entry.options[ 'printed-name' ]
 
 		local printedNameValidated = UTIL.trim( printedNameInput )
 
 		if printedNameInput and not printedNameValidated then
 			local message = ( 'Empty `printed-name` is not allowed at line %d!' )
-				:format( row.lineno )
+				:format( entry.lineno )
 
 			local category = 'transclusions with empty printed-name'
 
@@ -290,7 +290,7 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 
 		if printedNameValidated and not cardNameInput then
 			local message = ( 'Cannot use `printed-name` option when there isn\'t a card name, at line %d!' )
-				:format( row.lineno )
+				:format( entry.lineno )
 
 			local category = 'transclusions with printed-name but no card name'
 
@@ -310,7 +310,7 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 			)
 
 		local description = self.utils:handleInterpolation(
-			row.options.description,
+			entry.options.description,
 			globalData[ '$description' ],
 			globalData.description
 		)
@@ -348,12 +348,12 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 
 	-- Rarities:
 	do
-		local raritiesInput = row.values[ valuesIndex ]
+		local raritiesInput = entry.values[ valuesIndex ]
 
 		local linkedRarities = parseRarities(
 			self,
 			raritiesInput,
-			( 'line %d' ):format( row.lineno )
+			( 'line %d' ):format( entry.lineno )
 		)
 
 		rowTr:node(
@@ -378,7 +378,7 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 	-- Print:
 	if globalData.print then
 		-- DOC: if print is empty, don't override default value (just treat as nil). This is to prevent overriding when qty is being used and we want the default print value. 
-		local printInput = UTIL.trim( row.values[ valuesIndex ] )
+		local printInput = UTIL.trim( entry.values[ valuesIndex ] )
 
 		rowTr:node( createCell( printInput or globalData.print ) )
 
@@ -387,12 +387,12 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 
 	-- Quantity:
 	if globalData.qty then
-		local qtyInput = row.values[ valuesIndex ]
+		local qtyInput = entry.values[ valuesIndex ]
 
 		local qtyNumber = getQty(
 			self,
 			qtyInput,
-			( 'line %d' ):format( row.lineno ),
+			( 'line %d' ):format( entry.lineno ),
 			globalData.qty
 		)
 
@@ -403,7 +403,7 @@ function handlers:handleRow( row, globalData ) -- TODO: refactor: extract functi
 
 	-- Extra columns
 	for columnName, columnData in pairs( globalData.columns ) do
-		local columnInput = row.options[ '@' .. columnName ]
+		local columnInput = entry.options[ '@' .. columnName ]
 
 		local columnContent = self.utils:handleInterpolation(
 			columnInput,

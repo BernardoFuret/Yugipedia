@@ -45,20 +45,20 @@ function DefaultHandlers:initStructure( globalData )
 end
 
 --[[Doc
-@method DefaultHandlers handleRow
-@description Parses the row content
-@return 
+@method DefaultHandlers handleEntry
+@description Parses the entry data
+@return A concrete entry
 ]]
-function DefaultHandlers:handleRow( row, globalData )
-	local rowString = ( 'Non-empty line: %d »» %s' )
-		:format( row.lineno, row.raw )
+function DefaultHandlers:handleEntry( entry, globalData )
+	local entryString = ( 'Non-empty line: %d »» %s' )
+		:format( entry.lineno, entry.raw )
 
-	return mw.html.create( 'p' ):wikitext( rowString )
+	return mw.html.create( 'p' ):wikitext( entryString )
 end
 
 --[[Doc
 @method DefaultHandlers finalize
-@description Applied after the rows have been parsed.
+@description Applied after the entries have been parsed.
 Used to supply extra containers to be added to the
 main wrapper.
 @return Multiple values that will be appended to the

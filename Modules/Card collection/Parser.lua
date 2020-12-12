@@ -50,21 +50,21 @@ local function loadHandlers( root )
 	} )
 end
 
-local function parseRowEntry( handlers, entry, lineno ) -- TODO: have this on utils?
-	local rowPair = mwTextSplit( entry, '%s*//%s*' )
+local function parseEntry( handlers, rawEntry, lineno ) -- TODO: have this on utils?
+	local entryPair = mwTextSplit( rawEntry, '%s*//%s*' )
 
-	local rowValues = handlers.utils:parseValues( rowPair[ 1 ] )
+	local entryValues = handlers.utils:parseValues( entryPair[ 1 ] )
 
-	local rowOptions = handlers.utils:parseOptions(
-		rowPair[ 2 ] or '',
+	local entryOptions = handlers.utils:parseOptions(
+		entryPair[ 2 ] or '',
 		( 'line %d' ):format( lineno )
 	)
 
 	return {
-		raw = entry,
+		raw = rawEntry,
 		lineno = lineno,
-		values = rowValues,
-		options = rowOptions,
+		values = entryValues,
+		options = entryOptions,
 	}
 end
 
@@ -97,17 +97,17 @@ function Parser:parse( frame, arguments )
 	do
 		local lineno = 0 -- Count of non-empty lines.
 
-		for entry in mwTextGsplit( globalData[ 1 ], '%s*\n%s*' ) do
-			local entry = UTIL.trim( entry )
+		for rawEntry in mwTextGsplit( globalData[ 1 ], '%s*\n%s*' ) do
+			local rawEntry = UTIL.trim( rawEntry )
 
-			if entry then
+			if rawEntry then
 				lineno = lineno + 1
 
-				local row = parseRowEntry( handlers, entry, lineno )
+				local entry = parseEntry( handlers, rawEntry, lineno )
 
-				local parsedRow = handlers:handleRow( row, globalData )
+				local handledEntry = handlers:handleEntry( entry, globalData )
 
-				mainStructure:node( tostring( parsedRow ) )
+				mainStructure:node( tostring( handledEntry ) )
 			end
 		end
 	end
