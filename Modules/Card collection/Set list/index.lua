@@ -10,7 +10,7 @@ p:test{
 		YZ04-JP001; Number 47: Nightmare Shark; UR, SR // @Volume::4
 		YZ05-JP001; Number 72: Shogi Rook // description::Bold, Italics; @Volume::5
 		YZ06-JP001; Number 52: Diamond Crab King // @Volume::6
-		YZ07-JP001; Number 23: Lancelot, Dark Knight of the Underworld // @Volume::7
+		YZ07-JP001; Number 23: Lancelot, Dark Knight of the Underworld // @Volume::7; description::, Only italics
 		YZ08-JP001; Number S39: Utopia the Lightning // printed-name::Super Shiny Utopia; @Volume::8; description::And sooner as UTOPIA
 		YZ09-JP001; Gagaga Head; ; ; 2 // @Volume::9
 		YZ??-JP???; Gagaga Body // description:: ; @Some notes::Here, the description is inputted as empty, preventing the default description and interpolation.
@@ -24,7 +24,8 @@ p:test{
 	[ 'rarities' ] = 'UR',
 	[ 'print' ]    = 'New',
 	[ 'qty' ]      = '1',
-	[ 'columns' ]  = '$Volume::[[Yu-Gi-Oh! ZEXAL Volume $1 promotional card|Volume $1]]; Volume::[[Yu-Gi-Oh! ZEXAL Volume 1 promotional card|Volume 1 (default)]]; Some notes;',
+	[ 'columns' ]  = 'Volume::[[Yu-Gi-Oh! ZEXAL Volume 1 promotional card|Volume 1 (default)]]; Some notes;',
+	[ '$columns' ]  = 'Volume::[[Yu-Gi-Oh! ZEXAL Volume $1 promotional card|Volume $1]]',
 	[ 'description' ]  = 'Default desc',
 	[ '$description' ] = 'Bold: <b>$1</b>; Italics: <i>$2</i>',
 }
