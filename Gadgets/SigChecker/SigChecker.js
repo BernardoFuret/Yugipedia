@@ -5,52 +5,49 @@
  * @author Falzar, Becasita
  * @contact [[User talk:Becasita]]
  */
-( function _gadgetSigChecker( window, document, $, mw, console ) {
+( function _gadgetSigChecker( window, $, mw, console ) {
 	"use strict";
 
 	var LAST_LOG = '~~~~~';
 
-	var SigChecker = {
-		SIG: '~~\~~',
+	var SIG = '~~\~~';
 
-		config: mw.config.get( [
-			'wgNamespaceNumber',
-			'wgPageName'
-		] ),
+	var config = mw.config.get( [
+		'wgNamespaceNumber',
+		'wgPageName'
+	] );
 
-		$textBox: $( '#wpTextbox1' ),
+	var $textBox = $( '#wpTextbox1' );
 
-		state: {
-			alerts: 0,
-			initialText: ''
-		},
+	function mustSign() {
+		return (
+			(
+				// Forum page:
+				config.wgNamespaceNumber === 110
+				||
+				// Any talk page:
+				config.wgNamespaceNumber % 2
+			)
+			&&
+			!(
+				/\/archive|(\?|&)undo(after)?=/gi.test( window.location.href )
+				||
+				config.wgPageName === 'Forum:Reasons_why_cards_are_Forbidden/Limited'
+			)
+		);
+	}
 
-		mustSign: function() {
-			return (
-				(
-					// Forum page:
-					SigChecker.config.wgNamespaceNumber === 110
-					||
-					// Any talk page:
-					SigChecker.config.wgNamespaceNumber % 2
-				)
-				&&
-				!(
-					mw.util.getParamValue( 'undo' )
-					||
-					/\/archive/gi.test( document.URL )
-					||
-					SigChecker.config.wgPageName === 'Forum:Reasons_why_cards_are_Forbidden/Limited'
-				)
-			);
-		},
+	function validate( initialContent ) {
+		var state = {
+			content: initialContent,
+			alerts: 0
+		};
 
-		saveState: function() {
-			SigChecker.state.initialText = SigChecker.$textBox.val();
-		},
-
-		check: function() {
-			if (
+		return function onMousedown( event ) {
+			return !!( // Go through if:
+				// Too many alerts skipped:
+				state.alerts++ > 2
+				||
 				// Minor edit:
 				$( '#wpMinoredit' ).is( ':checked' )
 				||
@@ -58,60 +55,51 @@
 				/(archiv|mov)(e|ing)/i.test( $( '#wpSummary' ).val() )
 				||
 				// Page for deletion:
-				/\{\{\s*[Dd]elete/.test( SigChecker.$textBox.val() )
+				/\{\{\s*[Dd]elete/.test( $textBox.val() )
 				||
 				// Whitespace and/or capitalization changes:
 				(
-					SigChecker.state.initialText.replace( /\s/g, '' ).toLowerCase()
+					state.content.replace( /\s/g, '' ).toLowerCase()
 					===
-					SigChecker.$textBox.val().replace( /\s/g, '' ).toLowerCase()
+					$textBox.val().replace( /\s/g, '' ).toLowerCase()
 				)
 				||
 				// Strip any escaped four tildes (by nowiki or HTML comments).
 				// And check if we still match four tildes.
+				// (this is a hack; avoid parsing HTML with RegExp!)
 				// If true, then the user signed:
-				new RegExp( SigChecker.SIG, 'g' ).test(
-					SigChecker.$textBox.val().replace(
+				new RegExp( SIG, 'g' ).test(
+					$textBox.val().replace(
 						/<now\iki>[\s\S]*?~~\~~[\s\S]*?<\/nowiki>|<!--[\s\S]*?~~\~~[\s\S]*?-->/g,
 						''
 					)
 				)
 				||
-				// Too many alerts skipped:
-				SigChecker.state.alerts++ > 2
-			) {
-				return; // Go through.
-			}
-
-			// Else, alert the user they need to sign:
-			// (false, because if the user clicks "OK",
-			// then it's as if they want to sign. So, "OK" means
-			// they want to get back (cancel, not confirm)).
-			if (
-				window.confirm(
-					'Please sign your posts by adding 4 tildes (' + SigChecker.SIG + ') to the end of your posts.'
+				// User was notified about signing but dismissed:
+				// ("OK" is "I will sign"; "Cancel" is for "dismiss".)
+				!window.confirm(
+					'Please sign your posts by adding 4 tildes (' + SIG + ') to the end of your posts.'
 				)
-			) {
-				return; // Keep current page
+			); // Else keep current page.
+		};
+	} 
+
+	function init() {
+		// This should ensure it only captures the content
+		// after it has been updated by other gadgets.
+		queueMicrotask( function() {
+			var initialContent = $textBox.val();
+			
+			if ( mustSign() ) {
+				$( '#wpSave, #wpPreview, #wpDiff, .wikiEditor-ui-tabs > *' )
+					.mousedown( validate( initialContent ) )
+				;
 			}
+		} );
+	}
 
-			$( this ).click(); // Go through (trigger click event);
-		},
-
-		init: function() {
-			mw.loader.using( 'mediawiki.util' ).then( function() {
-				if ( SigChecker.mustSign() ) {
-					SigChecker.saveState();
-					$( '#wpSave, #wpPreview, #wpDiff, .wikiEditor-ui-tabs > *' )
-						.mousedown( SigChecker.check )
-					;
-				}
-			} );
-		}
-	};
-
-	mw.hook( 'wikipage.editform' ).add( SigChecker.init );
+	mw.hook( 'wikipage.editform' ).add( init );
 
 	console.log( '[Gadget] SigChecker last updated at', LAST_LOG );
 
-} )( window, window.document, window.jQuery, window.mediaWiki, window.console );
+} )( window, window.jQuery, window.mediaWiki, window.console );
