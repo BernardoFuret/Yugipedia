@@ -66,7 +66,6 @@ local function getEdition()
 	return edition
 end
 
-
 local function errorEntry( lineno, region )
 	return ( 'Back-%s.png | File number %d\n' ):format(
 		( {
@@ -84,7 +83,7 @@ local function fileToString( file )
 		:add( file.abbr )
 		:add( file.region.index )
 		:add( file.rarity.abbr )
-		:add( file.edition.abbr )
+		:add( file.edition and file.edition.abbr )
 		:add( UTIL.trim( file.alt ) )
 		:flush( '-' )
 		:add( file.extension )
@@ -195,7 +194,7 @@ function handlers:handleEntry( entry, globalData )
 				:addError( message )
 				:addCategory( category )
 
-			return errorEntry( entry.lineno, globalData.region ) 
+			return errorEntry( entry.lineno, globalData.region )
 		end
 
 		valuesIndex = valuesIndex + 1
@@ -207,7 +206,7 @@ function handlers:handleEntry( entry, globalData )
 
 		if cardName then
 			file.name = cardName
-			
+
 			caption.name = cardName
 
 			if globalData.language.index ~= LANGUAGE_ENGLISH.index then
@@ -226,7 +225,7 @@ function handlers:handleEntry( entry, globalData )
 				:addError( message )
 				:addCategory( category )
 
-			return errorEntry( entry.lineno, globalData.region ) 
+			return errorEntry( entry.lineno, globalData.region )
 		end
 
 		valuesIndex = valuesIndex + 1
@@ -243,7 +242,7 @@ function handlers:handleEntry( entry, globalData )
 		)
 
 		if ( rarityValidated or globalData.rarity or {} ).err then
-			return errorEntry( entry.lineno, globalData.region ) 
+			return errorEntry( entry.lineno, globalData.region )
 		end
 
 		rarityValidated = rarityValidated or globalData.rarity or RARITY_COMMON
@@ -268,10 +267,10 @@ function handlers:handleEntry( entry, globalData )
 	end
 
 	-- Extension:
-	do -- TODO: this and other options should be validated programmatically    
+	do -- TODO: this and other options should be validated programmatically
 		local extenisonInput = entry.options.extension
 
-		local extensionValidated = UTIL.trim( extenisonInput ) 
+		local extensionValidated = UTIL.trim( extenisonInput )
 
 		if extenisonInput and not extensionValidated then
 			local message = ( 'Empty `extension` is not allowed at line %d!' )
