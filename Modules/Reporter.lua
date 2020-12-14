@@ -10,12 +10,11 @@ local mwHtmlCreate = mw.html.create
 
 local namespace = mw.title.getCurrentTitle().namespace
 
---[[Doc
-@function isMainNs
-]]
-local function isMainNs()
-	return namespace == 0
-end
+local canDumpCategories = (
+	namespace ~= 10
+	and
+	namespace % 2 == 0
+)
 
 --[[Doc
 @class Reporter
@@ -162,7 +161,7 @@ end
 function Reporter:dump()
 	return tostring( mwHtmlCreate( 'div' )
 		:addClass( 'reporter' )
-		:wikitext( isMainNs() and dumpCategories( self ) or nil )
+		:wikitext( canDumpCategories and dumpCategories( self ) )
 		:node( self._errors.exists and dumpErrors( self ) )
 		:node( self._warnings.exists and dumpWarnings( self ) )
 	)
