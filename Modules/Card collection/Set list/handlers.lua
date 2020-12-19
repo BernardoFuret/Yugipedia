@@ -197,8 +197,9 @@ local function createHeaderRow( self, globalData )
 	return tostring( headerTr )
 end
 
-local function createCell( text )
+local function createCell( text, attributes )
 	return tostring( mwHtmlCreate( 'td' )
+		:attr( attributes or {} )
 		:wikitext( text )
 	)
 end
@@ -340,7 +341,9 @@ function handlers:handleEntry( entry, globalData ) -- TODO: refactor: extract fu
 				:flush( ' ' )
 				:toString()
 
-			rowTr:node( createCell( cardLocalizedNameCellContent ) )
+			rowTr:node( createCell( cardLocalizedNameCellContent, {
+				lang = globalData.language.index,
+			} ) )
 		end
 
 		valuesIndex = valuesIndex + 1
