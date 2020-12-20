@@ -77,6 +77,13 @@ local function errorEntry( lineno, region )
 	)
 end
 
+local function wrapLocalizedName( name, language )
+	return name and tostring( mw.html.create( 'span' )
+		:attr{ lang = language.index }
+		:wikitext( name )
+	)
+end
+
 local function fileToString( file )
 	return file.file or StringBuffer()
 		:add( UTIL.getImgName( file.name ) )
@@ -104,16 +111,22 @@ local function captionToString( caption )
 
 	local printedNameContent = caption[ 'printed-name' ]
 		and ( '(as %s)' ):format(
-			UTIL.wrapInQuotes(
-				caption[ 'printed-name' ],
-				caption.language.index
+			wrapLocalizedName(
+				UTIL.wrapInQuotes(
+					caption[ 'printed-name' ],
+					caption.language.index
+				),
+				caption.language
 			)
 		)
 
 	local localizedNameContent = caption.localizedName
-		and UTIL.wrapInQuotes(
-			caption.localizedName,
-			caption.language.index
+		and wrapLocalizedName(
+			UTIL.wrapInQuotes(
+				caption.localizedName,
+				caption.language.index
+			),
+			caption.language
 		)
 
 	return StringBuffer() -- TODO: check that double printedNameContent
