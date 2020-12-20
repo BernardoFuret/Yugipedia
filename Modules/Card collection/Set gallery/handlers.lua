@@ -99,8 +99,6 @@ local function fileToString( file )
 end
 
 local function captionToString( caption )
-	local rarityContent = ( '(%s)' ):format( UTIL.link( caption.rarity.abbr ) )
-
 	local nameContent = UTIL.wrapInQuotes(
 		UTIL.link(
 			caption.name,
@@ -108,6 +106,8 @@ local function captionToString( caption )
 		),
 		LANGUAGE_ENGLISH.index
 	)
+
+	local rarityContent = ( '(%s)' ):format( UTIL.link( caption.rarity.abbr ) )
 
 	local printedNameContent = caption[ 'printed-name' ]
 		and ( '(as %s)' ):format(
@@ -129,14 +129,12 @@ local function captionToString( caption )
 			caption.language
 		)
 
-	return StringBuffer() -- TODO: check that double printedNameContent
+	return StringBuffer()
 		:add( caption.cardNumber and UTIL.link( caption.cardNumber ) )
 		:add( rarityContent )
 		:flush( ' ' )
 		:add( nameContent )
 		:flush( TAG_BR )
-		:add( not caption.localizedName and printedNameContent or nil )
-		:flush( ' ' )
 		:add( localizedNameContent )
 		:flush( TAG_BR )
 		:add( printedNameContent )
