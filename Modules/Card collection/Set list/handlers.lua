@@ -150,6 +150,13 @@ local function columnsHandler( columns, columnName, columnValue )
 	columns[ columnName ].default = columnValue
 end
 
+local function wrapLocalizedName( name, language )
+	return name and tostring( mwHtmlCreate( 'span' )
+		:attr{ lang = language.index }
+		:wikitext( name )
+	)
+end
+
 local function createHeader( self, id, text )
 	local cssClass = self.utils:makeCssClass( 'main', 'header' )
 
@@ -197,9 +204,8 @@ local function createHeaderRow( self, globalData )
 	return tostring( headerTr )
 end
 
-local function createCell( text, attributes )
+local function createCell( text )
 	return tostring( mwHtmlCreate( 'td' )
-		:attr( attributes or {} )
 		:wikitext( text )
 	)
 end
@@ -304,9 +310,12 @@ function handlers:handleEntry( entry, globalData ) -- TODO: refactor: extract fu
 
 		local printedName = printedNameValidated
 			and ( '(as %s)' ):format(
-				UTIL.wrapInQuotes(
-					printedNameValidated,
-					globalData.language.index
+				wrapLocalizedName(
+					UTIL.wrapInQuotes(
+						printedNameValidated,
+						globalData.language.index
+					),
+					globalData.language
 				)
 			)
 
@@ -327,12 +336,15 @@ function handlers:handleEntry( entry, globalData ) -- TODO: refactor: extract fu
 
 		if not languageIsEnglish then
 			local cardLocalizedName = cardNameInput
-				and UTIL.wrapInQuotes(
-					DATA.getName(
-						cardNameInput:gsub( '#', '' ),
-						globalData.language
+				and wrapLocalizedName(
+					UTIL.wrapInQuotes(
+						DATA.getName(
+							cardNameInput:gsub( '#', '' ),
+							globalData.language
+						),
+						globalData.language.index
 					),
-					globalData.language.index
+					globalData.language
 				)
 
 			local cardLocalizedNameCellContent = StringBuffer()
@@ -341,9 +353,7 @@ function handlers:handleEntry( entry, globalData ) -- TODO: refactor: extract fu
 				:flush( ' ' )
 				:toString()
 
-			rowTr:node( createCell( cardLocalizedNameCellContent, {
-				lang = globalData.language.index,
-			} ) )
+			rowTr:node( createCell( cardLocalizedNameCellContent ) )
 		end
 
 		valuesIndex = valuesIndex + 1
