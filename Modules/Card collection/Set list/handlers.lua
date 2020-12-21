@@ -272,10 +272,14 @@ function handlers:handleEntry( entry, globalData ) -- TODO: refactor: extract fu
 
 		cardNameInput = UTIL.trim( entry.values[ valuesIndex ] ) -- TODO: move to outer scope (all *Input )
 
+		local cardNameDisplay = entry.options[ 'force-SMW' ]
+			and DATA.getName( cardNameInput, LANGUAGE_ENGLISH )
+			or ( cardNameInput:match( 'Token%s%(' ) and cardNameInput )
+
 		local cardName = cardNameInput and UTIL.wrapInQuotes(
 			UTIL.link(
 				cardNameInput,
-				cardNameInput:match( 'Token%s%(' ) and cardNameInput
+				cardNameDisplay
 			),
 			LANGUAGE_ENGLISH.index
 		) or ''
