@@ -14,3 +14,13 @@
 	justify-content: space-evenly;
 	flex-wrap: wrap;
 }
+
+.thumb {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.noFile {
+	overflow-wrap: break-word;
+}
