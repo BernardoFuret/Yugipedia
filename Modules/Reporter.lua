@@ -161,7 +161,7 @@ end
 function Reporter:dump()
 	return tostring( mwHtmlCreate( 'div' )
 		:addClass( 'reporter' )
-		:wikitext( canDumpCategories and dumpCategories( self ) )
+		:node( canDumpCategories and dumpCategories( self ) )
 		:node( self._errors.exists and dumpErrors( self ) )
 		:node( self._warnings.exists and dumpWarnings( self ) )
 	)
