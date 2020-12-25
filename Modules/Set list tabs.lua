@@ -125,6 +125,7 @@ local function main( regionsInput, frame )
 
 			table.insert( listsContent, {
 				region = region.full:gsub( 'Worldwide ', '' ),
+				title = setListPage,
 				content = generateNavbar( setListPage ) .. generateContent( setListPage, frame ),
 			} )
 		else
@@ -142,10 +143,14 @@ local function main( regionsInput, frame )
 		:wikitext(
 			reporter:dump(),
 			listsContent[ 2 ]
-				and frame:extensionTag{
-					name = 'tabber',
-					content = printContent( listsContent ),
-				}
+				and frame
+					:newChild{
+						title = listsContent[ 1 ].title,
+					}
+					:extensionTag{
+						name = 'tabber',
+						content = printContent( listsContent ),
+					}
 				or listsContent[ 1 ].content
 		)
 
