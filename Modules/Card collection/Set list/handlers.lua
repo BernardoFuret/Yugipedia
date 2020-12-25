@@ -274,7 +274,7 @@ function handlers:handleEntry( entry, globalData ) -- TODO: refactor: extract fu
 
 		local cardNameDisplay = entry.options[ 'force-SMW' ]
 			and DATA.getName( cardNameInput, LANGUAGE_ENGLISH )
-			or ( cardNameInput:match( 'Token%s%(' ) and cardNameInput )
+			or ( ( cardNameInput or '' ):match( 'Token%s%(' ) and cardNameInput )
 
 		local cardName = cardNameInput and UTIL.wrapInQuotes(
 			UTIL.link(
