@@ -41,12 +41,13 @@
 		.catch( console.error.bind( console, 'Error fetching content for', quote( pagename ) ) )
 	;
 
-	const shouldSkip = content => /(col|print)\s*=|^\s*!:|(name(-local)?|category|rarity)\s*::|Set page header/ig.test( content );
+	const shouldSkip = content => /(col|print|abbr)\s*=|^\s*!:|(name(-local)?|category|rarity)\s*::|Set page header/img.test( content );
 
 	const convert = content => content
 		.replace( /rarity\s*=/, 'rarities=' )
 		.replace( /description::\(as "(.*?)"\)/gi, 'printed-name::$1' )
 		.replace( /set\s*=\s*.*?\|/gi, '' )
+		.replace( /abbr\s*=\s*no/gi, 'options=noabbr' )
 	;
 
 	const updateContent = content => {
@@ -68,7 +69,7 @@
 		bot: true,
 	} )
 		.then( data => console.log(
-			'Updated!',
+			`Updated ${pagename}!`,
 			$( '<a>', {
 				target: '_blank',
 				href: `https://yugipedia.com/index.php?diff=${data.edit.newrevid}`,
@@ -157,7 +158,7 @@
 					} )
 					.catch( err => {
 						if ( err === 'Halt!' ) {
-							console.log( 'Terminating' );
+							console.log( 'Terminating chain with ID', id );
 
 							return;
 						}
