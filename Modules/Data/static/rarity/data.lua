@@ -33,7 +33,7 @@ local normalize = {
 	['plscr'] = 'plscr', ['platinumsecret'] = 'plscr',
 
 	-- Millennium:
-	['mlr']   = 'mlr',   ['millennium']       = 'mlr',
+	['mlr']   = 'mlr',   ['millennium']       = 'mlr', ['mr'] = 'mlr',
 	['mlsr']  = 'mlsr',  ['millenniumsuper']  = 'mlsr',
 	['mlur']  = 'mlur',  ['millenniumultra']  = 'mlur',
 	['mlscr'] = 'mlscr', ['millenniumsecret'] = 'mlscr',
@@ -71,7 +71,6 @@ local normalize = {
 	['msr'] = 'msr', ['mosaic']      = 'msr',
 	['shr'] = 'shr', ['shatterfoil'] = 'shr',
 	['cr']  = 'cr',  ['collectors']  = 'cr',
-	['rr']  = 'rr',  ['rush']        = 'rr',
 }
 
 local main = {
@@ -145,7 +144,6 @@ local main = {
 	['msr'] = { abbr = 'MSR', full = 'Mosaic Rare'      },
 	['shr'] = { abbr = 'SHR', full = 'Shatterfoil Rare' },
 	['cr']  = { abbr = 'CR',  full = 'Collectors Rare'  },
-	['rr']  = { abbr = 'RR',  full = 'Rush Rare'        },
 }
 
 return {
