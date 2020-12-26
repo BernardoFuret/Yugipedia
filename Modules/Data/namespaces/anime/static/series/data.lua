@@ -19,7 +19,7 @@ local normalize = {
 local main = {
 	-- Shorts:
 	['toei'] = {
-		abbr  = 'TOEI',
+		abbr  = 'Toei',
 		page  = 'Yu-Gi-Oh! (Toei anime)',
 		label = 'Yu-Gi-Oh! (Toei)',
 	},
