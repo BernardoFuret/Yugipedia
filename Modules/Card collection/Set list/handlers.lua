@@ -72,7 +72,7 @@ local function parseRarities( self, rawRarities, location )
 
 			if rarity then
 				if duplicated[ rarity.full ] then
-					local message = ( 'Duplicate rarity `%s` (same as `%s`, at non-empty position `%d`), at %s, at non-empty position %d!' )
+					local message = ( 'Duplicate rarity `%s` (same as `%s`, at non-empty position %d), at %s, at non-empty position %d!' )
 						:format(
 							rawRaritiy,
 							duplicated[ rarity.full ].input,
