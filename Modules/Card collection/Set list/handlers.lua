@@ -120,11 +120,11 @@ local function parseRarities( self, rawRarities, location )
 end
 
 local function getQty( self, rawQty, location, default )
-	local qty = tonumber( rawQty )
+	local qty = UTIL.trim( rawQty )
 
-	if UTIL.trim( rawQty ) and not qty then
-		local message = ( 'Invalid quantity value at %s! Cannot parse `%s` as a number!' )
-			:format( location, rawQty )
+	if qty and not qty:match( '^[%d%-]+$') then
+		local message = ( 'Invalid quantity `%s`, at %s! Expecting number or range.' )
+			:format( rawQty, location )
 
 		local category = 'transclusions with invalid quantity values'
 
