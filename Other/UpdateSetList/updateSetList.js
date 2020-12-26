@@ -45,7 +45,7 @@
 
 	const convert = content => content
 		.replace( /rarity\s*=/, 'rarities=' )
-		.replace( /description::\(as "(.*?)"\)/gi, 'printed-name::$1' )
+		.replace( /description\s*::\s*\(as "(.*?)"\)/gi, 'printed-name::$1' )
 		.replace( /set\s*=\s*.*?\|/gi, '' )
 		.replace( /abbr\s*=\s*no/gi, 'options=noabbr' )
 	;
