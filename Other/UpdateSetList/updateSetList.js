@@ -41,14 +41,21 @@
 		.catch( console.error.bind( console, 'Error fetching content for', quote( pagename ) ) )
 	;
 
-	const shouldSkip = content => /(col|print|abbr)\s*=|^\s*!:|(name(-local)?|category|rarity)\s*::|Set page header/img.test( content );
+	const shouldSkip = content => /col\s*=|^\s*!:|(name(-local)?|category|rarity)\s*::|Set page header/img.test( content );
 
-	const convert = content => content
-		.replace( /rarity\s*=/, 'rarities=' )
-		.replace( /description\s*::\s*\(as "(.*?)"\)/gi, 'printed-name::$1' )
-		.replace( /set\s*=\s*.*?\|/gi, '' )
-		.replace( /abbr\s*=\s*no/gi, 'options=noabbr' )
-	;
+	const convert = content => {
+		const newContent = content
+			.replace( /rarity\s*=/, 'rarities=' )
+			.replace( /description\s*::\s*\(as "(.*?)"\)/gi, 'printed-name::$1' )
+			.replace( /set\s*=\s*.*?\|/gi, '' )
+			.replace( /abbr\s*=\s*no/gi, 'options=noabbr' )
+		;
+
+		return ( /print\s*=/gi.test( content ) && !/qty\s*=/gi.test( newContent ) )
+			? newContent.replace( /(;\s*);(.*?)\s*(?=\/\/|$)/gm, '$1$2' )
+			: newContent
+		;
+	};
 
 	const updateContent = content => {
 		const newContent = convert( content );
