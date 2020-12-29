@@ -213,6 +213,14 @@ end
 local handlers = {}
 
 function handlers:initData( globalData )
+	self.reporter:dumpCategoriesWhen( function( default )
+		return (
+			default
+			and
+			mw.title.getCurrentTitle().namespace ~= 0
+		)
+	end )
+
 	globalData.region = getRegion( self, globalData.region )
 
 	globalData.language = DATA.getLanguage( globalData.region.index )
