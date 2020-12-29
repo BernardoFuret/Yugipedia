@@ -41,30 +41,156 @@
 		.catch( console.error.bind( console, 'Error fetching content for', quote( pagename ) ) )
 	;
 
-	const shouldSkip = content => /col\s*=|^\s*!:|(name(-local)?|category|rarity)\s*::|Set page header/img.test( content );
+	const shouldSkip = content => false // Never skip
+		&& /(name(-local)?|category|rarity)\s*::/img.test( content )
+	;
+
+	const convertColumns = content => {
+		const columnName = /col\s*=\s*(.*?)\|/gi.exec( content )?.[ 1 ];
+
+		return columnName
+			? content
+				.replace( /col\s*=\s*/gi, 'columns=' )
+				.replace( new RegExp( `${columnName}\\s*::`, 'gi' ), `@${columnName}::` )
+			: content
+		;
+	};
+
+	const getArgsFromWikitext = ( text, paramSep, assignSep ) => text
+		.split( paramSep )
+		.reduce( ( acc, e ) => {
+			if ( !e.trim() ) {
+				return acc;
+			}
+
+			const [ param, arg ] = e.split( assignSep );
+
+			return {
+				...acc,
+				[ param ]: arg,
+			};
+		}, {} )
+	;
+
+	const argsToWikitext = args => {
+		return Object.entries( args )
+			.map( ( [ param, arg ] ) => `${param}=${arg}|` )
+			.join( '' )
+		;
+	};
 
 	const convert = content => {
-		const newContent = content
-			.replace( /rarity\s*=/, 'rarities=' )
+		let newContent = content
+			.replace( /rarity\s*=/gi, 'rarities=' )
 			.replace( /description\s*::\s*\(as "(.*?)"\)/gi, 'printed-name::$1' )
 			.replace( /set\s*=\s*.*?\|/gi, '' )
 			.replace( /abbr\s*=\s*no/gi, 'options=noabbr' )
 		;
 
-		return ( /print\s*=/gi.test( content ) && !/qty\s*=/gi.test( newContent ) )
-			? newContent.replace( /(;\s*);(.*?)\s*(?=\/\/|$)/gm, '$1$2' )
+		newContent = convertColumns( newContent );
+
+		return /print\s*=/gi.test( content )
+			? newContent
+				.replace( /print\s*=\s*1/gi, 'print=Reprint' )
+				.split( '\n' )
+				.map( line => {
+					if ( /^\s*$|^\s*(?:\{|\}|\|)|[^{]=/gim.test( line ) ) {
+						return line;
+					}
+
+					const [ lineValues, ...lineOptions ] = line.split( /\s*\/\/\s*/ );
+
+					const lineValuesParts = lineValues.split( ';' );
+
+					[ lineValuesParts[ 3 ], lineValuesParts[ 4 ] ] = [ lineValuesParts[ 4 ], lineValuesParts[ 3 ] ];
+
+					return [
+						lineValuesParts.join( ';' ).replace( /(\s*;)+$/gm, '' ),
+						...lineOptions,
+					].join( ' // ' );
+				})
+				.join( '\n' )
 			: newContent
 		;
 	};
 
+	const convertSections = content => {
+		let templateArgs = {};
+
+		return content.split( '\n' )
+			.reduce( ( acc, line ) => {
+				// Template call:
+				if ( /set list/gi.test( line ) ) {
+					templateArgs = getArgsFromWikitext(
+						line.replace( /^\s*{{\s*Set list\s*\|\s*/im, '' ),
+						/\s*\|\s*/,
+						/\s*=\s*/,
+					);
+
+					return [ ...acc, line ];
+				}
+
+				// Section header
+				if ( /^\s*!:/m.test( line ) ) {
+					const headerArgs = getArgsFromWikitext(
+						line.replace( /^\s*!:\s*/m, '' ),
+						/\s*;\s*/,
+						/\s*::\s*/,
+					);
+
+					const { header, ...headerArgsRest } = headerArgs;
+
+					const allArgs = {
+						...templateArgs,
+						...headerArgsRest,
+					};
+
+					return [
+						...acc.filter( e => e ),
+						'}}',
+						' ',
+						`== ${header} ==`,
+						`{{Set list|${argsToWikitext( allArgs )}`,
+					];
+				}
+
+				// Rest:
+				return [ ...acc, line ];
+			}, [] )
+			.join( '\n' )
+			.replace( /{{\s*set list(.*?)\s*}}/gi, '' )
+			.replace( /^[ \t]$/gm, '' )
+			.trim()
+			.split( /\n{2,}/ )
+			.map( setList => {
+				const trimmedSetList = setList.trim();
+
+				const [ header, ...restOfSetList ] = trimmedSetList.split( '\n' );
+
+				return /^==/m.test( header )
+					? `${header}\n${convert( restOfSetList.join( '\n' ) )}`
+					: convert( trimmedSetList )
+				;
+			} )
+			.join( '\n\n' )
+			.replace( /^[ \t]$/gm, '' )
+		;
+	};
+
 	const updateContent = content => {
-		const newContent = convert( content );
+		const newContent = /^\s*!:/m.test( content )
+			? convertSections( content )
+			: convert( content )
+		;
 
 		const setName = /(set\s*=\s*(.*?)\s*\|)/gi.exec( content )?.[2];
 
 		const setPageHeader = `{{Set page header${setName ? `|set=${setName}` : ''}}}`;
 
-		return newContent !== content && `${setPageHeader}\n\n${newContent}`;
+		return newContent !== content && ( /Set page header/g.test( newContent )
+			? newContent
+			: `${setPageHeader}\n\n${newContent}`
+		);
 	};
 
 	const edit = ( pagename, content ) => api.postWithToken( 'csrf', {
@@ -83,7 +209,7 @@
 				text: data.edit.newrevid
 			} ).prop( 'outerHTML' ),
 		) )
-		.catch( console.warn.bind( console, 'Error updating:' ) )
+		.catch( console.warn.bind( console, `Error updating ${pagename}:` ) )
 	;
 
 	let continueToken = window.START_TOKEN;
@@ -118,7 +244,7 @@
 							}
 
 							console.log( 'Processing', title );
-						
+
 							processedPages++;
 
 							const content = await getContent( title );
@@ -172,7 +298,7 @@
 
 						console.error( 'Unknown error:', err.message, err );
 
-						__errors.push( { error: err } );	
+						__errors.push( { error: err } );
 					} )
 					.finally( () => {
 						delete __promises[ id ];
