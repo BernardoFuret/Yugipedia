@@ -32,6 +32,7 @@ Reporter.__class = Reporter
 ]]
 function Reporter.new( title )
 	local data = { -- TODO: use local references as fields?
+		_canDumpCategories = canDumpCategories,
 		_categories = {},
 		_warnings   = {},
 		_errors     = {},
@@ -50,6 +51,22 @@ end
 ]]
 function Reporter:setTitle( title )
 	self._title = tostring( title or '' ) -- TODO: default to better name? Escape title? Accept nil to avoid default category?
+
+	return self
+end
+
+--[[Doc
+@method Reporter dumpCategoriesWhen
+@description Changes the verification for when the categories can be dumped.
+@parameter {function} predicate A predicate that will receive the current
+value of the flag and the default value.
+@return {Reporter} `self`
+]]
+function Reporter:dumpCategoriesWhen( predicate )
+	self._canDumpCategories = predicate(
+		self._canDumpCategories,
+		canDumpCategories
+	)
 
 	return self
 end
@@ -161,7 +178,7 @@ end
 function Reporter:dump()
 	return tostring( mwHtmlCreate( 'div' )
 		:addClass( 'reporter' )
-		:node( canDumpCategories and dumpCategories( self ) )
+		:node( self._canDumpCategories and dumpCategories( self ) )
 		:node( self._errors.exists and dumpErrors( self ) )
 		:node( self._warnings.exists and dumpWarnings( self ) )
 	)
