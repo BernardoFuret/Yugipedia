@@ -108,6 +108,7 @@ function main( args )
 	local categories = makeCategories( ns, region, edition )
 
 	return table.concat{
+		'__NOTOC__',
 		header,
 		categories,
 	}
