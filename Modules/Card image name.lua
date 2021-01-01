@@ -59,6 +59,8 @@ local function normalize( pagename )
 		:gsub( '\'', ''):gsub( '"' , ''):gsub( '&', '')
 		:gsub( '%?', ''):gsub( '!' , ''):gsub( '@', '')
 		:gsub( '%%', ''):gsub( '=' , '')
+		:gsub( '%[', ''):gsub( '%]', '')
+		:gsub( '<' , ''):gsub( '>' , '')
 		:gsub( '/' , ''):gsub( '\\', '')
 		:gsub( '☆' , ''):gsub( '・' , '')
 	;
