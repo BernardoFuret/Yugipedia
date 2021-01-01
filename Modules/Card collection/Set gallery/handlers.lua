@@ -86,7 +86,7 @@ end
 
 local function fileToString( file )
 	return file.file or StringBuffer()
-		:add( UTIL.getImgName( file.name ) )
+		:add( UTIL.getImgName( file.name or file.pagename ) )
 		:add( file.abbr )
 		:add( file.region.index )
 		:add( file.rarity.abbr )
@@ -101,8 +101,8 @@ end
 local function captionToString( caption )
 	local nameContent = UTIL.wrapInQuotes(
 		UTIL.link(
-			caption.name,
-			caption.name:match( 'Token%s%(' ) and caption.name
+			caption.pagename,
+			caption.name
 		),
 		LANGUAGE_ENGLISH.index
 	)
@@ -213,16 +213,26 @@ function handlers:handleEntry( entry, globalData )
 
 	-- Card name (English and localized):
 	do
-		local cardName = UTIL.trim( entry.values[ valuesIndex ] )
+		local cardNameInput = UTIL.trim( entry.values[ valuesIndex ] )
 
-		if cardName then
-			file.name = cardName
+		if cardNameInput then
+			local cardNameNormalized = cardNameInput:gsub( '#', '' )
 
-			caption.name = cardName
+			local cardNameDisplay = entry.options[ 'force-SMW' ]
+				and DATA.getName( cardNameNormalized, LANGUAGE_ENGLISH )
+				or ( cardNameInput:match( 'Token%s%(' ) and cardNameInput )
+
+			file.pagename = cardNameNormalized
+
+			file.name = cardNameDisplay
+
+			caption.pagename = cardNameNormalized
+
+			caption.name = cardNameDisplay
 
 			if globalData.language.index ~= LANGUAGE_ENGLISH.index then
 				caption.localizedName = DATA.getName(
-					cardName:gsub( '#', '' ),
+					cardNameNormalized,
 					globalData.language
 				)
 			end
