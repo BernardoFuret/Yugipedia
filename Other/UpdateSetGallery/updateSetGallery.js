@@ -46,7 +46,7 @@
 		.catch( console.error.bind( console, 'Error fetching content for', link( pagename ) ) )
 	;
 
-	const shouldSkip = content => false; // Never skip
+	const shouldSkip = content => /Set page header/gi.test( content );
 
 	const getArgsFromWikitext = ( text, paramSep, assignSep ) => text
 		.split( paramSep )
@@ -104,11 +104,12 @@
 						/\s*::\s*/,
 					);
 
-					const { header, ...headerArgsRest } = headerArgs;
+					const { header = '', ...headerArgsRest } = headerArgs;
 
 					const allArgs = {
 						...templateArgs,
 						...headerArgsRest,
+						...( /\bReprint\b/i.test( header ) && { alt: 'Reprint' } ),
 					};
 
 					return [
@@ -153,9 +154,7 @@
 
 		const setPageHeader = `{{Set page header${setName ? `|set=${setName}` : ''}}}`;
 
-		return /Set page header/g.test( newContent )
-			? content
-			: `${setPageHeader}\n\n${newContent}`
+		return `${setPageHeader}\n\n${newContent}`
 		;
 	};
 
@@ -237,7 +236,7 @@
 
 							const updatedContent = updateContent( content );
 
-							if ( !updatedContent ) {
+							if ( updatedContent === content ) {
 								console.warn( `[${id}]`, 'No changes for', link( title ) );
 
 								window.console.warn( `[${id}]`, 'No changes for', link( title ) );
