@@ -196,16 +196,18 @@ function handlers:handleEntry( entry, globalData )
 
 			caption.cardNumber = cardNumber
 		else
-			local message = ( 'Missing card number at file number %d!' )
-				:format( entry.lineno )
+			if not entry.options.file then
+				local message = ( 'Missing card number at file number %d!' )
+					:format( entry.lineno )
 
-			local category = 'transclusions with missing card number'
+				local category = 'transclusions with missing card number'
 
-			self.reporter
-				:addError( message )
-				:addCategory( category )
+				self.reporter
+					:addError( message )
+					:addCategory( category )
 
-			return errorEntry( entry.lineno, globalData.region )
+				return errorEntry( entry.lineno, globalData.region )
+			end
 		end
 
 		valuesIndex = valuesIndex + 1
