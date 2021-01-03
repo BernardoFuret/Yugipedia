@@ -76,13 +76,13 @@ function D.vg( frame )
 end
 
 function D.name( frame )
+	local pagename = ( getArg( frame, 1 ) or '' ):gsub( '#', '' )
+
 	local language = DATA.getLanguage(
 		UTIL.trim( getArg( frame, 2 ) ) or 'en'
 	)
 
-	return language
-		and DATA.getName( getArg( frame, 1 ) or '', language )
-		or '' -- case of invalid language: display empty
+	return language and DATA.getName( pagename, language )
 end
 
 return D
