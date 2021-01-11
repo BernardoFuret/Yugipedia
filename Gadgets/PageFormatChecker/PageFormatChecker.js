@@ -54,7 +54,7 @@
 			'* ',
 			'',
 			'{{ArtworkHeader|lang=jp}}',
-			'<gallery heights="175px">',
+			'<gallery heights="275px" widths="275px">',
 			'Image.png  | Japanese',
 			'Image.png  | International',
 			'</gallery>',
@@ -62,12 +62,16 @@
 		].join( '\n' ),
 
 		'Set_Card_Galleries': [
+			'{{Set page header}}',
+			'',
 			'{{Set gallery|',
 			'number; name; rarity // option::value',
 			'}}',
 		].join( '\n' ),
 
 		'Set_Card_Lists': [
+			'{{Set page header}}',
+			'',
 			'{{Set list|region=|',
 			'number; name; rarity // option::value',
 			'}}',
