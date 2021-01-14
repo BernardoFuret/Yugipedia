@@ -265,9 +265,9 @@ function U.wrapInQuotes( name, ln )
 		return '';  --  Return empty string.
 	end
 
-	return (ln ~= 'ja' and ln ~= 'zh')
-		and table.concat( { '"', name, '"' } )
-		or  table.concat( { '「', name, '」' } )
+	return (ln == 'ja' or ln == 'tc')
+		and table.concat( { '「', name, '」' } )
+		or  table.concat( { '"', name, '"' } )
 	
 end
 
