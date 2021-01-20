@@ -1,18 +1,10 @@
-.set-gallery {
-	border: 0;
-	background-color: transparent;
-	white-space: normal;
-	text-align: center;
-	font-family: sans-serif;
-	padding: 0;
-}
-
-.set-gallery .mw-gallery-traditional {
+.set-gallery__main {
 	display: initial;
 	display: flex;
 	justify-content: space-around;
 	justify-content: space-evenly;
 	flex-wrap: wrap;
+	text-align: center;
 }
 
 .thumb {
