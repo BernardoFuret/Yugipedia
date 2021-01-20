@@ -2,6 +2,7 @@
 	align-items: center;
 	display: flex;
 	flex-direction: column;
+	margin: 1.5em;
 }
 
 .page-header__link {
