@@ -1,6 +1,6 @@
 /**
  * (browser)
- * Convert Set gallery to new version
+ * Remove Portuguese entries for Speed Duel: Battle City Box.
  */
 ( async ( window, $, mw, console ) => {
 	"use strict";
