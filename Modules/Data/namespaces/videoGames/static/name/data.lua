@@ -36,7 +36,7 @@ local normalize = {
 	['tf4'] = 'tf04', ['tf04'] = 'tf04', ['tagforce4'] = 'tf04',
 	['tf5'] = 'tf05', ['tf05'] = 'tf05', ['tagforce5'] = 'tf05',
 	['tf6'] = 'tf06', ['tf06'] = 'tf06', ['tagforce6'] = 'tf06',
-	['tfs'] = 'tfs',  ['tfsp'] = 'tfs',  ['tagforcespecial'] = 'tfs',
+	['tfs'] = 'tfsp', ['tfsp'] = 'tfsp', ['tagforcespecial'] = 'tfsp',
 
 	-- True Duel Monsters:
 	['s1']  = 'fmr', ['true1'] = 'fmr', ['truesealedmemories']    = 'fmr', ['sealedmemories'] = 'fmr', ['fmr'] = 'fmr', ['forbiddenmemories'] = 'fmr', ['fm'] = 'fmr',
@@ -133,7 +133,7 @@ local main = {
 	['tf04'] = { abbr = 'TF04', full = "Yu-Gi-Oh! 5D's Tag Force 4"        },
 	['tf05'] = { abbr = 'TF05', full = "Yu-Gi-Oh! 5D's Tag Force 5"        },
 	['tf06'] = { abbr = 'TF06', full = "Yu-Gi-Oh! 5D's Tag Force 6"        },
-	['tfs']  = { abbr = 'TFS',  full = 'Yu-Gi-Oh! ARC-V Tag Force Special' },
+	['tfsp'] = { abbr = 'TFSP', full = 'Yu-Gi-Oh! ARC-V Tag Force Special' },
 
 	-- True Duel Monsters:
 	['dor'] = { abbr = 'DOR', full = 'Yu-Gi-Oh! The Duelists of the Roses' },
