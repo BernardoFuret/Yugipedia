@@ -247,6 +247,8 @@ end
 function _nonGame( t )
 	if _count( t ) > 1 then 
 		return _error( 'On «_nonGame»; Too many card types!' )
+	elseif ( t[ 1 ] or '' ):match( '?' ) then
+		return '???'
 	else
 		return _link( FAQtypes[t[1]:lower():gsub( ' card', '' )] ) or _error( 'On «_nonGame»; Non-standard card type!' );
 	end
