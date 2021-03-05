@@ -228,7 +228,7 @@ function handlers:handleEntry( entry, globalData )
 
 			file.name = cardNameDisplay
 
-			caption.pagename = cardNameNormalized
+			caption.pagename = cardNameInput
 
 			caption.name = cardNameDisplay
 
