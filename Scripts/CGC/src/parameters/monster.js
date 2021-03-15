@@ -11,6 +11,7 @@ const names = [
 	'atk',
 	'def',
 	'link',
+	'link_arrows',
 	'pendulum_effect',
 	'pendulum_scale',
 	...languages.map( language => `${language.index}_pendulum_effect` ),
@@ -19,6 +20,8 @@ const names = [
 const titles = {
 	atk: 'ATK',
 	def: 'DEF',
+	link: 'Link Rating',
+	link_arrows: 'Link Arrows',
 	pendulum_effect: 'English Pendulum Effect',
 	...languages.reduce( ( all, language ) => ( {
 		...all,
@@ -34,6 +37,12 @@ const handlers = {
 		||
 		rawValue
 	),
+	link: ( rawValue, { content } ) => {
+		const linkArrows = getRawContentValue( content, 'link_arrows' );
+
+		return linkArrows && linkArrows.split( /\s*,\s*/ ).length.toString();
+	},
+	link_arrows: rawValue => rawValue && rawValue.split( /\s*,\s*/ ),
 	pendulum_effect: removeWikitextMarkup,
 	...languages.reduce( ( all, language ) => ( {
 		...all,
