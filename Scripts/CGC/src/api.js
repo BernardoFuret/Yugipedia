@@ -2,7 +2,7 @@ const axios = require( 'axios' ).default;
 
 const api = axios.create( {
 	baseURL: 'https://yugipedia.com',
-	timeout: 7000,
+	timeout: 10000,
 	headers: {
 		'User-Agent': 'Becasita - Scraping for Dan/CGC',
 	},
