@@ -24,6 +24,7 @@ module.exports = {
 			list: 'categorymembers',
 			cmtitle: 'Category:TCG cards',
 			cmlimit,
+			cmnamespace: 0,
 			format: 'json',
 			cmcontinue,
 		} );
