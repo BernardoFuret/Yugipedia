@@ -42,6 +42,10 @@ function regexEscape( s ) {
 	return s.replace( /[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, '\\$&' );
 }
 
+function throwNewError( message ) {
+	throw new Error( message );
+}
+
 async function exportToJSON( cardsData ) {
 	try {
 		await fsp.mkdir( resultsDir, { recursive: true } );
@@ -67,5 +71,6 @@ module.exports = {
 	removeWikitextMarkup,
 	parseContent,
 	regexEscape,
+	throwNewError,
 	exportToJSON,
 };

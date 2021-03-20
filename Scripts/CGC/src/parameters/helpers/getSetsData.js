@@ -4,7 +4,7 @@ const { editions, rarities } = require( '../../constants' );
 
 const api = require( '../../api' );
 
-const { parseContent, regexEscape } = require( '../../helpers' );
+const { parseContent, regexEscape, throwNewError } = require( '../../helpers' );
 
 const setsCache = {};
 
@@ -215,23 +215,26 @@ async function getImages( title, region, cardNumber ) {
 
 			images.push( validateImage( image ) );
 		} catch ( error ) {
-			console.error( 'Unexpected error while parsing image entry', entry, error );
+			console.error( 'Unexpected error while parsing image entry', entry, 'for card number', cardNumber, error );
 		}
 	} );
 
 	return Promise.all( images ).then( imgs => imgs.filter( i => i ) );
 }
 
-const parseParts = async ( region, title, [ cardNumber, setName, rarities ] ) => ( {
-	cardNumber,
-	...await computeSetInfo( region, setName ),
-	rarities: rarities.split( /\s*,\s*/ ),
-	images: await getImages( title, region, cardNumber ).catch( e => {
-		console.warn( 'Error processing images for', title, e );
+const parseParts = async ( region, title, [ cardNumber, setName, rarities ] ) => ( cardNumber
+	? {
+		cardNumber,
+		...await computeSetInfo( region, setName ),
+		rarities: rarities.split( /\s*,\s*/ ),
+		images: await getImages( title, region, cardNumber ).catch( e => {
+			console.warn( 'Error processing images for', title, e );
 
-		return [];
-	} ),
-} );
+			return [];
+		} ),
+	}
+	: throwNewError( 'No card number found!' )
+);
 
 const makeEntriesParser = ( region, title ) => async entry => parseParts( region, title, entry.split( /\s*;\s*/ ) ).catch( e => {
 	console.warn( 'Error processing set info for card', title, 'region', region, 'and entry', entry, e );
