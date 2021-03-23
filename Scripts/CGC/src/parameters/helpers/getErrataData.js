@@ -72,7 +72,7 @@ function parseErrata( content, language ) {
 			let data = removeWikitextMarkup( value );
 
 			if ( parameter === 'card_type' ) {
-				data = data.replace( /^\s*\[\s*/ ).replace( /\s*\]\s*$/ );
+				data = data.replace( /^\s*\[\s*/, '' ).replace( /\s*\]\s*$/, '' );
 			}
 
 			errata[ parameter ][ order ] = {
