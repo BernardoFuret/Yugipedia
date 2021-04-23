@@ -107,7 +107,12 @@ local function captionToString( caption )
 		LANGUAGE_ENGLISH.index
 	)
 
-	local rarityContent = ( '(%s)' ):format( UTIL.link( caption.rarity.abbr ) )
+	local rarityContent = ( '(%s)' ):format(
+		UTIL.link(
+			caption.rarity.full,
+			caption.rarity.abbr
+		)
+	)
 
 	local printedNameContent = caption[ 'printed-name' ]
 		and ( '(as %s)' ):format(
