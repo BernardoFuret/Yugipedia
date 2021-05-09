@@ -143,7 +143,7 @@ local main = {
 	['sfr'] = { abbr = 'SFR', full = 'Starfoil Rare'    },
 	['msr'] = { abbr = 'MSR', full = 'Mosaic Rare'      },
 	['shr'] = { abbr = 'SHR', full = 'Shatterfoil Rare' },
-	['cr']  = { abbr = 'CR',  full = 'Collectors Rare'  },
+	['cr']  = { abbr = 'CR',  full = "Collector's Rare" },
 }
 
 return {
