@@ -190,6 +190,8 @@ function handlers:handleEntry( entry, globalData )
 
 	local valuesIndex = 1
 
+	local cardNameInput
+
 	-- Card number (and abbr):
 	if entry.options.abbr or globalData.abbr then
 		file.abbr = entry.options.abbr or globalData.abbr
@@ -220,7 +222,7 @@ function handlers:handleEntry( entry, globalData )
 
 	-- Card name (English and localized):
 	do
-		local cardNameInput = UTIL.trim( entry.values[ valuesIndex ] )
+		cardNameInput = UTIL.trim( entry.values[ valuesIndex ] )
 
 		if cardNameInput then
 			local cardNameNormalized = cardNameInput:gsub( '#', '' )
@@ -284,7 +286,13 @@ function handlers:handleEntry( entry, globalData )
 
 	-- Alt:
 	do
-		file.alt = UTIL.trim( entry.values[ valuesIndex ] ) or globalData.alt
+		file.alt = UTIL.trim( entry.values[ valuesIndex ] )
+			or globalData.alt
+			or (
+				( cardNameInput or '' ):match( 'Token%s%(' ) and UTIL.getImgName(
+					UTIL.getDab( cardNameInput )
+				)
+			)
 
 		valuesIndex = valuesIndex + 1
 	end
