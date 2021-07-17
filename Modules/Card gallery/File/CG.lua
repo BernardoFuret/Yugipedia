@@ -45,7 +45,15 @@ local _standard, _releases, _options;
 -- @description Boolean indicating if the file doesn't have an edition.
 local function hasNoEdition( t )
 	local rg = t.parent:getRegion().index;
-	return rg == 'JP' or rg == 'JA' or rg == 'TC' or rg == 'SC';
+
+	return rg == 'JP'
+		or rg == 'JA'
+		or rg == 'TC'
+		or rg == 'SC'
+		or (
+			rg == 'KR'
+			and t.setAbbr:match( 'RD/' )
+		);
 end
 
 -- @description Decides what kind of card backing to present.
@@ -114,7 +122,7 @@ local function initReleases( t )
 	for releaseAsKey in pairs( releasesAsKeys ) do
 		table.insert( releases, releaseAsKey );
 	end
-	table.sort( releases ); 
+	table.sort( releases );
 
 	t.releases = {};
 	for _, releaseFull in ipairs( releases ) do
@@ -165,7 +173,7 @@ end
 local function initOptions( t )
 	-- Region:
 	t.region = DATA.getRegion( _options[ 'region' ] );
-	
+
 	if _options[ 'region' ] and not t.region then
 		t.parent:error(
 			('Invalid custom region value %s given for file input number %d!'):format(
@@ -217,7 +225,7 @@ local function buildFile( t )
 		:flush( '-' )
 		:add( t.extension )
 		:flush( '.' )
-	
+
 	return file:toString()
 end
 
