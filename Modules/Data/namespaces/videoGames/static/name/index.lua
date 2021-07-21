@@ -25,6 +25,7 @@ local function normalize( v )
 		:gsub(        'zexal',  '' )
 		:gsub(         'arcv',  '' )
 		:gsub(       'vrains',  '' )
+		:gsub(      'rushduel', '' )
 		-- Remove some redundant words:
 		:gsub(          'the',  '' )
 		:gsub(      'gameboy',  '' )

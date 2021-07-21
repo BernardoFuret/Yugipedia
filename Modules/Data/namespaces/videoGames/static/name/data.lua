@@ -82,6 +82,9 @@ local normalize = {
 	-- N:
 	['nt'] = 'ntr', ['ntr'] = 'ntr', ['nightmaretroubadour'] = 'ntr',
 
+	-- S:
+	['sbr'] = 'sbr', ['saikyobattleroyale'] = 'sbr',
+
 	-- T:
 	['tfk'] = 'tfk', ['fbk']  = 'tfk', ['falseboundkingdom'] = 'tfk',
 
@@ -165,6 +168,7 @@ local main = {
 	['gx03'] = { abbr = 'GX03', full = 'Yu-Gi-Oh! GX Spirit Caller'                   },
 	['mnst'] = { abbr = 'MNST', full = 'Yu-Gi-Oh! Monster Strike'                     },
 	['ntr']  = { abbr = 'NTR',  full = 'Yu-Gi-Oh! Nightmare Troubadour'               },
+	['sbr']  = { abbr = 'SBR',  full = 'Yu-Gi-Oh! Rush Duel Saikyo Battle Royale'     },
 	['tfk']  = { abbr = 'TFK',  full = 'Yu-Gi-Oh! The Falsebound Kingdom'             },
 	['wb01'] = { abbr = 'WB01', full = "Yu-Gi-Oh! 5D's Wheelie Breakers"              },
 	['ydb1'] = { abbr = 'YDB1', full = 'Yu-Gi-Oh! GX Card Almanac'                    },
