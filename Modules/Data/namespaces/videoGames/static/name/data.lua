@@ -80,7 +80,7 @@ local normalize = {
 	['mnst'] = 'mnst', ['monsterstrike']   = 'mnst',
 
 	-- N:
-	['ntr'] = 'ntr', ['nightmaretroubadour'] = 'ntr',
+	['nt'] = 'ntr', ['ntr'] = 'ntr', ['nightmaretroubadour'] = 'ntr',
 
 	-- T:
 	['tfk'] = 'tfk', ['fbk']  = 'tfk', ['falseboundkingdom'] = 'tfk',
