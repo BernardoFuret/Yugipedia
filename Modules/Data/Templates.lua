@@ -85,5 +85,15 @@ function D.name( frame )
 	return language and DATA.getName( pagename, language )
 end
 
+D['translated name'] = function( frame )
+	local pagename = ( getArg( frame, 1 ) or '' ):gsub( '#', '' )
+
+	local language = DATA.getLanguage(
+		UTIL.trim( getArg( frame, 2 ) ) or 'en'
+	)
+
+	return language and DATA.getTranslatedName( pagename, language )
+end
+
 return D
 -- </pre>

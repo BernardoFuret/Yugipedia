@@ -9,9 +9,10 @@ return {
 	getRelease  = 'static/release',
 
 	-- SMW data:
-	getName         = 'smw/name',
-	getReleaseDate  = 'smw/releaseDate',
-	getFullCardType = 'smw/cardType', -- TODO: move module?
+	getName           = 'smw/name',
+	getTranslatedName = 'smw/translatedName',
+	getReleaseDate    = 'smw/releaseDate',
+	getFullCardType   = 'smw/cardType', -- TODO: move module?
 	
 	-- Sub-Namespaces:
 	anime      = 'namespaces/anime',
