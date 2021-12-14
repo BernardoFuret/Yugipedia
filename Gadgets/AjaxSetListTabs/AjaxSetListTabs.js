@@ -12,7 +12,8 @@
 	function getListData( setListPagePath ) {
 		return $.ajax( {
 			url: setListPagePath,
-			dataType: 'html'
+			dataType: 'html',
+			timeout: 5000
 		} );
 	}
 
