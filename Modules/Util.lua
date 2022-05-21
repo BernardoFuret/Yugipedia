@@ -148,6 +148,16 @@ function U.removeDab( title )
 end
 
 --[[Doc
+@function U escape
+@description Escapes a string.
+@parameter {string} s String value to be escaped.
+@return {string} Escaped `s`.
+]]
+function U.escape( s )
+	return mw.ustring.gsub( s, '([^%w])', '%%%1' )
+end
+
+--[[Doc
 @function isSomething
 @description Meta-function for type checkers.
 @parameter {*} toCompare Anything to type-compare.

@@ -30,12 +30,21 @@ local function loadParameters( root )
 
 	local parameters = require( parametersPath ) -- TODO: should be mw.loadData, but is read only... TODO: safeRquire?
 
-	-- Parameter 1 is mandatory and has a minimal standard definition: 
+	-- Parameter 1 is mandatory and has a minimal standard definition:
 	parameters[ 1 ] = parameters[ 1 ] or {}
 
 	parameters[ 1 ].required = true
 
-	parameters[ 1 ].default = parameters[ 1 ].default or ''
+	parameters[ 1 ].allowEmpty = false
+
+	-- Parameter `separator` has a minimal standard definition:
+	parameters.separator = parameters.separator or {}
+
+	parameters.separator.default = parameters.separator.default or ';'
+
+	parameters.separator.allowEmpty = false
+
+	-- TODO: split definitions to their own file and merge with specific definitions?
 
 	return parameters
 end
@@ -88,6 +97,17 @@ function Parser:parse( frame, arguments )
 
 	local globalData = handlers.utils:validateArguments( self.parameters, arguments )
 
+	local wrapper = mw.html.create( 'div' )
+		:addClass( handlers.utils:makeCssClass() )
+
+	if globalData.hasHaltingError then
+		wrapper:node( reporter:dump() )
+
+		return tostring( wrapper )
+	end
+
+	handlers.utils:setSeparator( globalData.separator )
+
 	globalData = handlers:initData( globalData ) or globalData -- TODO: for internal use in modules: split here.
 
 	local mainStructure = handlers:initStructure( globalData )
@@ -111,9 +131,6 @@ function Parser:parse( frame, arguments )
 			end
 		end
 	end
-
-	local wrapper = mw.html.create( 'div' )
-		:addClass( handlers.utils:makeCssClass() )
 
 	local allStructures = { handlers:finalize( mainStructure, globalData ) }
 

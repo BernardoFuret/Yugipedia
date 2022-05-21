@@ -14,7 +14,6 @@ return {
 
 	[ 1 ] = {
 		required = true,
-		default = '',
 --		options = {
 --			[ 'file' ] = {},
 --			[ 'abbr' ] = {},

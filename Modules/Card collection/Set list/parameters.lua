@@ -2,7 +2,6 @@
 return {
 	region = {
 		required = true,
-		default = 'EN',
 	},
 
 	rarities = {
@@ -31,7 +30,6 @@ return {
 
 	[ 1 ] = {
 		required = true,
-		default = '',
 --		options = {
 --			[ 'printed-name' ] = {},
 --			[ 'description' ] = {

@@ -24,13 +24,25 @@ function Utils.new( name, reporter, frame )
 		name = name,
 		reporter = reporter,
 		frame = frame,
+		separator = nil,
+		escapedSeparator = nil,
 	}
 
 	return setmetatable( data, Utils )
 end
 
+function Utils:setSeparator( separator )
+	self.separator = separator
+
+	self.escapedSeparator = UTIL.escape( separator )
+
+	return self
+end
+
 function Utils:validateArguments( parameters, arguments )
 	local validated = {}
+
+	local hasHaltingError = false
 
 	for parameter, argument in pairs( arguments ) do
 		local schema = parameters[ parameter ]
@@ -57,7 +69,7 @@ function Utils:validateArguments( parameters, arguments )
 				:addError( message )
 				:addCategory( category )
 
-			validated[ parameter ] = schema.default
+			hasHaltingError = true
 
 		-- Valid parameter with valid argument:
 		else
@@ -65,14 +77,14 @@ function Utils:validateArguments( parameters, arguments )
 		end
 	end
 
-	local schemaErrors = {}
-
 	for parameter, schema in pairs( parameters ) do
-		if schema.required and not schema.default then
-			local message = ( 'No default value for required parameter `%s`!' )
+		if schema.required and schema.default then
+			local message = ( 'Required parameter `%s` with set default value!' )
 				:format( parameter )
-		
-			table.insert( schemaErrors, message )
+
+				local category = 'transclusions with required parameters with set default values'
+
+			hasHaltingError = true
 		end
 
 		if not arguments[ parameter ] then
@@ -85,14 +97,18 @@ function Utils:validateArguments( parameters, arguments )
 				self.reporter
 					:addError( message )
 					:addCategory( category )
-			end
 
-			validated[ parameter ] = schema.default
+				hasHaltingError = true
+			elseif schema.default then
+				validated[ parameter ] = schema.default
+			end
 		end
 	end
 
-	if schemaErrors[ 1 ] then
-		error( table.concat( schemaErrors, '<br />' ) )
+	if hasHaltingError then
+		return {
+			hasHaltingError = true
+		}
 	end
 
 	return validated
@@ -106,14 +122,16 @@ function Utils:parseOptions( rawOptions, location, config ) -- TODO: check and d
 	local config = config or {}
 
 	local options = config.initial or {}
-	
+
 	if not UTIL.trim( rawOptions ) then
 		return options
 	end
 
 	local position = 0
 
-	for optionPairString in mwTextGsplit( rawOptions, '%s*;%s*' ) do
+	local optionsSplitter = table.concat{ '%s*', self.escapedSeparator, '%s*' }
+
+	for optionPairString in mwTextGsplit( rawOptions, optionsSplitter ) do
 		position = position + 1
 
 		local optionPairString = UTIL.trim( optionPairString )
@@ -142,6 +160,8 @@ function Utils:parseOptions( rawOptions, location, config ) -- TODO: check and d
 end
 
 local function makeCssClassName( v )
+	-- The extra parenthesis are to avoid returning
+	-- the multiple values returned by `gsub`.
 	return ( v:lower():gsub( '%s+', '-' ) )
 end
 
@@ -158,7 +178,9 @@ function Utils:makeCssClass( ... )
 end
 
 function Utils:parseValues( rawValues )
-	return mwTextSplit( rawValues, '%s*;%s*' )
+	local valuesSplitter = table.concat{ '%s*', self.escapedSeparator, '%s*' }
+
+	return mwTextSplit( rawValues, valuesSplitter )
 end
 
 function Utils:handleInterpolation( value, template, default )
