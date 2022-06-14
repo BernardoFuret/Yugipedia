@@ -44,7 +44,7 @@ local _standard, _releases, _options;
 --------------------
 -- @description Boolean indicating if the file doesn't have an edition.
 local function hasNoEdition( t )
-	local rg = t.parent:getRegion().index;
+	local rg = ( t.region or t.parent:getRegion() ).index;
 
 	return rg == 'JP'
 		or rg == 'JA'
@@ -190,7 +190,7 @@ local function initOptions( t )
 	-- Description:
 	t.description = _options[ 'description' ];
 
-	-- Description:
+	-- File:
 	t.file = _options[ 'file' ];
 end
 
