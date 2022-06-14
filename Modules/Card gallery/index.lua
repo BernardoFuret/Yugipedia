@@ -60,10 +60,11 @@ local HTML = mw.html.create;
 local function getCardGalleryType( t )
 	if type( t ) == 'string' then
 		return ( {
-			['anime'] = 'Anime',
-			['manga'] = 'Manga',
-			['game']  = 'Video games', ['vg'] = 'Video games',
-			['other'] = 'Other',
+			['anime']   = 'Anime',
+			['manga']   = 'Manga',
+			['ruhduel'] = 'Rush Duel',   ['ruh'] = 'Rush Duel', -- "s" is trimmed
+			['game']    = 'Video games', ['vg']  = 'Video games',
+			['other']   = 'Other',
 		} )[
 			mw.text.trim( t ):lower():gsub( "[%s%-s]", '' ):gsub( 'video', '' )
 		]
