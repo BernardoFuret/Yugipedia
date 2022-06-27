@@ -33,9 +33,10 @@ local function getPageName( card )
 	end
 
 	local smwName;
+
 	local query = mw.smw.ask( {
 		('[[%s]]'):format( card:gsub( '#', '' ) ),
-		'?Page name=',
+		'?English name=',
 		limit     = 1,
 		mainlabel = '-'
 	} );
@@ -53,7 +54,7 @@ local function normalize( pagename )
 	end
 
 	return (split( pagename, '%s*%(' )[ 1 ])
-		:gsub( ' ' , '')
+		:gsub( ' ' , ''):gsub( '#' , '')
 		:gsub( '%-', ''):gsub( '–' , '')
 		:gsub( ',' , ''):gsub( '%.', ''):gsub( ':', '')
 		:gsub( '\'', ''):gsub( '"' , ''):gsub( '&', '')
