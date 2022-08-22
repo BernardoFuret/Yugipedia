@@ -115,7 +115,7 @@ to display linked set names, etc..
 @parameter {string} page Page name to link.
 @parameter {string|nil} label Label for the link. If unspecified,
 the label used will be `page` with its dab removed and italicized.
-Else, will italicize the label given. 
+Else, will italicize the label given.
 @return {string} Italicized wikilink.
 ]]
 function U.italicLink( page, label )
@@ -162,7 +162,7 @@ end
 @description Meta-function for type checkers.
 @parameter {*} toCompare Anything to type-compare.
 @parameter {*} compareTo Specific thing to be type-compared with.
-@return {boolean} If `toCompare` and `compareTo` have the same type. 
+@return {boolean} If `toCompare` and `compareTo` have the same type.
 ]]
 local function isSomething( toCompare, compareTo )
 	return type( toCompare ) == type( compareTo )
@@ -173,7 +173,7 @@ end
 @description Checks if it's a `boolean` type.
 @parameter {*} v Any value to check if it's a `boolean`.
 @return {boolean} If `v` type is `boolean`.
-@see [[#isSomething]] 
+@see [[#isSomething]]
 ]=]
 function U.isBoolean( v )
 	return isSomething( v, true )
@@ -184,7 +184,7 @@ end
 @description Checks if it's a `function` type.
 @parameter {*} v Any value to check if it's a `function`.
 @return {boolean} If `v` type is `function`.
-@see [[#isSomething]] 
+@see [[#isSomething]]
 ]=]
 function U.isFunction( v )
 	return isSomething( v, function() end )
@@ -195,7 +195,7 @@ end
 @description Checks if it's `nil`.
 @parameter {*} v Any value to check if it's `nil`.
 @return {boolean} If `v` type `nil`.
-@see [[#isSomething]] 
+@see [[#isSomething]]
 ]=]
 function U.isNil( v )
 	return isSomething( v, nil )
@@ -206,7 +206,7 @@ end
 @description Checks if it's a `number` type.
 @parameter {*} v Any value to check if it's a `number`.
 @return {boolean} If `v` type is `number`.
-@see [[#isSomething]] 
+@see [[#isSomething]]
 ]=]
 function U.isNumber( v )
 	return isSomething( v, 1 )
@@ -217,7 +217,7 @@ end
 @description Checks if it's a `string` type.
 @parameter {*} v Any value to check if it's a `string`.
 @return {boolean} If `v` type is `string`.
-@see [[#isSomething]] 
+@see [[#isSomething]]
 ]=]
 function U.isString( v )
 	return isSomething( v, '' )
@@ -228,7 +228,7 @@ end
 @description Checks if it's a `table` type.
 @parameter {*} v Any value to check if it's a `table`.
 @return {boolean} If `v` type is `table`.
-@see [[#isSomething]] 
+@see [[#isSomething]]
 ]=]
 function U.isTable( v )
 	return isSomething( v, {} )
@@ -252,9 +252,9 @@ end
 -- @name validate
 -- @description Asserts if a value has content.
 --[[function U.validate( v )
-	-- If boolean, function or nil, just return them: 
+	-- If boolean, function or nil, just return them:
 	if U.isBoolean( v ) or U.isFunction( v ) or U.isNil( v ) then return v end
-	-- If number, it is accepted if it's not 0: 
+	-- If number, it is accepted if it's not 0:
 	if U.isNumber( v ) then return v ~= 0 and v end
 	-- If string, it is accepted if it's not the empty string:
 	if U.isString( v ) then return mwTextTrim( v ) ~= '' and v end
@@ -278,7 +278,6 @@ function U.wrapInQuotes( name, ln )
 	return (ln == 'ja' or ln == 'tc')
 		and table.concat( { '「', name, '」' } )
 		or  table.concat( { '"', name, '"' } )
-	
 end
 
 --[[Doc
@@ -313,14 +312,6 @@ function U.getName( name, ln )
 	local language = DATA.getLanguage( ln )
 
 	return DATA.getName( name:gsub( '#', '' ), language )
-end
-
--- @name getImgName
--- @description Gets the localized name of a card, set or character.
--- @todo: deprecated. remove later.
--- @see [[Module:Name]]
-function U.getImgName( ... )
-	return require( 'Module:Card image name' ).main( ... )
 end
 
 ----------

@@ -12,11 +12,6 @@
 -- <Series>; <alt> :: <NonCard> // <option1>::<value1>; <optionN>::<valueN>
 -- »
 
--------------
--- Constants:
--------------
-local ANIME_CARD_BACK = 'Back-Anime-DM.png';
-
 ----------------
 -- Load modules:
 ----------------
@@ -24,6 +19,14 @@ local DATA = require( 'Module:Data' );
 local UTIL = require( 'Module:Util' );
 
 local StringBuffer = require( 'Module:StringBuffer' );
+local getCardImageName = require( 'Module:Card image name' );
+
+-------------
+-- Constants:
+-------------
+local PAGENAME  = mw.title.getCurrentTitle().text;
+
+local ANIME_CARD_BACK = 'Back-Anime-DM.png';
 
 ---------------
 -- Helper vars:
@@ -144,7 +147,7 @@ function File:render()
 
 	-- Build file:
 	local file = StringBuffer()
-		:add( self.fileName or UTIL.getImgName() )
+		:add( self.fileName or getCardImageName( PAGENAME ) )
 		:add( self.parent:getRegion().index )
 		:add( 'Anime' )
 		:add( self.series.abbr )

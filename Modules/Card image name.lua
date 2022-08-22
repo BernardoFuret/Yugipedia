@@ -1,102 +1,99 @@
 -- <pre>
--- @name Card image name
--- @description Converts a card name to be used in the file name.
--- @see {{Card image name}}
--- @author [[User:Becasita]]
--- @contact [[User talk:Becasita]]
+--[=[Doc
+@module Card image name
+@description Converts a card name to be used in the image name.
+@author [[User:Becasita]]
+@contact [[User talk:Becasita]]
+]=]
 
--------------------
--- Export variable:
--------------------
-local CardImageName = {};
-
-----------------
--- Load modules:
-----------------
-local DATA = require( 'Module:Data' );
-local UTIL = require( 'Module:Util' );
-
----------------------
--- Utility functions:
----------------------
--- mw functions:
-local split = mw.text.split;
-
---------------------
--- Module functions:
---------------------
--- @name getPageName
--- @description
-local function getPageName( card )
-	if not card then
-		return '';
-	end
-
-	local smwName;
-
+local function getEnglishName( cardNameOrpagename )
 	local query = mw.smw.ask( {
-		('[[%s]]'):format( card:gsub( '#', '' ) ),
+		( '[[%s]]' ):format( cardNameOrpagename:gsub( '#', '' ) ),
 		'?English name=',
 		limit     = 1,
 		mainlabel = '-'
-	} );
+	} )
 
-	if not query or UTIL.count( query ) == 0 or UTIL.count( query[1] ) == 0 then
-		return card;
+	return ( ( query or {} )[ 1 ] or {} )[ 1 ] or cardNameOrpagename
+end
+
+local function normalize( name )
+	local nameWithoutDab = mw.text.split( name, '%s*%(' )[ 1 ]
+
+	-- TODO: simplify
+	local normalizedName = nameWithoutDab
+		:gsub( ' ' , '' ):gsub( '#' , '' )
+		:gsub( '%-', '' ):gsub( '–' , '' )
+		:gsub( ',' , '' ):gsub( '%.', '' ):gsub( ':', '' )
+		:gsub( '\'', '' ):gsub( '"' , '' )
+		:gsub( '%?', '' ):gsub( '!' , '' )
+		:gsub( '&' , '' ):gsub( '@' , '' )
+		:gsub( '%%', '' ):gsub( '=' , '' )
+		:gsub( '%[', '' ):gsub( '%]', '' )
+		:gsub( '<' , '' ):gsub( '>' , '' )
+		:gsub( '/' , '' ):gsub( '\\', '' )
+		:gsub( '☆' , '' ):gsub( '★' , '' ):gsub( '・' , '' )
+
+	-- Sending the result to a reference instead of returning right away
+	-- prevents returning multiple values (from `gsub`).
+	return normalizedName
+end
+
+
+local function getCardImageName( cardNameOrpagename )
+	local trimmedCardNameOrpagename = mw.text.trim( cardNameOrpagename or '' )
+
+	if trimmedCardNameOrpagename == '' then
+		return ''
 	end
 
-	return query[ 1 ][ 1 ];
+	local englishName = getEnglishName( trimmedCardNameOrpagename )
+
+	return normalize( englishName )
 end
 
-local function normalize( pagename )
-	if not pagename then
-		return '';
+local function wikitextMain( frame )
+	local arguments = frame:getParent().args
+
+	return getCardImageName( arguments[ 1 ] )
+end
+
+local function test()
+	local testCases = {
+		{ '', '' },
+		{ 'Dark Magician', 'DarkMagician' },
+		{ 'Blue-Eyes White Dragon', 'BlueEyesWhiteDragon' },
+		{ 'Stardust Dragon/Assault Mode', 'StardustDragonAssaultMode' },
+		{ 'Jinzo #7', 'Jinzo7' },
+		{ 'Jinzo 7', 'Jinzo7' },
+		{ 'Red Nova (card)', 'RedNova' },
+		{ 'Griggle (anime)', 'Griggle' },
+		{ 'Great Imperial Dinocarriage Dynarmix (L)', 'GreatImperialDinocarriageDynarmixL' },
+		{ 'Yggdrago the Sky Emperor (R) (manga)', 'YggdragotheSkyEmperorR' },
+		{ 'Yggdrago the Sky Emperor [R]', 'YggdragotheSkyEmperorR' },
+		{ 'This is not a card name', 'Thisisnotacardname' },
+	}
+
+	for i, testCase in ipairs( testCases ) do
+		local inputValue = testCase[ 1 ]
+
+		local expectedValue = testCase[ 2 ]
+
+		local result = getCardImageName( inputValue )
+
+		mw.log( i, '\t', result, '\t', result == expectedValue, '\t', expectedValue )
 	end
-
-	return (split( pagename, '%s*%(' )[ 1 ])
-		:gsub( ' ' , ''):gsub( '#' , '')
-		:gsub( '%-', ''):gsub( '–' , '')
-		:gsub( ',' , ''):gsub( '%.', ''):gsub( ':', '')
-		:gsub( '\'', ''):gsub( '"' , ''):gsub( '&', '')
-		:gsub( '%?', ''):gsub( '!' , ''):gsub( '@', '')
-		:gsub( '%%', ''):gsub( '=' , '')
-		:gsub( '%[', ''):gsub( '%]', '')
-		:gsub( '<' , ''):gsub( '>' , '')
-		:gsub( '/' , ''):gsub( '\\', '')
-		:gsub( '☆' , ''):gsub( '・' , '')
-	;
 end
 
--- @name processArgs
--- @description Handles args (template call vs. module call).
-local function processArgs( v )
-	if UTIL.isString( v ) then
-		-- If used through other modules.
-		return { UTIL.trim( v ) };
-	end
-
-	return require( 'Module:Arguments' ).getArgs( v, {
-		trim         = true,
-		removeBlanks = true,
-		parentOnly   = true
-	} );
-end
-
--- @name main
--- @description Main function to be invoked. Handles args and execution.
-function CardImageName.main( frame )
-	local PAGENAME  = mw.title.getCurrentTitle().text;
-	local arg       = processArgs( frame )[ 1 ];
-	local pagename  = arg and arg ~= PAGENAME and arg ~= split( PAGENAME, '%s*%(' )[ 1 ]
-		and getPageName( arg )
-		or PAGENAME
-	;
-	local imageName = normalize( pagename );
-	return imageName;
-end
-
-----------
--- Return:
-----------
-return CardImageName;
+return setmetatable(
+	{
+		main = wikitextMain,
+		test = test,
+	},
+	{
+		__call = function( self, cardNameOrpagename )
+			return getCardImageName( cardNameOrpagename )
+		end,
+	}
+)
 -- </pre>

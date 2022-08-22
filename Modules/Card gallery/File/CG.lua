@@ -15,10 +15,13 @@ local DATA = require( 'Module:Data' );
 local UTIL = require( 'Module:Util' );
 
 local StringBuffer = require( 'Module:StringBuffer' );
+local getCardImageName = require( 'Module:Card image name' );
 
 -------------
 -- Constants:
 -------------
+local PAGENAME  = mw.title.getCurrentTitle().text;
+
 local CARD_BACK_TCG    = 'Back-EN.png';
 local CARD_BACK_JP     = 'Back-JP.png';
 local CARD_BACK_AE     = 'Back-AE.png';
@@ -209,7 +212,7 @@ end
 
 local function buildFile( t )
 	local file = StringBuffer()
-		:add( UTIL.getImgName() )
+		:add( getCardImageName( PAGENAME ) )
 		:add( t.setAbbr )
 		:add( ( t.region or t.parent:getRegion() ).index )
 		:add( t.rarity and t.rarity.abbr )

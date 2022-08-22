@@ -11,10 +11,13 @@ local DATA = require( 'Module:Data' );
 local UTIL = require( 'Module:Util' );
 
 local StringBuffer = require( 'Module:StringBuffer' );
+local getCardImageName = require( 'Module:Card image name' );
 
 -------------
 -- Constants:
 -------------
+local PAGENAME  = mw.title.getCurrentTitle().text;
+
 local CARD_BACK_TCG  = 'Back-EN.png';
 local CARD_BACK_JP   = 'Back-JP.png';
 local CARD_BACK_AE   = 'Back-AE.png';
@@ -69,7 +72,7 @@ local function initReleases( t )
 	for releaseAsKey in pairs( releasesAsKeys ) do
 		table.insert( releases, releaseAsKey );
 	end
-	table.sort( releases ); 
+	table.sort( releases );
 
 	t.releases = {};
 	for _, releaseFull in ipairs( releases ) do
@@ -162,7 +165,7 @@ function File:render()
 
 	-- Build file:
 	local file = StringBuffer()
-		:add( UTIL.getImgName() )
+		:add( getCardImageName( PAGENAME ) )
 		:add( self.parent:getRegion().index )
 	;
 
@@ -177,10 +180,10 @@ function File:render()
 		:add( self.extension )
 		:flush( '.' )
 	;
-	
+
 	-- Build caption:
 	local caption = StringBuffer();
-	
+
 	for _, release in ipairs( self.releases ) do
 		caption:add( UTIL.link( release.full ) );
 	end
@@ -190,7 +193,7 @@ function File:render()
 		:add( self.description )
 		:flush( '<br />' )
 	;
-	
+
 	return ('%s | %s'):format( file:toString(), caption:toString() );
 end
 

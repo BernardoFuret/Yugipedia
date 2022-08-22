@@ -15,11 +15,19 @@ local DATA = require( 'Module:Data' )
 local UTIL = require( 'Module:Util' )
 
 local StringBuffer = require( 'Module:StringBuffer' )
+local getCardImageName = require( 'Module:Card image name' );
 
 local LANGUAGE_ENGLISH = DATA.getLanguage( 'English' )
 local RARITY_COMMON = DATA.getRarity( 'Common' )
 
-local PAGENAME = mw.title.getCurrentTitle().text
+local currentTitle = mw.title.getCurrentTitle()
+
+local NS = currentTitle.nsText
+
+-- For testing:
+local PAGENAME = NS == 'Module'
+	and 'Sneak Peek Participation Cards: Series 6 (TCG-EN-LE)'
+	or currentTitle.text
 
 local TAG_BR = '<br />'
 
@@ -86,7 +94,7 @@ end
 
 local function fileToString( file )
 	return file.file or StringBuffer()
-		:add( UTIL.getImgName( file.name or file.pagename ) )
+		:add( getCardImageName( file.name or file.pagename ) )
 		:add( file.abbr )
 		:add( file.region.index )
 		:add( file.rarity.abbr )
@@ -289,7 +297,7 @@ function handlers:handleEntry( entry, globalData )
 		file.alt = UTIL.trim( entry.values[ valuesIndex ] )
 			or globalData.alt
 			or (
-				( cardNameInput or '' ):match( 'Token%s%(' ) and UTIL.getImgName(
+				( cardNameInput or '' ):match( 'Token%s%(' ) and getCardImageName(
 					UTIL.getDab( cardNameInput )
 				)
 			)
