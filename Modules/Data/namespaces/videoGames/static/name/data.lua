@@ -14,14 +14,15 @@ local normalize = {
 	['g6'] = 'dm6', ['gb6'] = 'dm6', ['dm6'] = 'dm6', ['duelmonsters6'] = 'dm6', ['ex2'] = 'dm6', ['6ex'] = 'dm6',  ['6ex2'] = 'dm6',
 	['g7'] = 'dm7', ['gb7'] = 'dm7', ['dm7'] = 'dm7', ['duelmonsters7'] = 'dm7', ['7duelcitylegend'] = 'dm7', ['duelcitylegend'] = 'dm7',
 	['tsc'] = 'tsc', ['sacredcards'] = 'tsc',
-	['g8'] = 'rod', ['gb8'] = 'rod', ['dm8'] = 'rod', ['duelmonsters8'] = 'rod', ['8reshefofdestruction'] = 'rod', ['rod'] = 'rod',   ['reshefofdestruction'] = 'rod',
+	['g8'] = 'gb8', ['dm8'] = 'gb8', ['duelmonsters8'] = 'gb8', ['8reshefofdestruction'] = 'gb8', ['gb8'] = 'gb8',
+	['rod'] = 'rod',   ['reshefofdestruction'] = 'rod',
 	['dds'] = 'dds', ['darkduelstories'] = 'dds',
 	['gbi'] = 'sdd', ['dmi'] = 'sdd',   ['di'] = 'sdd',   ['di1'] = 'sdd',  ['international1'] = 'sdd', ['international'] = 'sdd', ['worldwide'] = 'sdd',  ['worldwideedition'] = 'sdd', ['sdd'] = 'sdd', ['worldwideeditionstairwaytodestinedduel']  = 'sdd', ['stairwaytodestinedduel'] = 'sdd',
 	['eds'] = 'eds', ['eternalduelistsoul'] = 'eds', ['eternalduelistssoul'] = 'eds',
 
 	-- Legacy of the Duelist:
-	['ld']  = 'ld',   ['lod']  = 'ld',   ['legacyofduelist'] = 'ld',
-	['ld2'] = 'lod2', ['lod2'] = 'lod2', ['ldle'] = 'lod2', ['linkevolution'] = 'lod2', ['legacyofduelistlinkevolution'] = 'lod2',
+	['lotd'] = { abbr = 'LD',   full = 'Yu-Gi-Oh! Legacy of the Duelist'                 },
+	['lod2'] = { abbr = 'LOD2', full = 'Yu-Gi-Oh! Legacy of the Duelist: Link Evolution' },
 
 	-- Power of Chaos:
 	['poc'] = 'poc', ['powerofchaos']      = 'poc', ['pc'] = 'poc', -- TODO: too generic (series). Useful?
@@ -46,12 +47,13 @@ local normalize = {
 	-- World Championship:
 	['wc4']  = 'wc4', ['wc04'] = 'wc4', ['dm2004'] = 'wc4', ['worldchampionship2004'] = 'wc4', ['ex3'] = 'wc4',
 	['wc5']  = 'wc5', ['wc05'] = 'wc5', ['dm2005'] = 'wc5', ['worldchampionship2005'] = 'wc5', ['7trialstoglory'] = 'wc5', ['7trialstoglory2005'] = 'wc5', ['20057trialstoglory'] = 'wc5', ['dayofduelist'] = 'wc5', ['dayofduelist2005'] = 'wc5', ['2005dayofduelist'] = 'wc5', ['di2']  = 'wc5', ['international2']  = 'wc5', ['worldwide2'] = 'wc5', ['worldwideedition2'] = 'wc5',
-	['wc6']  = 'wc6', ['wc06'] = 'wc6', ['dm2006'] = 'wc6', ['w6s'] = 'wc6', ['e06'] = 'wc6', ['worldchampionship2006'] = 'wc6', ['ultimatemasters'] = 'wc6', ['ultimatemasters2006'] = 'wc6', ['2006ultimatemasters'] = 'wc6', ['e06'] = 'wc6', ['ex2006'] = 'wc6',
+	['wc6']  = 'wc6', ['wc06'] = 'wc6', ['w6s'] = 'wc6', ['worldchampionship2006'] = 'wc6', ['ultimatemasters'] = 'wc6', ['ultimatemasters2006'] = 'wc6', ['2006ultimatemasters'] = 'wc6',
+	['dm2006'] = 'e06',  ['e06'] = 'e06', ['ex2006'] = 'e06',
 	['wc7'] = 'wc07', ['wc07'] = 'wc07', ['dm2007'] = 'wc07', ['worldchampionship2007'] = 'wc07',
 	['wc8'] = 'wc08', ['wc08'] = 'wc08', ['dm2008'] = 'wc08', ['worldchampionship2008'] = 'wc08',
 	['wc9'] = 'wc09', ['wc09'] = 'wc09', ['dm2009'] = 'wc09', ['worldchampionship2009'] = 'wc09', ['stardustaccelerator'] = 'wc09', ['stardustaccelerator2009'] = 'wc09', ['2009stardustaccelerator'] = 'wc09',
 	['wc10'] = 'wc10', ['dm2010'] = 'wc10', ['worldchampionship2010'] = 'wc10', ['reverseofarcadia'] = 'wc10', ['2010reverseofarcadia'] = 'wc10', ['reverseofarcadia2010'] = 'wc10',
-	['wc11'] = 'wc11', ['dm2011'] = 'wc11', ['worldchampionship2011'] = 'wc11', ['overnexus'] = 'wc11', ['2011overnexus'] = 'wc11', ['overnexus2011'] = 'wc11',
+	['wc11'] = 'wc11', ['dm2011'] = 'wc11', ['worldchampionship2011'] = 'wc11', ['overnexus'] = 'wc11', ['2011overnexus'] = 'wc11', ['overnexus2011'] = 'wc11',x
 
 	-- Other:
 	-- B:
@@ -59,6 +61,7 @@ local normalize = {
 
 	-- C:
 	['cmc'] = 'cmc', ['capsulemonstercoliseum'] = 'cmc', ['capsulemonstercolosseum'] = 'cmc',
+	['crdu'] = 'crdu', ['cr'] = 'crdu', ['crossduel'] = 'crdu',
 
 	-- D:
 	['dar']  = 'dar',  ['duelarena']      = 'dar',  ['da']   = 'dar',
@@ -72,10 +75,13 @@ local normalize = {
 	['5ddp'] = '5ddp', ['decadeduelsplus'] = '5ddp', ['ddp'] = '5ddp',
 
 	-- G:
-	['gx1'] = 'gx1',  ['gx01'] = 'gx1',  ['duelacademy'] = 'gx1',   ['mezaseduelking'] = 'gx1',  ['awakenduelking'] = 'gx1',
-	['gx3'] = 'gx03', ['gx03'] = 'gx03', ['spiritcaller'] = 'gx03', ['spiritsummoner'] = 'gx03',
+	['gx1']  = 'gx1',  ['gx01']   = 'gx1',  ['duelacademy'] = 'gx1',   ['mezaseduelking'] = 'gx1',  ['awakenduelking'] = 'gx1',
+	['gx3']  = 'gx03', ['gx03']   = 'gx03', ['spiritcaller'] = 'gx03', ['spiritsummoner'] = 'gx03',
+	['g001'] = 'dbr',  ['rdg001'] = 'dbr',
+	['g002'] = 'g002', ['rdg002'] = 'g002', ['saikyobattleroyaleletsgogorush'] = 'g002', ['letsgogorush'] = 'g002',
 
 	-- M:
+	['madu'] = 'madu', ['masterduel']      = 'madu',
 	['md']   = 'md',   ['millenniumduels'] = 'md', -- Check if correct abbr.
 	['mm']   = 'mm',   ['multimaster']     = 'mm', -- Check if correct abbr.
 	['mnst'] = 'mnst', ['monsterstrike']   = 'mnst',
@@ -118,6 +124,7 @@ local main = {
 	['dm6'] = { abbr = 'DM6', full = 'Yu-Gi-Oh! Duel Monsters 6: Expert 2'                        },
 	['dm7'] = { abbr = 'DM7', full = 'Yu-Gi-Oh! Duel Monsters 7: The Duelcity Legend'             },
 	['tsc'] = { abbr = 'TSC', full = 'Yu-Gi-Oh! The Sacred Cards'                                 },
+	['gb8'] = { abbr = 'GB8', full = 'Yu-Gi-Oh! Reshef of Destruction'                            },
 	['rod'] = { abbr = 'ROD', full = 'Yu-Gi-Oh! Reshef of Destruction'                            },
 	['sdd'] = { abbr = 'SDD', full = 'Yu-Gi-Oh! Worldwide Edition: Stairway to the Destined Duel' },
 
@@ -149,6 +156,7 @@ local main = {
 	['wc4']  = { abbr = 'WC4',  full = 'Yu-Gi-Oh! World Championship Tournament 2004'                    },
 	['wc5']  = { abbr = 'WC5',  full = 'Yu-Gi-Oh! 7 Trials to Glory: World Championship Tournament 2005' },
 	['wc6']  = { abbr = 'WC6',  full = 'Yu-Gi-Oh! Ultimate Masters: World Championship Tournament 2006'  },
+	['e06']  = { abbr = 'E06',  full = 'Yu-Gi-Oh! Ultimate Masters: World Championship Tournament 2006'  },
 	['wc07'] = { abbr = 'WC07', full = 'Yu-Gi-Oh! World Championship 2007'                               },
 	['wc08'] = { abbr = 'WC08', full = 'Yu-Gi-Oh! World Championship 2008'                               },
 	['wc09'] = { abbr = 'WC09', full = "Yu-Gi-Oh! 5D's World Championship 2009: Stardust Accelerator"    },
@@ -156,28 +164,31 @@ local main = {
 	['wc11'] = { abbr = 'WC11', full = "Yu-Gi-Oh! 5D's World Championship 2011: Over the Nexus"          },
 
 	-- Other:
-	['bam']  = { abbr = 'BAM',  full = 'Yu-Gi-Oh! BAM'                                    },
-	['cmc']  = { abbr = 'CMC',  full = 'Yu-Gi-Oh! Capsule Monster Coliseum'               },
-	['dar']  = { abbr = 'DAR',  full = 'Yu-Gi-Oh! Duel Arena'                             },
+	['bam']  = { abbr = 'BAM',  full = 'Yu-Gi-Oh! BAM'                                },
+	['cmc']  = { abbr = 'CMC',  full = 'Yu-Gi-Oh! Capsule Monster Coliseum'           },
+	['crdu'] = { abbr = 'CRDU', full = 'Yu-Gi-Oh! Cross Duel'                         },
+	['dar']  = { abbr = 'DAR',  full = 'Yu-Gi-Oh! Duel Arena'                         },
+	['dbt']  = { abbr = 'DBT',  full = 'Yu-Gi-Oh! Destiny Board Traveler'             },
+	['ddm']  = { abbr = 'DDM',  full = 'Yu-Gi-Oh! Dungeon Dice Monsters (video game)' },
+	['dg']   = { abbr = 'DG',   full = 'Yu-Gi-Oh! Duel Generation'                    },
+	['duli'] = { abbr = 'DULI', full = 'Yu-Gi-Oh! Duel Links'                         },
+	['dod']  = { abbr = 'DOD',  full = 'Yu-Gi-Oh! The Dawn of Destiny'                },
+	['dt']   = { abbr = 'DT',   full = 'Duel Terminal'                                },
+	['5dd']  = { abbr = '5DD',  full = "Yu-Gi-Oh! 5D's Decade Duels"                  },
+	['5ddp'] = { abbr = '5DDP', full = "Yu-Gi-Oh! 5D's Decade Duels Plus"             },
+	['gx1']  = { abbr = 'GX1',  full = 'Yu-Gi-Oh! GX Duel Academy'                    },
+	['gx03'] = { abbr = 'GX03', full = 'Yu-Gi-Oh! GX Spirit Caller'                   },
+	['madu'] = { abbr = 'MADU', full = 'Yu-Gi-Oh! Master Duel'                        },
+	['mnst'] = { abbr = 'MNST', full = 'Yu-Gi-Oh! Monster Strike'                     },
+	['ntr']  = { abbr = 'NTR',  full = 'Yu-Gi-Oh! Nightmare Troubadour'               },
 	['dbr']  = { abbr = 'DBR',  full = 'Yu-Gi-Oh! RUSH DUEL: Dawn of the Battle Royale!!' },
-	['dbt']  = { abbr = 'DBT',  full = 'Yu-Gi-Oh! Destiny Board Traveler'                 },
-	['ddm']  = { abbr = 'DDM',  full = 'Yu-Gi-Oh! Dungeon Dice Monsters (video game)'     },
-	['dg']   = { abbr = 'DG',   full = 'Yu-Gi-Oh! Duel Generation'                        },
-	['duli'] = { abbr = 'DULI', full = 'Yu-Gi-Oh! Duel Links'                             },
-	['dod']  = { abbr = 'DOD',  full = 'Yu-Gi-Oh! The Dawn of Destiny'                    },
-	['dt']   = { abbr = 'DT',   full = 'Duel Terminal'                                    },
-	['5dd']  = { abbr = '5DD',  full = "Yu-Gi-Oh! 5D's Decade Duels"                      },
-	['5ddp'] = { abbr = '5DDP', full = "Yu-Gi-Oh! 5D's Decade Duels Plus"                 },
-	['gx1']  = { abbr = 'GX1',  full = 'Yu-Gi-Oh! GX Duel Academy'                        },
-	['gx03'] = { abbr = 'GX03', full = 'Yu-Gi-Oh! GX Spirit Caller'                       },
-	['mnst'] = { abbr = 'MNST', full = 'Yu-Gi-Oh! Monster Strike'                         },
-	['ntr']  = { abbr = 'NTR',  full = 'Yu-Gi-Oh! Nightmare Troubadour'                   },
-	['tfk']  = { abbr = 'TFK',  full = 'Yu-Gi-Oh! The Falsebound Kingdom'                 },
-	['wb01'] = { abbr = 'WB01', full = "Yu-Gi-Oh! 5D's Wheelie Breakers"                  },
-	['ydb1'] = { abbr = 'YDB1', full = 'Yu-Gi-Oh! GX Card Almanac'                        },
-	['ydt1'] = { abbr = 'YDT1', full = "Yu-Gi-Oh! 5D's Duel Transer"                      },
-	['ygoo'] = { abbr = 'YGOO', full = 'Yu-Gi-Oh! Online'                                 },
-	['zdc1'] = { abbr = 'ZDC1', full = 'Yu-Gi-Oh! ZEXAL World Duel Carnival'              },
+	['g002'] = { abbr = 'G002', full = "Yu-Gi-Oh! RUSH DUEL: Saikyo Battle Royale!! Let's Go! Go Rush!!" },
+	['tfk']  = { abbr = 'TFK',  full = 'Yu-Gi-Oh! The Falsebound Kingdom'             },
+	['wb01'] = { abbr = 'WB01', full = "Yu-Gi-Oh! 5D's Wheelie Breakers"              },
+	['ydb1'] = { abbr = 'YDB1', full = 'Yu-Gi-Oh! GX Card Almanac'                    },
+	['ydt1'] = { abbr = 'YDT1', full = "Yu-Gi-Oh! 5D's Duel Transer"                  },
+	['ygoo'] = { abbr = 'YGOO', full = 'Yu-Gi-Oh! Online'                             },
+	['zdc1'] = { abbr = 'ZDC1', full = 'Yu-Gi-Oh! ZEXAL World Duel Carnival'          },
 
 	-- Special cases:
 	['md'] = { abbr = 'MD', full = 'Yu-Gi-Oh! Millennium Duels' }, -- TODO: decide on this.
