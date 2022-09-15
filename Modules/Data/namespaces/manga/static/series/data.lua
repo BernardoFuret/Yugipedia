@@ -10,6 +10,9 @@ local normalize = {
 	['dy'] = 'dy',                   ['duelistyuya'] = 'dy',
 --	['vr']   = 'vr', ['vrains'] = 'vr',
 	['os'] = 'os', ['ocg']   = 'os', ['structures'] = 'os',
+	['sv'] = 'sv',
+	['lp'] = 'lp',
+	['gr'] = 'gr',
 }
 
 local main = {
@@ -57,6 +60,21 @@ local main = {
 		abbr  = 'OS',
 		page  = 'Yu-Gi-Oh! OCG Structures',
 		label = 'Yu-Gi-Oh! OCG Structures',
+	},
+	['sv'] = {
+		abbr  = 'SV',
+		page  = 'Yu-Gi-Oh! SEVENS Luke! Explosive Supremacy Legend!!',
+		label = 'Yu-Gi-Oh! SEVENS Luke! Explosive Supremacy Legend!!',
+	},
+	['lp'] = {
+		abbr  = 'LP',
+		page  = 'Yu-Gi-Oh! Rush Duel LP',
+		label = 'Yu-Gi-Oh! Rush Duel LP',
+	},
+	['gr'] = {
+		abbr  = 'GR',
+		page  = 'Yu-Gi-Oh! GO RUSH!! (manga)',
+		label = 'Yu-Gi-Oh! GO RUSH!!',
 	},
 }
 
