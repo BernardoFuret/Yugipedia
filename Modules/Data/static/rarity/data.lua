@@ -41,6 +41,7 @@ local normalize = {
 
 	-- Parallel:
 	['npr']   = 'npr',   ['normalparallel']      = 'npr',
+	['rpr']   = 'rpr',   ['rareparallel']        = 'rpr',
 	['spr']   = 'spr',   ['superparallel']       = 'spr',
 	['upr']   = 'upr',   ['ultraparallel']       = 'upr',
 	['scpr']  = 'scpr',  ['secretparallel']      = 'scpr',
@@ -63,14 +64,17 @@ local normalize = {
 	['kcur'] = 'kcur', ['kaibacorporationultra']  = 'kcur', ['kcu'] = 'kcur',
 
 	-- Rush:
-	['rr'] = 'rr', ['rush'] = 'rr',
+	['rr']  = 'rr',  ['rush']     = 'rr',
+	['grr'] = 'grr', ['goldrush'] = 'grr',
+	['orr'] = 'orr', ['overrush'] = 'orr',
 
 	-- Other:
-	['hfr'] = 'hfr', ['holofoil']    = 'hfr',
-	['sfr'] = 'sfr', ['starfoil']    = 'sfr',
-	['msr'] = 'msr', ['mosaic']      = 'msr',
-	['shr'] = 'shr', ['shatterfoil'] = 'shr',
-	['cr']  = 'cr',  ['collectors']  = 'cr',
+	['hfr']  = 'hfr',  ['holofoil']      = 'hfr',
+	['sfr']  = 'sfr',  ['starfoil']      = 'sfr',
+	['msr']  = 'msr',  ['mosaic']        = 'msr',
+	['shr']  = 'shr',  ['shatterfoil']   = 'shr',
+	['cr']   = 'cr',   ['collector']    = 'cr',
+	['urpr'] = 'urpr', ['ultrapharaoh'] = 'urpr', ['ultrararepharaoh'] = 'urpr', ['pharaohsrareultra'] = 'urpr', ['pharaoh'] = 'urpr'
 }
 
 local main = {
@@ -115,6 +119,7 @@ local main = {
 
 	-- Parallel:
 	['npr']   = { abbr = 'NPR',   full = 'Normal Parallel Rare'       },
+	['rpr']   = { abbr = 'RPR',   full = 'Rare Parallel Rare'         },
 	['spr']   = { abbr = 'SPR',   full = 'Super Parallel Rare'        },
 	['upr']   = { abbr = 'UPR',   full = 'Ultra Parallel Rare'        },
 	['scpr']  = { abbr = 'ScPR',  full = 'Secret Parallel Rare'       },
@@ -136,14 +141,17 @@ local main = {
 	['kcur'] = { abbr = 'KCUR', full = 'Kaiba Corporation Ultra Rare' },
 
 	-- Rush:
-	['rr'] = { abbr = 'RR', full = 'Rush Rare' },
+	['rr']  = { abbr = 'RR',  full = 'Rush Rare' },
+	['grr'] = { abbr = 'GRR', full = 'Gold Rush Rare' },
+	['orr'] = { abbr = 'ORR', full = 'Over Rush Rare' },
 
 	-- Other:
-	['hfr'] = { abbr = 'HFR', full = 'Holofoil Rare'    },
-	['sfr'] = { abbr = 'SFR', full = 'Starfoil Rare'    },
-	['msr'] = { abbr = 'MSR', full = 'Mosaic Rare'      },
-	['shr'] = { abbr = 'SHR', full = 'Shatterfoil Rare' },
-	['cr']  = { abbr = 'CR',  full = "Collector's Rare" },
+	['hfr']  = { abbr = 'HFR',  full = 'Holofoil Rare'                },
+	['sfr']  = { abbr = 'SFR',  full = 'Starfoil Rare'                },
+	['msr']  = { abbr = 'MSR',  full = 'Mosaic Rare'                  },
+	['shr']  = { abbr = 'SHR',  full = 'Shatterfoil Rare'             },
+	['cr']   = { abbr = 'CR',   full = 'Collector\'s Rare'            },
+	['urpr'] = { abbr = 'URPR', full = 'Ultra Rare (Pharaoh\'s Rare)' },
 }
 
 return {

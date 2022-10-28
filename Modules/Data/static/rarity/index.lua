@@ -5,8 +5,10 @@ local function normalize( v )
 	return type( v ) == 'string'
 		and mw.text.trim( v )
 			:lower()
-			:gsub(    ' rare$', '' )
-			:gsub( "[/%s%-_']", '' )
+			:gsub( "[/%-_'%(%)]", '' )
+			:gsub(      ' rare$', '' )
+			:gsub(          's$', '' )
+			:gsub(          '%s', '' )
 		or nil
 end
 
