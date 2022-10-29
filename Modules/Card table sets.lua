@@ -25,6 +25,8 @@ local reporter;
 local KEY_DATE = 'SET_DATE'
 local KEY_NAME = 'SET_NAME'
 
+local CONTROL_PROP = 'Modification date'
+
 local function formatCardNumber( cardNumber )
 	return cardNumber:match( '?' )
 		and cardNumber
@@ -70,7 +72,7 @@ local function linkRarities( rarities, lineno )
 						nonEmptyposition = nonEmptyposition,
 					}
 
-					table.insert( linked, UTIL.link( rarity.full ) )
+					table.insert( linked, UTIL.link( rarity.full, rarity.full ) )
 				end
 			else
 				local message = ( 'No such rarity for `%s`, at non-empty input line %d, at non-empty position %d.' )
@@ -163,7 +165,7 @@ local function getSetSmwInfo( frame, setName )
 
 	local smwResult = ( mw.smw.ask{ -- TODO: the props to query should be generated automatically from DATA region and language
 		table.concat{ '[[', setName, ']]' },
-		'?Modification date',
+		table.concat{ '?', CONTROL_PROP },
 
 		'?Worldwide English release date#ISO',
 		'?English release date#ISO',
@@ -198,7 +200,7 @@ local function getSetSmwInfo( frame, setName )
 		mainlabel = '-',
 	} or {} )[ 1 ] or {}
 
-	if not smwResult[ 'Modification date' ] then
+	if not smwResult[ CONTROL_PROP ] then
 		setWikitextVarValue( frame, missingSetPageVarName, 1 )
 
 		local category = 'transclusions with set names without a page'

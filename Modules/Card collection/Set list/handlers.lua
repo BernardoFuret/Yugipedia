@@ -92,7 +92,7 @@ local function parseRarities( self, rawRarities, location )
 						nonEmptyposition = nonEmptyposition,
 					}
 
-					table.insert( rarities, UTIL.link( rarity.full ) )
+					table.insert( rarities, UTIL.link( rarity.full, rarity.full ) )
 				end
 			else
 				local message = ( 'No such rarity for `%s`, at %s, at non-empty position %d!' )
