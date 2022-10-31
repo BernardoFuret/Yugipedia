@@ -366,7 +366,9 @@ function handlers:handleEntry( entry, globalData )
 end
 
 function handlers:finalize( mainStructure, globalData )
-	return processNotes( self, globalData.notes ), self.frame:preprocess( tostring( mainStructure ) )
+	local toc = mw.html.create( 'div' ):addClass( 'set-gallery__toc' )
+
+	return toc, processNotes( self, globalData.notes ), self.frame:preprocess( tostring( mainStructure ) )
 end
 
 return handlers

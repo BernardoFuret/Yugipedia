@@ -1,0 +1,29 @@
+.set-gallery__toc__container {
+	background-color: #f8f9fa;
+	border: 1px solid #CCC;
+}
+
+.set-gallery__toc__container > ul {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+}
+
+.set-gallery__toc__entry {
+	display: inline-block;
+	padding: 0.25em;
+}
+
+.set-gallery__toc__entry::before {
+	font-weight: bold;
+}
+
+.set-gallery__toc__entry:first-child::before {
+	content: 'Go to:\20';
+}
+
+.set-gallery__toc__entry:not(:first-child)::before {
+	content: '• ';
+}
