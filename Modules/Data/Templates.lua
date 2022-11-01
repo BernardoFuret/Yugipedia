@@ -25,6 +25,10 @@ local function getMedium( frame )
 	return DATA.getMedium( getArg( frame, 1 ) ) or {}
 end
 
+local function getRarity( frame )
+	return DATA.getRarity( getArg( frame, 1 ) ) or {}
+end
+
 local function getVideoGameName( frame )
 	return DATA.videoGames.getName( getArg( frame, 1 ) ) or {}
 end
@@ -63,13 +67,21 @@ function D.rgo( frame )
 	return getMedium( frame ).abbr or ''
 end
 
+function D.rarity( frame )
+	local full = UTIL.trim( getArg( frame, 'full' ) )
+
+	local rarity = getRarity( frame )
+
+	return ( full and rarity.full or rarity.abbr ) or ''
+end
+
 function D.vg( frame )
 	local full = UTIL.trim( getArg( frame, 'full' ) )
 
 	local link = UTIL.trim( getArg( frame, 'link' ) )
 
 	local game = getVideoGameName( frame )
-	
+
 	return full
 		and ( link and game.full or UTIL.removeDab( game.full or '' ) )
 		or game.abbr
