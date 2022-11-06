@@ -337,6 +337,12 @@ local function createDataRow( frame, region, language, line, lineno )
 	return tostring( tr )
 end
 
+function printOtherCategories( categories )
+	return mw.title.getCurrentTitle().namespace == 0
+		and table.concat( categories )
+		or ''
+end
+
 
 local function main( frame, regionInput, setsInput )
 	reporter = Reporter( 'Card table sets' )
@@ -344,6 +350,8 @@ local function main( frame, regionInput, setsInput )
 	local region = DATA.getRegion( regionInput ) -- TODO: handle incorrect regions (necessary?)
 
 	local language = DATA.getLanguage( regionInput )
+
+	local otherCategories = {}
 
 	local setsTable = mwHtmlCreate( 'table' )
 		:attr( 'id', 'cts--' .. region.index )
@@ -363,6 +371,10 @@ local function main( frame, regionInput, setsInput )
 				setsTable:node( createDataRow( frame, region, language, line, lineno ) )
 			end
 		end
+
+		if lineno == 1 then
+			table.insert( otherCategories, ( '[[Category:%s cards that have not been reprinted]]' ):format( region.full ) )
+		end
 	else
 		local message = 'No input provided for the sets.'
 
@@ -375,6 +387,7 @@ local function main( frame, regionInput, setsInput )
 
 	return StringBuffer()
 		:add( reporter:dump() )
+		:add( printOtherCategories( otherCategories ) )
 		:add( tostring( setsTable ) )
 		:toString()
 end
