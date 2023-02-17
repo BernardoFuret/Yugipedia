@@ -17,22 +17,12 @@ local function getEnglishName( cardNameOrpagename )
 	return ( ( query or {} )[ 1 ] or {} )[ 1 ] or cardNameOrpagename
 end
 
-local function normalize( name )
-	local nameWithoutDab = mw.text.split( name, '%s*%(' )[ 1 ]
+local function removeDab( name )
+	return mw.text.split( name, '%s*%(' )[ 1 ]
+end
 
-	-- TODO: simplify
-	local normalizedName = nameWithoutDab
-		:gsub( ' ' , '' ):gsub( '#' , '' )
-		:gsub( '%-', '' ):gsub( '–' , '' )
-		:gsub( ',' , '' ):gsub( '%.', '' ):gsub( ':', '' )
-		:gsub( '\'', '' ):gsub( '"' , '' )
-		:gsub( '%?', '' ):gsub( '!' , '' )
-		:gsub( '&' , '' ):gsub( '@' , '' )
-		:gsub( '%%', '' ):gsub( '=' , '' )
-		:gsub( '%[', '' ):gsub( '%]', '' )
-		:gsub( '<' , '' ):gsub( '>' , '' )
-		:gsub( '/' , '' ):gsub( '\\', '' )
-		:gsub( '☆' , '' ):gsub( '★' , '' ):gsub( '・' , '' )
+local function processChars( name )
+	local normalizedName = name:gsub( '[ #–,%.:\'"%?!&@%%=%[%]<>/\\☆★・-]', '' )
 
 	-- Sending the result to a reference instead of returning right away
 	-- prevents returning multiple values (from `gsub`).
@@ -49,7 +39,9 @@ local function getCardImageName( cardNameOrpagename )
 
 	local englishName = getEnglishName( trimmedCardNameOrpagename )
 
-	return normalize( englishName )
+	local nameAfterDabProcessed = englishName or removeDab( trimmedCardNameOrpagename )
+
+	return processChars( nameAfterDabProcessed )
 end
 
 local function wikitextMain( frame )
@@ -68,9 +60,11 @@ local function test()
 		{ 'Jinzo 7', 'Jinzo7' },
 		{ 'Red Nova (card)', 'RedNova' },
 		{ 'Griggle (anime)', 'Griggle' },
-		{ 'Great Imperial Dinocarriage Dynarmix (L)', 'GreatImperialDinocarriageDynarmixL' },
+		{ 'Dynamic Dino Dynamix (L)', 'DynamicDinoDynamixL' },
 		{ 'Yggdrago the Sky Emperor (R) (manga)', 'YggdragotheSkyEmperorR' },
 		{ 'Yggdrago the Sky Emperor [R]', 'YggdragotheSkyEmperorR' },
+		{ 'The Winged Dragon of Ra (Sphere Mode)', 'TheWingedDragonofRa(SphereMode)' },
+		{ 'CotH', 'CalloftheHaunted' },
 		{ 'This is not a card name', 'Thisisnotacardname' },
 	}
 
@@ -81,7 +75,15 @@ local function test()
 
 		local result = getCardImageName( inputValue )
 
-		mw.log( i, '\t', result, '\t', result == expectedValue, '\t', expectedValue )
+		local testPassed = result == expectedValue
+
+		mw.log( ( 'Case %d: %s' ):format( i, testPassed and 'PASSED' or 'FAILED' ) )
+
+		if not testPassed then
+			mw.log( '', ( 'Input:    %s' ):format( inputValue ) )
+			mw.log( '', ( 'Expected: %s' ):format( expectedValue ) )
+			mw.log( '', ( 'Result:   %s' ):format( result ) )
+		end
 	end
 end
 
