@@ -1,0 +1,50 @@
+@import url("https://yugipedia.com/index.php?title=User:Becasita/layout.css&action=raw&ctype=text/css");
+@import url("https://yugipedia.com/index.php?title=User:Becasita/test.css&action=raw&ctype=text/css");
+
+/* Make diffs more noticeable: */
+/* Monospaced font and preserved whitespace for diffs */
+td.diff-addedline, td.diff-deletedline, td.diff-context
+{   /* From c.wikia.com/User:Dinoguy1000/global.css */
+    font-family: monospace, monospace; /* has to be doubled to fix the font-size issue in Webkit */
+    white-space: pre-wrap;
+}
+td.diff-addedline .diffchange
+{   /* New text. */
+    background-color: #c9e1f9;
+}
+td.diff-deletedline .diffchange
+{   /* Old text. */
+    background-color: #f7e2af;
+}
+
+/* Test for User:Becasita/SubPages/Templates/Banlist */
+.status-forbidden, .status-limited,
+.status-semi-limited, .status-unlimited,
+.status-did-not-exist
+{
+    text-align: center;
+}
+.status-forbidden
+{
+    background-color: #F66;
+} 
+.status-limited
+{
+    background-color: #FC6;
+} 
+.status-semi-limited
+{
+    background-color: #FF9;
+} 
+.status-unlimited
+{
+    background-color: #9F9;
+}
+.status-did-not-exist
+{
+    background-color: #DDD;
+}
+
+#mw-scribunto-input, #mw-scribunto-output {
+    font-family: monospace, monospace;
+}

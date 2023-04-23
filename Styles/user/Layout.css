@@ -1,0 +1,208 @@
+/*********************
+ * Fixed top user bar:
+ */
+#mw-head-base
+{
+	margin-top: -6.5em;
+}
+div#mw-head
+{
+	position: fixed;
+	left: 11em;
+	background: linear-gradient(#ffffff 60%, #b4d9f3 160%);
+	z-index: 101;
+}
+/* Top side: */
+#p-personal
+{	/* Fix/stretch/push/pad/color. */
+	position: fixed;
+	top: unset; /* CHECK */
+	left: 11em;
+	display: flex;
+	justify-content: center;
+	padding: 0.25em 0;
+	border-left: 1px solid #a7d7f9;
+}
+#p-personal ul
+{
+	padding-left: unset;
+}
+#p-personal li
+{	/* Push items down. */
+	margin-top: 0.7em;
+}
+#p-personal li#pt-search
+{	/* Don't push the search bar down. */
+	margin-top: -1px;
+}
+#p-personal #pt-notifications-alert,
+#p-personal #pt-notifications-notice
+{	/* Notification icons. */
+	margin-right: 0;
+}
+#special-messages
+{	/* Messages: */
+	color: white;
+	border-radius: 0.25em;
+	padding: 0.25em 0.8em 0.2em 0.8em;
+	transition: all 0.25s ease-in-out;
+}
+.done { background-color: lightgreen; }
+.pending { background-color: sandybrown; }
+.failed { background-color: red; }
+#special-messages abbr { text-decoration: none; }
+
+/* Bottom side. */
+#p-bottom
+{
+	height: 2.5em;
+	margin-top: 1.3em;
+	border-bottom: 1px solid #a7d7f9;
+}
+#right-navigation,
+#left-navigation
+{	/* Handled by #p-bottom. */
+	margin-top: unset;
+}
+#left-navigation
+{	/* Add border to look better.
+	Re-align height and left. */
+	margin-left: unset;
+	border-left: 1px solid #a7d7f9;
+}
+#right-navigation
+{	/* «#mw-head» is padded 11em. */
+	margin-right: 11em;
+}
+div#right-navigation .emptyPortlet
+{	/* For special pages. Need to enable
+	to adjust the size of the header. */
+	display: unset;
+}
+#left-navigation div.vectorTabs
+{	/* Remove padding for the left container. */
+	padding-left: unset;
+}
+div.vectorTabs ul li {background: none; }
+div.vectorTabs li.selected
+{	/* "Erase" border for the selected buttons. */
+	border-bottom: 1px solid white;
+}
+/* Right "More" menu buttons. */
+div.vectorMenu div.menu { border-color: #b4d9f3; }
+div.vectorMenu ul { background: linear-gradient(#b4d9f3 -140%, #ffffff 60%); }
+div.vectorMenu li { border-top: 1px solid #b4d9f3; }
+
+@media screen and (min-width: 982px)
+{
+	#left-navigation { margin-left: unset; }
+}
+
+/***********
+ * Side bar:
+ */
+/* Fix (make it fixed) the side bar. */
+div#mw-panel
+{
+	position: fixed;
+	bottom: 0;
+	overflow: auto;
+}
+/* Hide scroll bar. */
+div#mw-panel::-webkit-scrollbar
+{	/* Webkit only. */
+	display: none;
+}
+/* Reduce distance between links and logo. */
+div#mw-panel #p-logo + div.portal
+{	/* @overwrite overqualified <style> */
+	margin-top: 0;
+}
+
+/*****************
+ * Recent Changes.
+ */
+/* Adjust some stuff on S:RC: */
+.mw-enhanced-watched .mw-enhanced-rc-time
+{	/* No need to have timestamps bold. */
+	font-weight: unset;
+}
+.mw-enhanced-rc-time
+{	/* No need for monospace font for time stamps. */
+	font-family: unset;
+}
+#recentchangestext
+{	/* MW page. */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	border-collapse: collapse;
+}
+#recentchangestext tr
+{
+	display: table-cell;
+	border: 1px solid #2a4b8d;
+	width: 33%;
+	text-align: center;
+}
+#recentchangestext th,
+#recentchangestext td
+{
+	text-align: center !important;
+	display: flow-root;
+}
+fieldset.rcoptions.cloptions { margin: 0; }
+
+/**************
+ * Last edited.
+ */
+div#last-edited
+{
+	position: absolute;
+	right: 0;
+	max-width: 40%;
+	background: white;
+	padding: 0 1em
+}
+#last-edited p
+{
+	font-size: 0.75em;
+	margin: 0;
+}
+#last-edited .bot::after
+{
+    content: '  [b]';
+    font-weight: bold;
+}
+#last-edited .minor::after
+{
+    content: ' [m]';
+    font-weight: bold;
+}
+
+/********
+ * Other:
+ */
+.hide { display: none; }
+
+.mw-highlight > pre span.sx
+{	/* Break big words as for urls on code sheets.
+	Make them noticeable, so I know it's not default. */
+	word-break: break-all;
+	color: #03ffbb;
+}
+
+/* Hide stuff that just gets in the way for me.
+- These can be displayed through the toggle button. */
+#siteNotice, /* Site notice (top of the article). */
+#editpage-copywarn, /* Licensing warning when editing. */
+.mw-editTools, /* Edit tools. */
+.smw-editpage-help, /* SMW disabled box. */
+/* Side bar. */
+#n-irc-chat, #n-Twitter, #n-Facebook, /* In "Community" section. */
+#p-Content, /* Content section on the sidebar */
+#p-random	/* "Random" section. */
+{
+	display: none;
+}
