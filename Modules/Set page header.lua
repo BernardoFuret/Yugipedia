@@ -97,7 +97,7 @@ function main( args )
 
 	local pagename = currentTitle.text
 
-	local region = getRegion( pagename )
+	local region = args.region and DATA.getRegion( args.region ) or getRegion( pagename )
 
 	local edition = getEdition( pagename )
 
