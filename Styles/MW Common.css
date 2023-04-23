@@ -1,0 +1,402 @@
+/*<nowiki>
+Some CSS is loaded via a default, hidden gadget:
+* CSS from Wikimedia is in [[MediaWiki:Gadget-Wikimedia.css]]
+* card table CSS is in [[MediaWiki:Gadget-Cardtable.css]]
+Please keep this in mind when adding or looking for CSS.
+*/
+/** CSS placed here will be applied to all skins **/
+/* Necessary for the ads. */
+#footer {
+	margin-bottom: 6em;
+}
+/* Remove serifs from headers. */
+.mw-body h1, .mw-body-content h1, .mw-body-content h2 {
+	font-family: sans-serif;
+}
+/* Floatable headers for tables */
+/* based on https://css-tricks.com/position-sticky-and-table-headers/ */
+table.floatable-header {
+	position: relative;
+	border-collapse: separate;
+	border-spacing: 0;
+}
+.floatable-header th[scope="col"] {
+	position: sticky;
+	top: 0;
+}
+/* this is stupidly fragile, but it works... feel free to suggest better versions, though */
+.floatable-header tr:nth-child(2) th[scope="col"] {
+	top: 29px;
+}
+/* position:sticky does weird things to cell borders, so we have to reset them here */
+/* I hate all of this; if anyone has better ideas, I'm all ears */
+table.wikitable.floatable-header th,
+table.wikitable.floatable-header td {
+	border-style: none solid solid none;
+}
+/* the reset creates a double-thick border on the bottom and right edges of the table (only in Firefox?), so remove it here */
+table.wikitable.floatable-header tr:last-child th,
+table.wikitable.floatable-header tr:last-child td {
+	border-bottom-style: none;
+}
+/* ...and *that* reset removes the bottom border of the header row on tables with a single header row, so restore *it* */
+table.wikitable.floatable-header thead tr:last-child th,
+table.wikitable.floatable-header thead tr:last-child td {
+	border-bottom-style: solid;
+}
+table.wikitable.floatable-header th:last-child,
+table.wikitable.floatable-header td:last-child {
+	border-right-style: none;
+}
+/* fix borders in Edge (sometimes - see https://css-tricks.com/position-sticky-and-table-headers/#comment-1749745 ) */
+@supports (-ms-ime-align: auto) {
+	background-clip: padding-box;
+}
+/**********************************/
+/** Card galleries and lists. */
+/** These are temporary; may be implemented as a gadget later. */
+/* Card gallery errors. */
+.card-gallery__errors { color: red; }
+/* Card gallery itself. */
+.card-gallery__gallery {
+	border-collapse: collapse;
+	border: 1px solid #CCC;
+	margin: 0.5em auto;
+	text-align: center;
+}
+.card-gallery__gallery .mw-gallery-traditional {
+	display: initial; /* In the odd case flex is not supported. */
+	display: flex;
+	justify-content: space-around; /* Because not all support the above. */
+	justify-content: space-evenly;
+	flex-wrap: wrap;
+}
+/** Lua reporter */
+.reporter__warnings {
+	color: darkgoldenrod;
+	font-weight: bold;
+}
+.reporter__errors {
+	color: red;
+	font-weight: bold;
+}
+/** End possible temporary styles. */
+/**********************************/
+/* Card <gallery> styles. */
+/* only used (?) on hardcoded gallery elements on Card Gallery pages */
+.card-galleries { /* TODO: Cleanup after updating Module:Set gallery. */
+	border-collapse: collapse;
+	border: 1px solid #CCC;
+	margin: 0.5em auto;
+	text-align: center;
+}
+.card-galleries th {
+	background-color: #337C97;
+	color: #FFF;
+	border: 1px solid #999;
+	padding: 3px;
+}
+.card-galleries td {
+	padding: 0;
+	text-align: center;
+}
+.card-galleries ul.gallery {
+	width: 100%;
+	margin: 0;
+	border: 0;
+}
+.card-galleries ul.gallery td {
+	background-color: transparent;
+}
+.card-galleries ul.gallery .gallerybox {
+	background-color: #F9F9F9;
+	border: 1px solid #CCC;
+	margin: 0 auto;
+}
+.card-galleries ul.gallery .gallerybox .thumb {
+	background-color: transparent;
+	border: 0;
+	margin: 0 auto;
+	padding: 10px 0 0 !important;
+}
+.card-galleries .thumb neutral,
+.card-galleries .image lightbox,
+.card-galleries .lightbox-caption {
+	border: 0;
+	background-color: transparent;
+	white-space: normal;
+	text-align: center;
+	font-family: sans-serif;
+	padding: 0;
+}
+.card-galleries .mw-gallery-traditional { /* TODO: Cleanup after updating Module:Set gallery */
+	display: initial; /* In the odd case flex is not supported. */
+	display: flex;
+	justify-content: space-around; /* Because not all support the above. */
+	justify-content: space-evenly;
+	flex-wrap: wrap;
+}
+.thumb {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.noFile {
+	word-break: break-word; /* Deprecated, but used here as fallback. */
+	overflow-wrap: anywhere; /* Fairly recent. */
+}
+/* Card lists */
+/* TODO: Move to TemplateStyles */
+/* the mw-datatable class offers row highlighting on hover as well, but doesn't seem to interact nicely with SMW queries
+   and is also Vector desktop-specific (see e.g. [[mwphab:T287997]]) */
+.card-list {
+	width: 100%;
+	clear: both;
+}
+.card-list tr th[colspan], .card-list caption {
+	padding: 3px;
+	border: 1px solid #CCC;
+	border-bottom: 0;
+}
+.card-list tr:hover th[scope=row], .card-list tr:hover th[scope=rowgroup], .card-list tr:hover td {
+	background-color: #EEE;
+}
+/* hide some stuff on rollback/mover requests pages */
+.page-Yu-Gi-Oh_Requests_for_rollback_requests #wpSummary,
+.page-Yu-Gi-Oh_Requests_for_rollback_requests #wpSummaryLabel,
+.page-Yu-Gi-Oh_Requests_for_mover_requests #wpSummary,
+.page-Yu-Gi-Oh_Requests_for_mover_requests #wpSummaryLabel {
+	display: none;
+}
+/* Infoboxes */
+body {
+    --bg-color-infobox: #f8f9fa;
+    --bg-color-infobox-caption: #bbf;
+    --bg-color-infobox-heading: #ccf;
+    --bg-color-infobox-label: #ddf;
+    --bg-color-infobox-sublabel: #eef;
+    --border-color-infobox: #a2a9b1;
+    --color-infobox: #222;
+}
+.infobox {
+    background-color: var(--bg-color-infobox);
+    border-color: var(--border-color-infobox);
+    color: var(--color-infobox);
+}
+.infobox-yugipedia caption {
+    background-color: var(--bg-color-infobox-caption);
+    border-color: var(--border-color-infobox);
+}
+.infobox-yugipedia th {
+    background-color: var(--bg-color-infobox-heading);
+}
+.infobox-yugipedia th[scope="row"],
+.infobox-yugipedia .collapsible th,
+.infobox-yugipedia .infobox-subheading {
+    background-color: var(--bg-color-infobox-label);
+}
+.infobox-yugipedia .collapsible th[scope="row"] {
+    background-color: var(--bg-color-infobox-sublabel);
+}
+/* Need to deprecate this */
+.infobox-subheading {
+	font-weight: bold;
+}
+/* Indentation to mark beginning of list items in infoboxes */
+.infobox td ul {
+	margin: 0;
+}
+.infobox td li {
+	list-style: none;
+}
+/* fix nested description list weirdness
+   https://en.wikipedia.org/w/index.php?title=MediaWiki_talk:Common.css&diff=prev&oldid=1006377228#hlist_description_list_term_following_a_description_details_subitem_starts_a_new_line
+   needed for {{Series 3}} and maybe other navboxes
+   */
+.hlist dd:empty {
+	display: none;
+}
+/* hlist varieties: comma, slash, plus, minus, pipe */
+.hcomma dd::after,
+.hcomma li::after {
+	content: ",\20";
+	font-weight: normal;
+}
+.hslash dd::after,
+.hslash li::after {
+	content: " / ";
+	font-weight: normal;
+}
+.hplus dd::after,
+.hplus li::after {
+	content: " + ";
+	font-weight: normal;
+}
+.hplus dd:lang(ja)::after,
+.hplus li:lang(ja)::after {
+	content: " ＋ ";
+}
+.hplus.inline ul {
+	display: inline;
+}
+.hminus dd::after,
+.hminus li::after,
+.hdash dd::after,
+.hdash li::after {
+	content: " - ";
+	font-weight: normal;
+}
+.hminus dd:lang(ja)::after,
+.hminus li:lang(ja)::after,
+.hdash dd:lang(ja)::after,
+.hdash li:lang(ja)::after{
+	content: " － ";
+}
+.hpipe dd::after,
+.hpipe li::after {
+	content: " | ";
+	font-weight: normal;
+}
+/* prevent a delimiter from appearing after the last item */
+.hlist dd:last-child::after,
+.hlist dt:last-child::after,
+.hlist li:last-child::after {
+	content: none;
+}
+/* For IE8 */
+.hlist dd.hlist-last-child::after,
+.hlist dt.hlist-last-child::after,
+.hlist li.hlist-last-child::after {
+	content: none;
+}
+/* ...but that hides the closing parenthesis on sublists, so we have to re-add it */
+.hlist dl dl dd:last-child::after,
+.hlist dl dl dt:last-child::after,
+.hlist ol ol li:last-child::after,
+.hlist ul ul li:last-child::after {
+	content: ")";
+	font-weight: normal;
+}
+/* For IE8 */
+.hlist dl dl dd.hlist-last-child::after,
+.hlist dl dl dt.hlist-last-child::after,
+.hlist ol ol li.hlist-last-child::after,
+.hlist ul ul li.hlist-last-child::after {
+	content: ")";
+	font-weight: normal;
+}
+/* Tabber stuff:
+	* background
+	* smaller text in tabs when there are too many
+	* even smaller text
+*/
+.tabbertab {
+	background-color: #FFF;
+}
+.smalltabs .tabbernav {
+	font-size: .625rem;
+}
+.smallertabs .tabbernav {
+	font-size: .5625rem;
+}
+/* prev/next navigation */
+.nav-prev {
+	float: left;
+	text-align: left;
+}
+.nav-prev li::before {
+	content: "← ";
+}
+.nav-next {
+	float: right;
+	text-align: right;
+}
+.nav-next li::after {
+	content: " →";
+}
+/* quotes in page titles ({{Quoted title}}) */
+.quoted-title::before,
+.quoted-title::after {
+	content: '"';
+}
+/* hide content in non-mobile devices
+   to hide content on mobile devices, use the "nomobile" class */
+.mobile-show {
+	display: none;
+}
+/* If JavaScript is enabled, hide image switcher links, until after the script has loaded. */
+.client-js .image-switcher {
+	visibility: hidden;
+}
+/* most editors don't need to worry about semantic annotations,
+   and we don't want them being added directly to articles anyways */
+.smw-editpage-help {
+	display: none;
+}
+/* make image thumbnail borders transparent so they don't look horrible on colored backgrounds */
+div.thumb {
+	border: transparent;
+}
+/* redirects in special pages (e.g. Special:AllPages) */
+.allpagesredirect a {
+	background: url('data:image/gif;base64,R0lGODlhCgAKAKL/AP///4ODg4MAAAAAAMDAwAAAAAAAAAAAACH5BAEAAAQALAAAAAAKAAoAQAMTSLrc8ks0Jqeq5GE8uYuOJnZMAgA7') center left no-repeat;
+	padding-left: 13px;
+}
+/* Adjust the word breaking for fullwidth text */
+:lang(ja-Latn),
+:lang(ko-Latn),
+:lang(zh-Latn) {
+	word-break: keep-all;
+}
+/* links to official websites */
+.mw-body-content a[href^="http://www.db.yugioh-card.com"],
+.mw-body-content a[href^="https://www.db.yugioh-card.com"],
+.mw-body-content a[href^="//www.db.yugioh-card.com"],
+.mw-body-content a[href^="http://db.yugioh-card.com"],
+.mw-body-content a[href^="https://db.yugioh-card.com"],
+.mw-body-content a[href^="//db.yugioh-card.com"] {
+	background-image: url('https://yugipedia.com/wiki/Special:Redirect/file/Official_card_database_favicon.png');
+}
+.mw-body-content a[href^="http://www.yugioh.com/cards"],
+.mw-body-content a[href^="https://www.yugioh.com/cards"],
+.mw-body-content a[href^="//www.yugioh.com/cards"],
+.mw-body-content a[href^="http://yugioh.com/cards"],
+.mw-body-content a[href^="https://yugioh.com/cards"],
+.mw-body-content a[href^="//yugioh.com/cards"] {
+	background-image: url('https://yugipedia.com/wiki/Special:Redirect/file/Yugioh.com_anime_site_favicon.png');
+	padding-right: 16px;
+}
+/* links to Wikipedia */
+.mw-body-content a[href^="http://en.wikipedia.org"],
+.mw-body-content a[href^="https://en.wikipedia.org"],
+.mw-body-content a[href^="//en.wikipedia.org"] {
+	background: url(https://yugipedia.com/wiki/Special:Redirect/file/Wikipedia-favicon.png) no-repeat top right;
+	background-size: .75em;
+	padding-right: .8em;
+}
+/* links to FANDOM/Wikia */
+.mw-body-content a[href*="wikia.com"],
+.mw-body-content a[href*="fandom.com"] {
+	background: url("https://yugipedia.com/wiki/Special:Redirect/file/Fandom favicon.png") no-repeat center right;
+	background-size: 16px;
+	padding-right: 18px;
+}
+/* Fix content jumping on top ad change. */
+div#content div#top-ad { /* can't be overwritten by anything! */
+	height: 90px !important;
+}
+/* Fix bottom ad overlapping side bar. */
+#bottom-ad {
+	margin-left: 10em;
+}
+@media screen and (min-width: 982px) {
+	#bottom-ad {
+		margin-left: 11em
+	}
+}
+/* Better center SiteNotice post-"Dismissable SiteNotice" installation */
+.sitedir-ltr .mw-dismissable-notice-body,
+.sitedir-rtl .mw-dismissable-notice-body {
+	margin: 0;
+}
+/* </nowiki> */
