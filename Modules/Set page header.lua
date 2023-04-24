@@ -35,7 +35,9 @@ end
 local function getSetPagename( pagename )
 	local parts = mw.text.split( pagename, '%(' )
 
-	return table.concat( parts, '(', 1, #parts - 1 )
+	local length = #parts
+
+	return table.concat( parts, '(', 1, length == 1 and length or ( length - 1 ) )
 end
 
 local function makeHeader( setPagename, region, edition )
