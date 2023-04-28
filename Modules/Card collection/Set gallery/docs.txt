@@ -1,0 +1,106 @@
+{{Documentation subpage}}
+<!-- PLEASE ADD CATEGORIES AT THE BOTTOM OF THIS PAGE -->
+{{TOC}}
+{{Lua|Module:Card collection/modules/Set gallery}}
+This template is used to generate [[:Category:Set Card Galleries|set galleries]].
+
+== Usage ==
+<pre>
+{{Set gallery|abbr=|rarity=|alt=|notes=|description=|$description=|
+&lt;card number>; &lt;card name>; &lt;card rarity>; &lt;alt> // &lt;entry options>
+}}
+</pre>
+
+Each template call builds one gallery only. For multiple galleries on the same page, multiple calls to the template must be made.
+Ideally, for this case, each separate gallery should have its own MediaWiki header.
+<br />
+For the page header, {{T|Set page header}} must be used.
+
+=== Parameters ===
+All parameters are optional except where noted.
+
+;<code>abbr</code> 
+:Used to pass a set abbreviation code. If this parameter is used, the first value of the entry will be interpreted as the card name, instead of as the card number (card numbers won't be displayed). It's overwritten by locally passing an abbreviation (card numbers still won't be displayed), through the entry option <code>abbr</code>.
+
+;<code>rarity</code> 
+:Used to pass the rarity of the card. Defaults to [[Common]].
+
+;<code>alt</code> 
+<!--:Used to pass a list of alt codes for the file path. Each alt code is separated by <code>,</code>. These codes would apply to all the entries, unless specific codes are passed for the individual entry.-->
+:Used to pass an alt code for the file path. This code would apply to all the entries, unless a specific code is passed for the individual entry.
+
+;<code>notes</code> 
+:Text to be prepended to the gallery.
+
+;<code>description</code> 
+:Appends a description to the English card name. The value passed will be used as a default value. 
+
+;<code>$description</code> 
+:Sets a template description. <!--TODO: @see some docs about interpolation.--> 
+
+=== Building an entry ===
+Each entry goes in one line.<br />
+Entries are in the form of <code>&lt;card number>; &lt;card name>; &lt;card rarity>; &lt;alt> // &lt;entry options></code>.
+
+;<code>card number</code>
+:The card number. For cards that don't have a card number, it should be left blank (but still separated from the card name). If the global option <code>noabbr</code> is used, the card number is omitted and the first value will be considered as the card name, the second the card rarities and so on.
+
+;<code>card name</code>
+:The card English name or the pagename. Supports <code>#</code> in the card name. If the card English name uses less common characters, it's advised to input the pagename here and use the entry option <code>force-SMW</code>.
+
+;<code>card rarity</code>
+:The card rarity. If left empty, the default rarity defined in parameter <code>rarities</code> will be used.
+
+;<code>alt</code>
+<!--:Optional. List of alt codes for the file path. Each alt code is separated by <code>,</code>.-->
+:Alt code for the file path.
+
+==== Entry options ====
+The options part is optional and is separated by inserting <code>//</code> and then the options pairs. Each option is a pair separated by <code>;</code> and consists of an option name and the respective value, separated by `::`. Available options are:
+
+;<code>abbr::&lt;value></code> 
+:Sets a set abbreviation for this entry. Used when a single entry doesn't have a card number. If used, the first value of the entry will be interpreted as the card name, instead of as the card number (card numbers won't be displayed).
+
+;<code>printed-name::&lt;old name></code> 
+:Used for when the card was released in that set with a name different the current name. This appends the old name to the localized name this gallery presents, so this should be used only if the name of the card in that language was different at the time of release than it is now.
+
+;<code>description::&lt;value></code>
+:Adds a description next to the English name. If this is not used but the <code>description</code> parameter is used, it will display the default <code>description</code>. If a value is present, it will display that value (regardless of the default <code>description</code>). The only exception is if <code>$description</code> was used; the value passed here will be interpolated to the template value defined by <code>$description</code>.
+
+;<code>force-SMW</code> 
+:This option enables extra fetching from SMW properties. This option is to be used when there is a need to get the card English name from the pagename (provided as input) and to generate the correct file name.
+
+;<code>file::&lt;value></code> 
+:Overrides the file path with whatever value is entered here. Should be avoided as much as possible.
+
+== Examples ==
+* [[Set Card Galleries:Duelist Pack: Jaden Yuki 2 (TCG-FR-1E)]] (Use of the <code>printed-name</code> entry option.)
+* [[Set Card Galleries:Booster 3 (OCG-JP)]] (Use of the <code>abbr</code> parameter.)
+* [[Set Card Galleries:777 Treasure Campaign (OCG-JP)]] (Use of <code>force-SMW</code> entry option.)
+* [[Set Card Galleries:Hobby League participation cards (TCG-EN-UE)]] (Multiple galleries.)
+* [[Set Card Galleries:Sneak Peek Participation Cards: Series 6 (TCG-EN-LE)]] (Use of <code>description</code>.)
+
+== Tracking categories ==
+* [[:Category:((Set gallery)) transclusions to be checked]]: General category that contains all pages using {{t|Set gallery}} with errors. Each page present in the following categories is also present on this one.
+
+* [[:Category:((Set gallery)) transclusions with invalid parameters]]: There are parameters in use that are not part of this template.
+* [[:Category:((Set gallery)) transclusions with missing required parameters]]: There are template parameters that are required but were not entered. 
+* [[:Category:((Set gallery)) transclusions with empty parameters]]: There are template parameters in use that are not receiving any value, but should always receive a non-empty value when used.
+* [[:Category:((Set gallery)) transclusions with empty options]]: There is a place that receives input in the options format but received empty options.
+
+* [[:Category:((Set gallery)) transclusions with invalid rarities]]: A rarity provided for the default rarity or for an entry is not valid.
+* [[:Category:((Set gallery)) transclusions with missing card number]]: A card number that should exist is missing.
+* [[:Category:((Set gallery)) transclusions with missing card name]]: There is an entry without a card name.
+* [[:Category:((Set gallery)) transclusions with empty printed-name]]: The entry option <code>printed-name</code> is used but it's empty.
+* [[:Category:((Set gallery)) transclusions with empty extension]]: An empty extension was provided.
+
+Each page tagged with each of these tracking categories presents details about the errors.
+
+== See also ==
+* [[Module:Card collection/modules/Set gallery]]
+* [[Module:Card collection]]
+
+<includeonly>
+<!-- CATEGORIES HERE, THANKS -->
+[[Category:Templates]]
+</includeonly>

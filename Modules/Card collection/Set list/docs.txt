@@ -1,0 +1,114 @@
+{{Documentation subpage}}
+<!-- PLEASE ADD CATEGORIES AT THE BOTTOM OF THIS PAGE -->
+{{TOC}}
+{{Lua|Module:Card collection/modules/Set list}}
+This template is used to generate [[:Category:Set Card Lists|set lists]].
+
+== Usage ==
+<pre>
+{{Set list|region=|rarities=|options=|print=|qty=|description=|$description=|columns=|$columns=|
+&lt;card number>; &lt;card name>; &lt;card rarities>; &lt;print>; &lt;quantity> // &lt;entry options>
+}}
+</pre>
+
+Each template call builds one list only. For multiple lists on the same page, multiple calls to the template must be made.
+Ideally, for this case, each separate list should have its own MediaWiki header.
+<br />
+For the page header, {{T|Set page header}} must be used.
+
+=== Parameters ===
+All parameters are optional except where noted.
+
+;<code>region</code> 
+:'''Required''' parameter. Used to pass a region (e.g., <code>EN</code>, <code>French</code>, <code>AE</code>).
+
+;<code>rarities</code> 
+:Used to pass the rarities of the card. Each rarity should be separated by a <code>,</code>. The rarities entered here will be used as default, in case no rarities are passed into each individual entry.
+
+;<code>options</code>
+:Receives a list of options. Each option is separated by <code>;</code>. Currently, the available options are:
+:*<code>noabbr</code>: Omits the card number column. Indicates the cards don't have a card number. 
+
+;<code>print</code> 
+:Used to indicate if a card was introduced in a set or reprinted from an earlier set. The column's default value is the value passed. This parameter can be used empty, to just display the column with empty cells.
+
+;<code>qty</code>
+:Used to pass a quantity value. The value must be convertible to a number. The column's default value is the value passed. This parameter can be used empty, to just display the column with empty cells.
+
+;<code>description</code> 
+:Appends a description to the English card name. The value passed will be used as a default value. 
+
+;<code>$description</code> 
+:Sets a template description. <!--TODO: @see some docs about interpolation.--> 
+
+;<code>columns</code> 
+:Receives a list of pairs. Each pair is separated by <code>;</code> and consist of a column name and the column default value, separated by `::`. To omit the default value, just enter the column name (e.g., <code>columns=Notes::Default notes; More notes</code>). Each pair will append a new column to the list generated.
+
+;<code>$columns</code> 
+:Receives a list of pairs, just like the above, but the value is a template for the column content.
+
+=== Building an entry ===
+Each entry goes in one line.<br />
+Entries are in the form of <code>&lt;card number>; &lt;card name>; &lt;card rarities>; &lt;print>; &lt;quantity> // &lt;entry options></code>.
+
+;<code>card number</code>
+:The card number. For cards that don't have a card number, it should be left blank (but still separated from the card name). If the global option <code>noabbr</code> is used, the card number is omitted and the first value will be considered as the card name, the second the card rarities and so on.
+
+;<code>card name</code>
+:The card English name or the pagename. Supports <code>#</code> in the card name. If the card English name uses less common characters, it's advised to input the pagename here and use the entry option <code>force-SMW</code>. 
+
+;<code>card rarities</code>
+:All of the card's rarities, separated by <code>,</code>. If left empty, the default rarities defined in parameter <code>rarities</code> will be used.
+
+;<code>print</code>
+:Only takes effect if the parameter <code>print</code> is in use. Indicates the card print. If left empty, the default print value, if any, defined in parameter <code>print</code> will be used. If parameter <code>print</code> was not used, this field is skipped and will be considered as the quantity, in case the parameter <code>qty</code> is in use.
+
+;<code>quantity</code>
+:Only takes effect if the parameter <code>qty</code> is in use. Indicates the fixed amount of copies of this card present in this set. If left empty, the default quantity value, if any, defined in parameter <code>qty</code> will be used.
+
+==== Entry options ====
+The options part is optional and is separated by inserting <code>//</code> and then the options pairs. Each option is a pair separated by <code>;</code> and consists of an option name and the respective value, separated by `::`. Available options are:
+
+;<code>printed-name::&lt;old name></code> 
+:Used for when the card was released in that set with a name different the current name. This appends the old name to the localized name this list represents, so this should be used only if the name of the card in that language was different at the time of release than it is now.
+
+;<code>description::&lt;value></code> 
+:Adds a description next to the English name. If this is not used but the <code>description</code> parameter is used, it will display the default <code>description</code>. If a value is present, it will display that value (regardless of the default <code>description</code>). The only exception is if <code>$description</code> was used; the value passed here will be interpolated to the template value defined by <code>$description</code>.
+
+;<code>force-SMW</code> 
+:This option enables extra fetching from SMW properties. This option is to be used when there is a need to get the card English name from the pagename (provided as input).
+
+Besides these default options, other special options are supported to fill the cells for the columns added through <code>columns</code> and <code>$columns</code>. Each column content option is called like any other option, except the name is the column name and it must be prepended with <code>@</code>. So if <code>columns=My column</code> is used, then to populate the cell for that column in this entry, <code>@My column::&lt;column content></code> must be used. If the column option is used but left blank, it will clear the default value, if any, ignore the template, if any, and display blank.
+
+== Examples ==
+* [[Set Card Lists:Duelist Pack: Jaden Yuki 2 (TCG-FR)]] (Use of the <code>printed-name</code> entry option.)
+* [[Set Card Lists:Booster 3 (OCG-JP)]] (Use of the <code>noabbr</code> option.)
+* [[Set Card Lists:Yu-Gi-Oh! ZEXAL manga promotional cards (OCG-JP)]] (Use of custom columns.)
+* [[Set Card Lists:777 Treasure Campaign (OCG-JP)]] (Use of <code>force-SMW</code> entry option.)
+
+== Tracking categories ==
+* [[:Category:((Set list)) transclusions to be checked]]: General category that contains all pages using {{t|Set list}} with errors. Each page present in the following categories is also present on this one.
+
+* [[:Category:((Set list)) transclusions with invalid parameters]]: There are parameters in use that are not part of this template.
+* [[:Category:((Set list)) transclusions with missing required parameters]]: There are template parameters that are required but were not entered. 
+* [[:Category:((Set list)) transclusions with empty parameters]]: There are template parameters in use that are not receiving any value, but should always receive a non-empty value when used.
+* [[:Category:((Set list)) transclusions with empty options]]: There is a place that receives input in the options format but received empty options.
+
+* [[:Category:((Set list)) transclusions with invalid region]]: The region provided was invalid.
+* [[:Category:((Set list)) transclusions with duplicate rarities]]: The list of rarities provided for the default rarities or for an entry contains the same rarity multiple times.
+* [[:Category:((Set list)) transclusions with invalid rarities]]: The list of rarities provided for the default rarities or for an entry contains rarities that are not valid.
+* [[:Category:((Set list)) transclusions with empty rarities]]: The list of rarities provided for the default rarities or for an entry contains multiple straight <code>,</code> (empty rarities).
+* [[:Category:((Set list)) transclusions with invalid quantity values]]: The quantity value provided for the default quantity or for an entry cannot be parsed as a number.
+* [[:Category:((Set list)) transclusions with empty printed-name]]: The entry option <code>printed-name</code> is used but it's empty.
+* [[:Category:((Set list)) transclusions with printed-name but no card name]]: The entry option <code>printed-name</code> is used but there is no card name inputted.
+
+Each page tagged with each of these tracking categories presents details about the errors.
+
+== See also ==
+* [[Module:Card collection/modules/Set list]]
+* [[Module:Card collection]]
+
+<includeonly>
+<!-- CATEGORIES HERE, THANKS -->
+[[Category:Templates]]
+</includeonly>
