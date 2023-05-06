@@ -84,6 +84,7 @@ Besides these default options, other special options are supported to fill the c
 * [[Set Card Lists:Duelist Pack: Jaden Yuki 2 (TCG-FR)]] (Use of the <code>printed-name</code> entry option.)
 * [[Set Card Lists:Booster 3 (OCG-JP)]] (Use of the <code>noabbr</code> option.)
 * [[Set Card Lists:Yu-Gi-Oh! ZEXAL manga promotional cards (OCG-JP)]] (Use of custom columns.)
+* [[Set Card Lists:Yu-Gi-Oh! ZEXAL manga promotional cards (TCG-EN)]] (Use of custom columns with interpolation.)
 * [[Set Card Lists:777 Treasure Campaign (OCG-JP)]] (Use of <code>force-SMW</code> entry option.)
 
 == Tracking categories ==
