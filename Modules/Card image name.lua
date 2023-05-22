@@ -37,9 +37,11 @@ local function getCardImageName( cardNameOrpagename )
 		return ''
 	end
 
-	local englishName = getEnglishName( trimmedCardNameOrpagename )
+	local unencodedName = mw.text.decode( trimmedCardNameOrpagename )
 
-	local nameAfterDabProcessed = englishName or removeDab( trimmedCardNameOrpagename )
+	local englishName = getEnglishName( unencodedName )
+
+	local nameAfterDabProcessed = englishName or removeDab( unencodedName )
 
 	return processChars( nameAfterDabProcessed )
 end
@@ -56,6 +58,7 @@ local function test()
 		{ 'Dark Magician', 'DarkMagician' },
 		{ 'Blue-Eyes White Dragon', 'BlueEyesWhiteDragon' },
 		{ 'Stardust Dragon/Assault Mode', 'StardustDragonAssaultMode' },
+		{ "Fiend's Hand", 'FiendsHand' },
 		{ 'Jinzo #7', 'Jinzo7' },
 		{ 'Jinzo 7', 'Jinzo7' },
 		{ 'Red Nova (card)', 'RedNova' },
@@ -65,6 +68,7 @@ local function test()
 		{ 'Yggdrago the Sky Emperor [R]', 'YggdragotheSkyEmperorR' },
 		{ 'The Winged Dragon of Ra (Sphere Mode)', 'TheWingedDragonofRa(SphereMode)' },
 		{ 'CotH', 'CalloftheHaunted' },
+		{ 'Fiend&#39;s Hand', 'FiendsHand' },
 		{ 'This is not a card name', 'Thisisnotacardname' },
 	}
 
