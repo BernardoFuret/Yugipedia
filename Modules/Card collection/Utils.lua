@@ -39,13 +39,15 @@ function Utils:setSeparator( separator )
 	return self
 end
 
-function Utils:validateArguments( parameters, arguments )
+function Utils:validateArguments( parameters, arguments, moduleArguments )
 	local validated = {}
 
 	local hasHaltingError = false
 
-	for parameter, argument in pairs( arguments ) do
+	for parameter, moduleArgument in pairs( moduleArguments ) do
 		local schema = parameters[ parameter ]
+
+		local argument = arguments[ parameter ]
 
 		-- Invalid parameter:
 		if not schema then
@@ -59,7 +61,50 @@ function Utils:validateArguments( parameters, arguments )
 				:addCategory( category )
 
 		-- Empty parameter that is not allowed to be empty:
-		elseif not UTIL.trim( argument ) and not schema.allowEmpty then
+		elseif (
+			not schema.allowEmpty
+			and not UTIL.trim( moduleArgument )
+			and not UTIL.trim( argument )
+		) then
+			local message = ( 'Empty parameter `%s`!' )
+				:format( parameter )
+
+			local category = 'transclusions with empty parameters'
+
+			self.reporter
+				:addError( message )
+				:addCategory( category )
+
+			hasHaltingError = true
+
+		-- Valid parameter with valid argument:
+		else
+			validated[ parameter ] = moduleArgument
+		end
+	end
+
+	for parameter, argument in pairs( arguments ) do
+		local schema = parameters[ parameter ]
+
+		local moduleArgument = moduleArguments[ parameter ]
+
+		-- Invalid parameter:
+		if not schema then
+			local message = ( 'Invalid parameter `%s`!' )
+				:format( parameter )
+
+			local category = 'transclusions with invalid parameters'
+
+			self.reporter
+				:addError( message )
+				:addCategory( category )
+
+		-- Empty parameter that is not allowed to be empty:
+		elseif (
+			not schema.allowEmpty
+			and not UTIL.trim( argument )
+			and not UTIL.trim( moduleArgument )
+		) then
 			local message = ( 'Empty parameter `%s`!' )
 				:format( parameter )
 
@@ -87,12 +132,13 @@ function Utils:validateArguments( parameters, arguments )
 			hasHaltingError = true
 		end
 
-		if not arguments[ parameter ] then
+		if not arguments[ parameter ] and not moduleArguments[ parameter ] then
 			if schema.required then
-				local message = ( 'Missing required parameter `%s`!' ) -- TODO: for `1` it might not be obvious to the editor what's missing
+				-- TODO: for `1` it might not be obvious to the editor what's missing
+				local message = ( 'Missing required parameter `%s`!' )
 					:format( parameter )
 
-				local category = 'transclusions with missing required parameters' 
+				local category = 'transclusions with missing required parameters'
 
 				self.reporter
 					:addError( message )
@@ -185,7 +231,7 @@ end
 
 function Utils:handleInterpolation( value, template, default )
 	--[[DOC
-value    = row.desc 
+value    = row.desc
 template = $desc not empty
 default  = default.desc
 

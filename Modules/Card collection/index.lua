@@ -4,7 +4,7 @@ return setmetatable( {}, {
 		local loadedModule = require( 'Module:Card collection/modules/' .. templateName )
 
 		return function( frame )
-			return loadedModule:parse( frame, frame:getParent().args )
+			return loadedModule:parse( frame, frame:getParent().args, frame.args )
 		end
 	end,
 

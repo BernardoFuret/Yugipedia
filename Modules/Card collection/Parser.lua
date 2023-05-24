@@ -90,12 +90,12 @@ function Parser.new( name )
 	return setmetatable( data, Parser )
 end
 
-function Parser:parse( frame, arguments )
+function Parser:parse( frame, arguments, moduleArguments )
 	local reporter = Reporter( self.name )
 
 	local handlers = self.handlers:new( self.name, reporter, frame )
 
-	local globalData = handlers.utils:validateArguments( self.parameters, arguments )
+	local globalData = handlers.utils:validateArguments( self.parameters, arguments, moduleArguments )
 
 	local wrapper = mw.html.create( 'div' )
 		:addClass( handlers.utils:makeCssClass() )
@@ -143,8 +143,16 @@ function Parser:parse( frame, arguments )
 	return tostring( wrapper )
 end
 
-function Parser:test( arguments )
-	return mw.log( self:parse( mw.getCurrentFrame(), arguments ) )
+function Parser:test( arguments, moduleArguments )
+	local parseResult = self:parse(
+		mw.getCurrentFrame(),
+		arguments or {},
+		moduleArguments or {}
+	)
+
+	mw.log( parseResult )
+
+	return parseResult
 end
 
 return setmetatable( Parser, {
