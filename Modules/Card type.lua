@@ -1,7 +1,7 @@
 --  <pre>
 --  Module for {{Card type}}.
 --  Can also be used through other modules.
---  @@@ for ideas. 
+--  @@@ for ideas.
 local CardType = {};
 
 ---------------------
@@ -98,7 +98,7 @@ function _categories( ... )
 	end
 	return table.concat( t, '\n' );
 end
-	
+
 --  Error function:
 --  Generates error messages and categories.
 function _error( message )
@@ -125,11 +125,11 @@ function _show( page, property, link )
 		('?%s='):format( property ),
 		mainlabel = '-'
 	};
-	
+
 	if not result or _count( result ) == 0 or _count( result[1] ) == 0 then
 		return;
 	end
-	
+
 	local show = type( result[1][1] ) == 'string' and result[1] or result[1][1];
 
 	return table.concat( link and show or _unlink( show ), '\n' );
@@ -160,7 +160,7 @@ function _ability( t )
 end
 
 --  Effect function:
---  Misleading name; checks for Effect/Normal Monster. 
+--  Misleading name; checks for Effect/Normal Monster.
 function _effect( t )
 	for key, value in ipairs( t ) do
 		if value:match('Effect') then
@@ -209,24 +209,24 @@ function _monster( card )
 	local primary = _show( card, 'Primary type' );
 	if not _trim( primary ) then
 		return card:match( '(original)' ) and _link( 'Monster Card' ) --  For Egyptian Gods.
-			or _error( 'On «_monster»; No primary type available!' );
+			or '';
 	end
 	if primary:match( 'Token' ) then
 		return _link( 'Monster Token', 'Token' );
 	end
-	
+
 	--  Primary type:
 	local primaryTable    = split( primary, '\n' );
 	local monsterCardType = _monsterCardType( primaryTable );
 	local pendulum        = primary:match( 'Pendulum' );
 	local effect          = _effect( primaryTable );
-	
+
 	--  Secondary type:
 	local secondary      = _trim( _show( card, 'Secondary type' ) );
 	local secondaryTable = secondary and split( secondary, '\n' );
 	local ability        = secondary and _ability( secondaryTable );
 	local tuner          = secondary and secondary:match( 'Tuner' );
-	
+
 	--  Full monster card type:
 	return _full( pendulum, monsterCardType, tuner, ability, effect );
 end
@@ -239,13 +239,13 @@ function _spellTrap( card, ST )
 	if not _trim( _property ) then
 		return _error( 'On «_spellTrap»; No property available!' )
 	end
-	
+
 	--return ('%s %s'):format( _link( table.concat( { _property, ST }, ' ' ), _property ), _link( ST ) );
 	return ('%s %s'):format( _link( _property, _property:gsub(ST..' Card', '') ), _link( ST ) );
 end
 
 function _nonGame( t )
-	if _count( t ) > 1 then 
+	if _count( t ) > 1 then
 		return _error( 'On «_nonGame»; Too many card types!' )
 	elseif ( t[ 1 ] or '' ):match( '?' ) then
 		return '???'
@@ -257,13 +257,13 @@ end
 --  Type function:
 --  Processes the card, to figure out the actual card type:
 --  Monster, Spell, Trap, other.
---  (where «other» can be Tip, Strategy, etc..) 
+--  (where «other» can be Tip, Strategy, etc..)
 function _type( card )
 	local cardType = _show( card, 'Card type' );
 	if not _trim( cardType ) then
 		return _error( 'On «_type»; No card type available!' );
 	end
-	
+
 	cardType = cardType:lower();
 	if cardType:match( 'monster' ) then
 		return _monster( card );
@@ -287,7 +287,7 @@ function _main( s )
 	end
 	local _page = _card:gsub( '#', '' );
 	local redirect = _redirect( _page ); -- @@@cat + text
-	
+
 	if not _trim( _show( _page, 'Page name' ) ) then
 		-- If the page doesn't exist, basically. @@@ Fails for cases where SMW is down.
 		return _categories( '((Card type)) transclusions to be checked' );
@@ -312,14 +312,14 @@ function CardType.main( frame )
 	--  «args» for the args table;
 	--  «argsN» for the number or arguments;
 	local args = getArgs( frame, { trim = true, parentOnly = true } ); -- Args table.
-	
+
 	local argsN = _count( args );
 	if argsN > 1 then
 		return _error( 'Too many arguments! Use only one!' );
 	elseif argsN < 1 then
 		return _error( 'No arguments! Use one!' );
 	end
-	
+
 	return _main( args[1] );
 end
 
