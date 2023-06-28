@@ -22,7 +22,7 @@
 
 	var $button = $('<li>', {
 		id: 'ca-download-gallery-images',
-		class: 'collapsible',
+		'class': 'collapsible',
 		html: $('<span>', {
 			html: $('<a>', {
 				href: '#',
@@ -43,13 +43,17 @@
 	}
 
 	function sleep(ms) {
-		return new Promise((resolve) => setTimeout(resolve, ms));
+		return new Promise(function (resolve) {
+			return setTimeout(resolve, ms);
+		});
 	}
 
 	function downloadImage(imageUrl, fileName) {
 		return fetch(imageUrl)
-			.then((response) => response.blob())
-			.then((blob) => {
+			.then(function (response) {
+				return response.blob();
+			})
+			.then(function (blob) {
 				var blobURL = URL.createObjectURL(blob);
 
 				var $link = $('<a>', {
@@ -70,9 +74,9 @@
 		return $('.gallerybox')
 			.find('a.image')
 			.toArray()
-			.reduce((chain, imageElement, index) => {
+			.reduce(function (chain, imageElement, index) {
 				return chain
-					.then(() => {
+					.then(function () {
 						var imageName = $(imageElement).attr('href').split(':')[1];
 
 						var imageUrl = fileRedirectPath + encodeURIComponent(imageName);
@@ -81,7 +85,9 @@
 
 						return downloadImage(imageUrl, fileName);
 					})
-					.then(() => sleep(1000));
+					.then(function () {
+						return sleep(1000);
+					});
 			}, Promise.resolve());
 	}
 
@@ -92,7 +98,7 @@
 
 		$button.off('click').css(disabledStyles);
 
-		donwloadImages().then(() => {
+		donwloadImages().then(function () {
 			$button.click(handleClick).removeAttr('style');
 
 			log('Done fetching images.');
