@@ -70,7 +70,7 @@
 			});
 	}
 
-	function donwloadImages() {
+	function downloadImages() {
 		return $('.gallerybox')
 			.find('a.image')
 			.toArray()
@@ -98,7 +98,7 @@
 
 		$button.off('click').css(disabledStyles);
 
-		donwloadImages().then(function () {
+		downloadImages().then(function () {
 			$button.click(handleClick).removeAttr('style');
 
 			log('Done fetching images.');
