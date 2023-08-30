@@ -146,7 +146,7 @@ end
 
 local function columnsHandler( columns, columnName, columnValue )
 	columns[ columnName ] = columns[ columnName ] or {}
-	
+
 	columns[ columnName ].default = columnValue
 end
 
@@ -252,139 +252,91 @@ end
 function handlers:handleEntry( entry, globalData ) -- TODO: refactor: extract functions
 	local rowTr = mwHtmlCreate( 'tr' )
 
-	local valuesIndex = 1
+	local data = self:readData( entry, globalData )
 
-	local cardNameInput
+	self:validateData( data, entry )
 
-	-- Card number:
+	-- If there is a card number column, add a cell for it
 	if not globalData.options.noabbr then
-		local cardNumberInput = UTIL.trim( entry.values[ valuesIndex ] )
-
-		cardNameInput = UTIL.trim( entry.values[ valuesIndex + 1 ] ) -- TODO: move to outer scope (all *Input )
-
-		local cardNumberContent = cardNumberInput
-			and ( ( cardNumberInput:match( '?' ) or not cardNameInput )
+		-- If the card number exists and isn't "?", add a link to it.
+		local cardNumberContent = data.cardNumber
+			and ( ( data.cardNumber:match( '?' ) or not data.card )
 				and cardNumberInput
-				or UTIL.link( cardNumberInput )
+				or UTIL.link( data.cardNumber )
 			)
 			or ''
 
+		-- Add its cell to the row
 		rowTr:node( createCell( cardNumberContent ) )
-
-		valuesIndex = valuesIndex + 1
 	end
 
-	-- Card name (English and localized):
 	do
-		local languageIsEnglish = globalData.language.index == LANGUAGE_ENGLISH.index
-
-		cardNameInput = UTIL.trim( entry.values[ valuesIndex ] ) -- TODO: move to outer scope (all *Input )
-
-		local cardNameDisplay = entry.options[ 'force-SMW' ]
-			and DATA.getName( cardNameInput, LANGUAGE_ENGLISH )
-
-		local tokenCardLink = ( cardNameInput or '' ):match( 'Token%s%(' ) and UTIL.removeDab( cardNameInput ) 
-
-		local tokenCardDab = ( cardNameInput or '' ):match( 'Token%s%(' ) and UTIL.getDab( cardNameInput )
-
-		local tokenCardDescription = tokenCardDab
-			and UTIL.link( cardNameInput, ( '(%s)' ):format( tokenCardDab ) )
-			or nil
-
-		local cardName = cardNameInput and UTIL.wrapInQuotes(
+		-- Add link and quotes to the card name
+		local cardNameFormatted = data.card and UTIL.wrapInQuotes(
 			UTIL.link(
-				tokenCardLink or cardNameInput,
-				cardNameDisplay
+				data.tokenLink or data.card,
+				data.name
 			),
 			LANGUAGE_ENGLISH.index
 		) or ''
 
-		local printedNameInput = entry.options[ 'printed-name' ]
-
-		local printedNameValidated = UTIL.trim( printedNameInput )
-
-		if printedNameInput and not printedNameValidated then
-			local message = ( 'Empty `printed-name` is not allowed at line %d!' )
-				:format( entry.lineno )
-
-			local category = 'transclusions with empty printed-name'
-
-			self.reporter
-				:addError( message )
-				:addCategory( category )
-		end
-
-		if printedNameValidated and not cardNameInput then
-			local message = ( 'Cannot use `printed-name` option when there isn\'t a card name, at line %d!' )
-				:format( entry.lineno )
-
-			local category = 'transclusions with printed-name but no card name'
-
-			self.reporter
-				:addError( message )
-				:addCategory( category )
-
-			printedNameValidated = nil
-		end
-
-		local printedName = printedNameValidated
+		-- Add quotes to the printed name
+		-- Prepend with "as " and put in parenheses
+		local printedNameFormatted = data.printedName
 			and ( '(as %s)' ):format(
 				wrapLocalizedName(
 					UTIL.wrapInQuotes(
-						printedNameValidated,
+						data.printedName,
 						globalData.language.index
 					),
 					globalData.language
 				)
 			)
 
-		local description = self.utils:handleInterpolation(
-			entry.options.description,
-			globalData[ '$description' ],
-			globalData.description
-		) or tokenCardDescription
+		local languageIsEnglish = globalData.language.index == LANGUAGE_ENGLISH.index
 
+		-- Get the content for the "(English) name" cell.
 		local cardNameCellContent = StringBuffer()
-			:add( cardName )
-			:add( languageIsEnglish and printedName or nil )
-			:add( description )
+			:add( cardNameFormatted )
+			-- Include printed name if specified and this is an English list
+			:add( languageIsEnglish and printedNameFormatted or nil )
+			-- Include the description, if applicable
+			:add( data.description )
 			:flush( ' ' )
 			:toString()
 
+		-- Add its cell to the row.
 		rowTr:node( createCell( cardNameCellContent ) )
 
 		if not languageIsEnglish then
-			local cardLocalizedName = cardNameInput
+			-- Wrap the local name in quotes.
+			-- And wrap in `span` with `lang` attribute.
+			local localNameFormatted = data.card
 				and wrapLocalizedName(
 					UTIL.wrapInQuotes(
-						DATA.getName(
-							cardNameInput:gsub( '#', '' ),
-							globalData.language
-						),
+						data.localName,
 						globalData.language.index
 					),
 					globalData.language
 				)
 
+			-- Get the content for the local name cell
 			local cardLocalizedNameCellContent = StringBuffer()
-				:add( cardLocalizedName )
-				:add( not languageIsEnglish and printedName or nil )
+				:add( localNameFormatted )
+				-- Add the printed name, if specified
+				:add( printedNameFormatted or nil )
 				:flush( ' ' )
 				:toString()
 
+			-- Add the cell to the row
 			rowTr:node( createCell( cardLocalizedNameCellContent ) )
 		end
-
-		valuesIndex = valuesIndex + 1
 	end
 
-	-- Rarities:
 	do
-		local raritiesInput = entry.values[ valuesIndex ]
-
 		local linkedRarities = parseRarities(
 			self,
-			raritiesInput,
+			data.rarities,
 			( 'line %d' ):format( entry.lineno )
 		)
 
@@ -396,41 +348,21 @@ function handlers:handleEntry( entry, globalData ) -- TODO: refactor: extract fu
 				)
 			)
 		)
-
-		valuesIndex = valuesIndex + 1
 	end
 
-	-- Category:
-	do
-		local cardFullType = cardNameInput and DATA.getFullCardType( cardNameInput )
-
-		rowTr:node( createCell( cardFullType ) )
-	end
+	-- Add the category cell to the row
+	rowTr:node( createCell( data.categories ) )
 
 	-- Print:
 	if globalData.print then
-		-- DOC: if print is empty, don't override default value (just treat as nil). This is to prevent overriding when qty is being used and we want the default print value. 
-		local printInput = UTIL.trim( entry.values[ valuesIndex ] )
-
-		rowTr:node( createCell( printInput or globalData.print ) )
-
-		valuesIndex = valuesIndex + 1
+		-- DOC: if print is empty, don't override default value (just treat as nil).
+		-- This is to prevent overriding when qty is being used and we want the default print value.
+		rowTr:node( createCell( data.print or globalData.print ) )
 	end
 
 	-- Quantity:
 	if globalData.qty then
-		local qtyInput = entry.values[ valuesIndex ]
-
-		local qtyNumber = getQty(
-			self,
-			qtyInput,
-			( 'line %d' ):format( entry.lineno ),
-			globalData.qty
-		)
-
-		rowTr:node( createCell( qtyNumber ) )
-
-		valuesIndex = valuesIndex + 1
+		rowTr:node( createCell( data.qty ) )
 	end
 
 	-- Extra columns
@@ -447,6 +379,130 @@ function handlers:handleEntry( entry, globalData ) -- TODO: refactor: extract fu
 	end
 
 	return tostring( rowTr )
+end
+
+-- Extra data from the `entry`, ensuring it is formatted appropriately
+function handlers:readData( entry, globalData )
+	-- Object with all the default values
+	local data = {
+		lineno      = entry.lineno,
+		cardNumber  = nil,
+		card        = nil, -- Page name
+		name        = nil, -- English name
+		localName   = nil, -- Standard name in the printed language
+		printedName = nil, -- Name used in this specific print, if different
+		rarities    = nil, -- Comma-separated list of rarity names
+		description = nil,
+		['print']   = nil, -- e.g. "new" or "reprint"
+		qty         = nil, -- for sets where cards have fixed quantities e.g. Structure Decks
+		category    = nil, -- Normal Spell, Effect Monster, etc.
+		tokenLink   = nil
+	}
+
+	--[[
+		Extract data from the entry
+	--]]
+	-- Determine what each unnamed input param refers to.
+
+	-- Build an array where each property's position in the array says what
+	-- position it can be found the unnamed parameters.
+	local inputCols = {}
+
+	if ( not globalData.options.noabbr ) then
+		table.insert( inputCols, 'cardNumber' )
+	end
+
+	table.insert( inputCols, 'card' )
+
+	table.insert( inputCols, 'rarities' )
+
+	if ( globalData.print ) then
+		table.insert( inputCols, 'print' )
+	end
+
+	if ( globalData.qty ) then
+		table.insert( inputCols, 'qty' )
+	end
+
+	-- Get data from each unnamed param.
+	for i, key in pairs( inputCols ) do
+		data[ key ] = UTIL.trim( entry.values [ i ] )
+	end
+
+	-- Get data from named params
+	data.printedName = UTIL.trim( entry.options[ 'printed-name' ] )
+
+	data.description = entry.options.description
+
+	--[[
+		Normalize data from the params
+	--]]
+	data.card = data.card and data.card:gsub( '#', '' )
+
+	-- Get the Token link and description
+	data.tokenLink = ( data.card or '' ):match( 'Token%s%(' ) and UTIL.removeDab( data.card )
+
+	local tokenDab = ( data.card or '' ):match( 'Token%s%(' ) and UTIL.getDab( data.card )
+
+	local tokenDescription = tokenDab
+		and UTIL.link( data.card, ( '(%s)' ):format( tokenDab ) )
+		or nil
+
+	data.description = self.utils:handleInterpolation(
+		data.description,
+		globalData[ '$description' ],
+		globalData.description
+	) or tokenDescription
+
+	-- If there is a default quantity, fall back to it
+	if ( globalData.qty ) then
+		data.qty = getQty(
+			self,
+			data.qty,
+			( 'line %d' ):format( data.lineno ),
+			globalData.qty
+		)
+	end
+
+	--[[
+		Perform data lookups
+	--]]
+	-- Get the English name via SMW query, if `force-SMW` is set.
+	-- Otherwise, get from the input.
+	data.name = entry.options[ 'force-SMW' ]
+		and DATA.getName( data.card, LANGUAGE_ENGLISH )
+		or ( ( data.card or '' ):match( 'Token%s%(' ) and UTIL.removeDab( data.card ) )
+
+	-- Look up the local card name for non-English lists.
+	if not languageIsEnglish and data.card then
+		data.localName = DATA.getName( data.card, globalData.language )
+	end
+
+	-- Look up the card's category
+	data.categories = data.card and DATA.getFullCardType( data.card )
+
+	return data
+end
+
+function handlers:validateData( data, entry )
+	-- If the printed name was supplied but is empty after trimming
+	if entry.options[ 'printed-name' ] and not data.printedName then
+		local message = ( 'Empty `printed-name` is not allowed at line %d!' )
+			:format( data.lineno )
+
+		self.reporter
+			:addError( message )
+			:addCategory( 'transclusions with empty printed-name' )
+	end
+
+	if data.printedName and not data.card then
+		local message = ( "Cannot use `printed-name` option when there isn't a card name, at line %d!" )
+			:format( data.lineno )
+
+		self.reporter
+			:addError( message )
+			:addCategory( 'transclusions with printed-name but no card name' )
+	end
 end
 
 return handlers
