@@ -282,11 +282,18 @@ function handlers:handleEntry( entry, globalData ) -- TODO: refactor: extract fu
 
 		local cardNameDisplay = entry.options[ 'force-SMW' ]
 			and DATA.getName( cardNameInput, LANGUAGE_ENGLISH )
-			or ( ( cardNameInput or '' ):match( 'Token%s%(' ) and cardNameInput )
+
+		local tokenCardLink = ( cardNameInput or '' ):match( 'Token%s%(' ) and UTIL.removeDab( cardNameInput ) 
+
+		local tokenCardDab = ( cardNameInput or '' ):match( 'Token%s%(' ) and UTIL.getDab( cardNameInput )
+
+		local tokenCardDescription = tokenCardDab
+			and UTIL.link( cardNameInput, ( '(%s)' ):format( tokenCardDab ) )
+			or nil
 
 		local cardName = cardNameInput and UTIL.wrapInQuotes(
 			UTIL.link(
-				cardNameInput,
+				tokenCardLink or cardNameInput,
 				cardNameDisplay
 			),
 			LANGUAGE_ENGLISH.index
@@ -335,7 +342,7 @@ function handlers:handleEntry( entry, globalData ) -- TODO: refactor: extract fu
 			entry.options.description,
 			globalData[ '$description' ],
 			globalData.description
-		)
+		) or tokenCardDescription
 
 		local cardNameCellContent = StringBuffer()
 			:add( cardName )
