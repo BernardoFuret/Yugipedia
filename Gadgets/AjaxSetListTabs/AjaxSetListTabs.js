@@ -139,8 +139,24 @@
 		;
 	};
 
+	SetListLoader.prototype.makeTableSortable = function() {
+		// Adapted from /resources/src/mediawiki/page/ready.js
+		// Because otherwise would fire at a similar time as the lists loading,
+		// but the lists loading would always resolve later.
+
+		var $sortable = this.$container.find( 'table.sortable' );
+
+		if ( $sortable.length ) {
+			mw.loader.using( 'jquery.tablesorter', function() {
+				$sortable.tablesorter();
+			} );
+		}
+	};
+
 	SetListLoader.prototype.display = function( html ) {
 		this.$container.html( html );
+
+		this.makeTableSortable();
 	};
 
 	SetListLoader.prototype.load = function() {
