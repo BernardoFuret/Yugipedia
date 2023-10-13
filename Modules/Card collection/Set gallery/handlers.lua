@@ -237,15 +237,24 @@ function handlers:handleEntry( entry, globalData )
 
 			local cardNameDisplay = entry.options[ 'force-SMW' ]
 				and DATA.getName( cardNameNormalized, LANGUAGE_ENGLISH )
-				or ( cardNameInput:match( 'Token%s%(' ) and cardNameInput )
+
+			local tokenCardLink = cardNameInput:match( 'Token%s%(' ) and UTIL.removeDab( cardNameInput ) 
+
+			local tokenCardDab = cardNameInput:match( 'Token%s%(' ) and UTIL.getDab( cardNameInput )
+
+			local tokenCardDescription = tokenCardDab
+				and UTIL.link( cardNameInput, ( '(%s)' ):format( tokenCardDab ) )
+				or nil
 
 			file.pagename = cardNameNormalized
 
 			file.name = cardNameDisplay
 
-			caption.pagename = cardNameInput
+			caption.pagename = tokenCardLink or cardNameInput
 
 			caption.name = cardNameDisplay
+
+			caption.description = tokenCardDescription
 
 			if globalData.language.index ~= LANGUAGE_ENGLISH.index then
 				caption.localizedName = DATA.getName(
@@ -356,7 +365,7 @@ function handlers:handleEntry( entry, globalData )
 			entry.options.description,
 			globalData[ '$description' ],
 			globalData.description
-		)
+		) or caption.description
 	end
 
 	return ( '%s | %s\n' ):format(
