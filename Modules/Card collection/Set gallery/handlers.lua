@@ -238,7 +238,7 @@ function handlers:handleEntry( entry, globalData )
 			local cardNameDisplay = entry.options[ 'force-SMW' ]
 				and DATA.getName( cardNameNormalized, LANGUAGE_ENGLISH )
 
-			local tokenCardLink = cardNameInput:match( 'Token%s%(' ) and UTIL.removeDab( cardNameInput ) 
+			local tokenCardNameToLink = cardNameInput:match( 'Token%s%(' ) and UTIL.removeDab( cardNameInput )
 
 			local tokenCardDab = cardNameInput:match( 'Token%s%(' ) and UTIL.getDab( cardNameInput )
 
@@ -246,11 +246,13 @@ function handlers:handleEntry( entry, globalData )
 				and UTIL.link( cardNameInput, ( '(%s)' ):format( tokenCardDab ) )
 				or nil
 
-			file.pagename = cardNameNormalized
+			file.pagename = tokenCardNameToLink or cardNameNormalized
 
 			file.name = cardNameDisplay
 
-			caption.pagename = tokenCardLink or cardNameInput
+			file.alt = tokenCardDab
+
+			caption.pagename = tokenCardNameToLink or cardNameInput
 
 			caption.name = cardNameDisplay
 
@@ -305,11 +307,7 @@ function handlers:handleEntry( entry, globalData )
 	do
 		file.alt = UTIL.trim( entry.values[ valuesIndex ] )
 			or globalData.alt
-			or (
-				( cardNameInput or '' ):match( 'Token%s%(' ) and getCardImageName(
-					UTIL.getDab( cardNameInput )
-				)
-			)
+			or getCardImageName( file.alt )
 
 		valuesIndex = valuesIndex + 1
 	end
