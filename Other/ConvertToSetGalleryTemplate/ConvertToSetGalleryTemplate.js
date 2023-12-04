@@ -121,7 +121,7 @@
 
 	const parseRest = (rest = '', { isCaseTopper, isGiantCard }) => {
 		const fixedDescriptionParts = [
-			...(isCaseTopper ? ['[[Case Topper]]'] : [] ),
+			...(isCaseTopper ? ['[[Case Topper]]'] : []),
 			...(isGiantCard ? ['[[Giant Card]]'] : []),
 		];
 
@@ -184,9 +184,9 @@
 		);
 
 		const options = [
-			...(extension !== 'png' ? [`extension::${extension}`] : []),
 			...(printedName ? [`printed-name::${printedName}`] : []),
 			...(description ? [`description::${description}`] : []),
+			...(extension !== 'png' ? [`extension::${extension}`] : []),
 		].join('; ');
 
 		return [entry, ...(options ? [options] : [])].join(' // ');
@@ -260,6 +260,27 @@
 							isCaseTopper,
 							isGiantCard,
 						});
+
+						if (rarity !== fileRarity && !isCaseTopper && !isGiantCard) {
+							throw new DataError(
+								'Found different rarities for the same entry',
+								{
+									line,
+									filename,
+									cardNumber,
+									rarity,
+									pagename,
+									cardName,
+									pagename2,
+									rest,
+									fileRarity,
+									alt,
+									extension,
+									description,
+									printedName,
+								},
+							);
+						}
 
 						const galleryEntry = buildGalleryEntry({
 							cardNumber,
@@ -381,8 +402,6 @@
 	};
 
 	const edit = (pagename, content) => {
-		// TODO
-		// return Promise.resolve({ data: { edit: { newrevid: 1 } } });
 		return api
 			.postWithToken('csrf', {
 				action: 'edit',
