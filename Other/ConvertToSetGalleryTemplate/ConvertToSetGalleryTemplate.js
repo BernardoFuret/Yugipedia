@@ -98,14 +98,24 @@
 		// DododoWarrior-ZTIN-DE-SR-1E.png
 		// ChaosEmperorDragonEnvoyoftheEnd-BPT-JP-UtR.png
 		// MonsterReborn-YGLD-IT-C-1E-B.png
+		// CyberStein-SJC-EN-UR-LE-GC.jpg
 
 		const [filenameWithoutExtension, extension] = filename.split('.');
 
 		const fileParts = filenameWithoutExtension.split('-');
 
+		const rarity = fileParts.at(3);
+
+		if (!rarity) {
+			throw new DataError('Could not find rarity on filename', {
+				filename,
+				lacksEdition,
+			});
+		}
+
 		const alt = fileParts.at(lacksEdition ? 4 : 5) || '';
 
-		return { alt, extension };
+		return { rarity, alt, extension };
 	};
 
 	const parseRest = (rest = '') => {
@@ -230,21 +240,24 @@
 							},
 						} = entryMatchRegex.exec(line);
 
-						const { alt, extension } = parseFilename(
-							filename,
-							context.lacksEdition,
-						);
+						const {
+							rarity: fileRarity,
+							alt,
+							extension,
+						} = parseFilename(filename, context.lacksEdition);
 
 						const { description, printedName } = parseRest(rest);
+
+						const isGiantCard = /giant card/i.test(rarity);
 
 						const galleryEntry = buildGalleryEntry({
 							cardNumber,
 							pagename: pagename || pagename2,
-							rarity,
+							rarity: isGiantCard ? fileRarity : rarity,
 							alt,
 							extension,
 							printedName,
-							description,
+							description: description || (isGiantCard ? '[[Giant Card]]' : ''),
 						});
 
 						return {
