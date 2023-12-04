@@ -99,6 +99,7 @@
 		// ChaosEmperorDragonEnvoyoftheEnd-BPT-JP-UtR.png
 		// MonsterReborn-YGLD-IT-C-1E-B.png
 		// CyberStein-SJC-EN-UR-LE-GC.jpg
+		// Number39Utopia-ST12-JP-UR-CT.jpg
 
 		const [filenameWithoutExtension, extension] = filename.split('.');
 
@@ -118,10 +119,15 @@
 		return { rarity, alt, extension };
 	};
 
-	const parseRest = (rest = '') => {
+	const parseRest = (rest = '', { isCaseTopper, isGiantCard }) => {
+		const fixedDescriptionParts = [
+			...(isCaseTopper ? ['[[Case Topper]]'] : [] ),
+			...(isGiantCard ? ['[[Giant Card]]'] : []),
+		];
+
 		if (!rest) {
 			return {
-				description: '',
+				description: fixedDescriptionParts.join('<br />'),
 				printedName: '',
 			};
 		}
@@ -159,7 +165,7 @@
 			);
 
 		return {
-			description: descriptionParts.join('<br />'),
+			description: [descriptionParts, ...fixedDescriptionParts].join('<br />'),
 			printedName,
 		};
 	};
@@ -246,18 +252,23 @@
 							extension,
 						} = parseFilename(filename, context.lacksEdition);
 
-						const { description, printedName } = parseRest(rest);
+						const isCaseTopper = /^CT$|case topper/i.test(rarity);
 
-						const isGiantCard = /giant card/i.test(rarity);
+						const isGiantCard = /^GC$|giant card/i.test(rarity);
+
+						const { description, printedName } = parseRest(rest, {
+							isCaseTopper,
+							isGiantCard,
+						});
 
 						const galleryEntry = buildGalleryEntry({
 							cardNumber,
 							pagename: pagename || pagename2,
-							rarity: isGiantCard ? fileRarity : rarity,
+							rarity: isGiantCard || isCaseTopper ? fileRarity : rarity,
 							alt,
 							extension,
 							printedName,
-							description: description || (isGiantCard ? '[[Giant Card]]' : ''),
+							description,
 						});
 
 						return {
