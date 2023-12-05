@@ -165,7 +165,9 @@
 			);
 
 		return {
-			description: [descriptionParts, ...fixedDescriptionParts].join('<br />'),
+			description: [...descriptionParts, ...fixedDescriptionParts].join(
+				'<br />',
+			),
 			printedName,
 		};
 	};
