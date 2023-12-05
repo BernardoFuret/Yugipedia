@@ -357,10 +357,9 @@
 			throw new DataError('Could not find galleries', { oldContent });
 		}
 
-		const gallerySectionsRegex = /\|-(.*?<\/gallery>)/gms;
+		const gallerySectionsRegex = /\|(?:-|$)(.*?<\/gallery>)/gms;
 
-		const gallerySectionsMatch =
-			gallerySectionsRegex.test(oldGalleriesMatch) || [];
+		const gallerySectionsMatch = gallerySectionsRegex.test(oldGalleriesMatch);
 
 		if (!gallerySectionsMatch) {
 			throw new DataError('Could not find gallery sections', { oldContent });
@@ -462,6 +461,17 @@
 					__errors.push({
 						data: { categoryMember },
 						type: '01-invalid-ns',
+					});
+
+					continue;
+				}
+
+				if (/bandai/i.test(categoryMember.title)) {
+					console.warn('\tWarning: Cannot convert Bandai card gallery');
+
+					__errors.push({
+						data: { categoryMember },
+						type: '01-invalid-pagename',
 					});
 
 					continue;
