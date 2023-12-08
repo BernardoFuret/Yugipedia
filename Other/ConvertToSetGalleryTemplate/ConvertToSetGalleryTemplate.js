@@ -174,16 +174,14 @@
 
 	const buildGalleryEntry = ({
 		cardNumber,
-		pagename,
+		name,
 		rarity,
 		alt,
 		extension,
 		printedName,
 		description,
 	}) => {
-		const entry = [cardNumber, pagename, rarity, ...(alt ? [alt] : [])].join(
-			'; ',
-		);
+		const entry = [cardNumber, name, rarity, ...(alt ? [alt] : [])].join('; ');
 
 		const options = [
 			...(printedName ? [`printed-name::${printedName}`] : []),
@@ -286,7 +284,7 @@
 
 						const galleryEntry = buildGalleryEntry({
 							cardNumber,
-							pagename: pagename || pagename2,
+							name: cardName || pagename || pagename2,
 							rarity: isGiantCard || isCaseTopper ? fileRarity : rarity,
 							alt,
 							extension,
@@ -466,12 +464,12 @@
 					continue;
 				}
 
-				if (/bandai/i.test(categoryMember.title)) {
-					console.warn('\tWarning: Cannot convert Bandai card gallery');
+				if (!/\([TO]CG/.test(categoryMember.title)) {
+					console.warn('\tWarning: Invalid gallery to convert');
 
 					__errors.push({
 						data: { categoryMember },
-						type: '01-invalid-pagename',
+						type: '01-invalid-gallery',
 					});
 
 					continue;
@@ -484,8 +482,7 @@
 
 					if (getContentError) {
 						console.warn(
-							'\tWarning: Error getting content for page',
-							link(categoryMember.title),
+							'\tWarning: Error getting content:',
 							getContentError?.message || getContentError,
 						);
 
@@ -504,8 +501,7 @@
 
 					if (convertContentError) {
 						console.warn(
-							'\tWarning: Error converting content for page',
-							link(categoryMember.title),
+							'\tWarning: Error converting content:',
 							convertContentError?.message || convertContentError,
 						);
 
@@ -524,8 +520,7 @@
 
 					if (editError) {
 						console.warn(
-							'\tWarning: Error editing page',
-							link(categoryMember.title),
+							'\tWarning: Error editing page:',
 							editError?.message || editError,
 						);
 
@@ -537,11 +532,7 @@
 						continue;
 					}
 
-					console.log(
-						'\tUpdated',
-						link(categoryMember.title),
-						linkDiff(editData.edit.newrevid),
-					);
+					console.log('\tUpdated:', linkDiff(editData.edit.newrevid));
 				} finally {
 					await sleep(window.SCRIPT_LATENCY || 1000);
 				}
