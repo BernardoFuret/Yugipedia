@@ -100,6 +100,7 @@
 		// MonsterReborn-YGLD-IT-C-1E-B.png
 		// CyberStein-SJC-EN-UR-LE-GC.jpg
 		// Number39Utopia-ST12-JP-UR-CT.jpg
+		// SummonedSkull-SDY-NA-C-UE-Sample-Back.jpg
 
 		const [filenameWithoutExtension, extension] = filename.split('.');
 
@@ -114,7 +115,23 @@
 			});
 		}
 
-		const alt = fileParts.at(lacksEdition ? 4 : 5) || '';
+		const altParts = fileParts.slice(lacksEdition ? 4 : 5);
+
+		if (altParts.length > 1) {
+			const messageParts = [
+				'WARNING: Spotted filename with multiple alt parts',
+				{
+					filename,
+					lacksEdition,
+				},
+			];
+
+			console.warn(...messageParts);
+
+			window.console.warn(...messageParts);
+		}
+
+		const alt = altParts.join('-');
 
 		return { rarity, alt, extension };
 	};
@@ -181,7 +198,11 @@
 		printedName,
 		description,
 	}) => {
-		const entry = [cardNumber, name, rarity, ...(alt ? [alt] : [])].join('; ');
+		const escapedName = name.replace(/=/g, '{{=}}');
+
+		const entry = [cardNumber, escapedName, rarity, ...(alt ? [alt] : [])].join(
+			'; ',
+		);
 
 		const options = [
 			...(printedName ? [`printed-name::${printedName}`] : []),
@@ -327,7 +348,7 @@
 		);
 
 		if (!galleryEntries.length) {
-			throw new DataError('Emtpy gallery section', {
+			throw new DataError('Empty gallery section', {
 				title,
 				galleryEntries,
 				oldGallerySection,
