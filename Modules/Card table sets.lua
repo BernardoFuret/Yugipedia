@@ -274,6 +274,23 @@ local function createCell( id, text )
 	)
 end
 
+local function checkIsSetNameSpecialCase( setName )
+	return UTIL.getDab( setName ) == '25th Anniversary Edition'
+end
+
+local function computeSetNameCellContent( setName )
+	if not setName then
+		return nil
+	end
+
+	local isSetNameSpecialCase = checkIsSetNameSpecialCase( setName )
+
+	return isSetNameSpecialCase
+		and UTIL.link( setName, UTIL.italicNoDab( setName ) )
+		or UTIL.italicLink( setName )
+end
+
+
 local function createDataRow( frame, region, language, line, lineno )
 	local parts = mwText.split( line, '%s*;%s*' )
 
@@ -318,10 +335,12 @@ local function createDataRow( frame, region, language, line, lineno )
 		reporter:addCategory( category )
 	end
 
+	local setNameCellContent = computeSetNameCellContent( setName )
+
 	local tr = mwHtmlCreate( 'tr' )
 		:node( createCell( 'release', releaseDate ) )
 		:node( createCell( 'number', cardNumber and formatCardNumber( cardNumber ) ) )
-		:node( createCell( 'set', setName and UTIL.italicLink( setName ) ) )
+		:node( createCell( 'set', setNameCellContent ) )
 
 	if language.full ~= LANGUAGE_ENGLISH.full then
 		tr:node(
@@ -406,6 +425,9 @@ return setmetatable( {
 TLM-KR012; The Lost Millennium; Super Rare, Ultimate Rare
 MVP1-ENSV4; Yu-Gi-Oh! The Dark Side of Dimensions Movie Pack Secret Edition; Ultra Rare
 MVP1-ENS55; Yu-Gi-Oh! The Dark Side of Dimensions Movie Pack Secret Edition; Secret Rare
+
+SRL-DE082; Spell Ruler (25th Anniversary Edition); Common
+SDMA-EN001; Structure Deck: Marik (TCG); Common
 
 MVP1-ENS55; ; Secret Rare
 MVP1-ENS55; PAGE THAT DOESN'T EXIST; Secret Rare
