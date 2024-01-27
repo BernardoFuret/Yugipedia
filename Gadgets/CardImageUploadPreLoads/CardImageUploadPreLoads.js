@@ -3,8 +3,8 @@
  * (Achieved by updating the links for missing files on card galleries.)
  * @author Becasita
  * @contact [[User:Becasita]]
+ * @deprecated Integrated into [[MediaWiki:Gadget-LinkMissingGalleryFilesToUpload.js]].
  */
-// TODO: pre loads for anime / manga / etc..
 ( function _gadgetCardImageUploadPreLoads( window, $, mw, console ) {
 	"use strict";
 
