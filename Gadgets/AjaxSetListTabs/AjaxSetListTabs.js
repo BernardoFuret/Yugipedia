@@ -20,7 +20,9 @@
 	function parseData( data ) {
 		return $( '<div>' )
 			.append( $.parseHTML( data ) )
-			.find( '#mw-content-text .mw-parser-output .set-list' )
+			.find( '#mw-content-text .mw-parser-output' )
+				.find('.page-header').remove().end()
+				.find('style').remove().end()
 				.html()
 		;
 	}
