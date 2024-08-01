@@ -238,11 +238,15 @@ function handlers:handleEntry( entry, globalData )
 			local cardNameDisplay = entry.options[ 'force-SMW' ]
 				and DATA.getName( cardNameNormalized, LANGUAGE_ENGLISH )
 
-			local tokenCardNameToLink = cardNameInput:match( 'Token%s%(' ) and UTIL.removeDab( cardNameInput )
-
 			local tokenCardDab = cardNameInput:match( 'Token%s%(' ) and UTIL.getDab( cardNameInput )
 
+			local tokenCardNameToLink = cardNameInput:match( 'Token%s%(' )
+				and tokenCardDab ~= 'card'
+				and UTIL.removeDab( cardNameInput ) == 'Token'
+				and 'Token (card)'
+
 			local tokenCardDescription = tokenCardDab
+				and tokenCardDab ~= 'card'
 				and UTIL.link( cardNameInput, ( '(%s)' ):format( tokenCardDab ) )
 				or nil
 
