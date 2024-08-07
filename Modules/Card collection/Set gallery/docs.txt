@@ -81,6 +81,7 @@ The options part is optional and is separated by inserting <code>//</code> and t
 * [[Set Card Galleries:Sneak Peek Participation Cards: Series 6 (TCG-EN-LE)]] (Use of <code>description</code>.)
 
 == Tracking categories ==
+=== Errors ===
 * [[:Category:((Set gallery)) transclusions to be checked]]: General category that contains all pages using {{t|Set gallery}} with errors. Each page present in the following categories is also present on this one.
 
 * [[:Category:((Set gallery)) transclusions with invalid parameters]]: There are parameters in use that are not part of this template.
@@ -95,6 +96,11 @@ The options part is optional and is separated by inserting <code>//</code> and t
 * [[:Category:((Set gallery)) transclusions with empty extension]]: An empty extension was provided.
 
 Each page tagged with each of these tracking categories presents details about the errors.
+
+=== Maintenance ===
+* [[:Category:((Set gallery)) transclusions with force-SMW entry option]]: Tracks usages of the <code>force-SMW</code> entry option.
+
+These tracking categories are silently added to the pages and are used just for tracking stats or maintenance.
 
 == See also ==
 * [[Module:Card collection/modules/Set gallery]]

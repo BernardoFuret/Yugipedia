@@ -281,6 +281,12 @@ function handlers:handleEntry( entry, globalData )
 			return errorEntry( entry.lineno, globalData.region )
 		end
 
+		if entry.options[ 'force-SMW' ] then
+			local category = 'transclusions with force-SMW option'
+
+			self.reporter:addCategory( category )
+		end
+
 		valuesIndex = valuesIndex + 1
 	end
 
