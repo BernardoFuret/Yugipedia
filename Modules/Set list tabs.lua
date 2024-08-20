@@ -106,7 +106,7 @@ local function printContent( listsContent )
 	return table.concat( tabberContent )
 end
 
-local function main( regionsInput, frame )
+local function main( frame, regionsInput, setPagenameInput )
 	reporter = Reporter( 'Set list tabs' )
 
 	local listsContainer = mwHtmlCreate( 'div' )
@@ -114,7 +114,7 @@ local function main( regionsInput, frame )
 
 	local listsContent = {}
 
-	local setPagename = mw.title.getCurrentTitle().text
+	local setPagename = setPagenameInput or mw.title.getCurrentTitle().text
 
 	local setNameForLink = normalizeSetNameForLink( setPagename )
 
@@ -164,11 +164,13 @@ return setmetatable( {
 	main = function( frame )
 		local arguments = frame:getParent().args
 
-		return main( UTIL.trim( arguments[ 1 ] ) or 'EN,FR,DE,IT,SP,JP,JA,KR', frame )
+		local regionsInput = UTIL.trim( arguments[ 1 ] )
+
+		return main( frame, regionsInput or 'EN,FR,DE,IT,SP,JP,JA,KR' )
 	end
 }, {
-	__call = function( t, ... )
-		return main( ..., mw.getCurrentFrame() )
+	__call = function( t, regionsInput, setPagenameInput )
+		return main( mw.getCurrentFrame(), regionsInput, setPagenameInput )
 	end,
 } )
 -- </pre>
