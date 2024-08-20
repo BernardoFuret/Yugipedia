@@ -16,13 +16,16 @@ local Reporter = require( 'Module:Reporter' )
 
 local mwHtmlCreate = mw.html.create
 
-local reporter;
+local reporter
 
 local SET_NAMES_SPECIAL_CASES = {
 	[ '2011' ] = true,
 	[ '2018' ] = true,
 	[ '2019' ] = true,
 	[ 'series' ] = true,
+	[ 'Obelisk the Tormentor' ] = true, -- 20th Anniversary Duel Set
+	[ 'Slifer the Sky Dragon' ] = true, -- 20th Anniversary Duel Set
+	[ '25th Anniversary Edition' ] = true,
 }
 
 local function normalizeSetNameForLink( setPagename )
@@ -116,7 +119,7 @@ local function main( regionsInput, frame )
 	local setNameForLink = normalizeSetNameForLink( setPagename )
 
 	generateContent = generateContentFirst
-	
+
 	for regionInput in mw.text.gsplit( regionsInput, '%s*,%s*' ) do
 		local region = DATA.getRegion( regionInput )
 
