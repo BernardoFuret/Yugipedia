@@ -17,14 +17,26 @@
 		} );
 	}
 
+	function incrementHeaders( htmlContent ) {
+		return htmlContent
+			.find( ':header' ).replaceWith( function() {
+				return this.outerHTML.replace( /(?<=^<h)\d|(?<=<\/h)\d(?=>$)/g, function( $0 ) {
+					var headerLevel = Number( $0 );
+
+					return headerLevel < 6 ? headerLevel + 1 : headerLevel;
+				} );
+			} )
+			.end();
+	}
+
 	function parseData( data ) {
-		return $( '<div>' )
+		var htmlContent = $( '<div>' )
 			.append( $.parseHTML( data ) )
 			.find( '#mw-content-text .mw-parser-output' )
 				.find('.page-header').remove().end()
-				.find('style').remove().end()
-				.html()
-		;
+				.find('style').remove().end();
+
+		return incrementHeaders( htmlContent ).html();
 	}
 
 	function SetListLoader( $container ) {
