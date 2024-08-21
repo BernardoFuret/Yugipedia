@@ -201,8 +201,7 @@ return setmetatable(
 
 			local regionsInput = UTIL.trim( arguments[ 1 ] )
 
-			-- TODO: validate if regionsInput exists?
-			return main( frame, regionsInput or 'EN,FR,DE,IT,SP,JP,JA,KR' )
+			return main( frame, regionsInput )
 		end
 	},
 	{
