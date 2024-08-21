@@ -62,6 +62,38 @@ local function transcludeSetList( fullpagename, frame )
 	}
 end
 
+local function incrementHeaders( content )
+	local contentLines = mw.text.split( content, '\n' )
+
+	local updatedContentLines = {}
+
+	local pattern = '^(=+)(.*)(%1)%s*$'
+
+	for _, line in ipairs( contentLines ) do
+		local headerMarkupStart, headerTitle, headerMarkupEnd = line:match( pattern )
+
+		if headerMarkupEnd then
+			local headerLevel = headerMarkupEnd:len()
+
+			if headerLevel < 6 then
+				local incrementedHeader = table.concat{
+					headerMarkupStart, '=',
+					headerTitle,
+					'=', headerMarkupEnd
+				}
+
+				table.insert( updatedContentLines, incrementedHeader )
+			else
+				table.insert( updatedContentLines, line )
+			end
+		else
+			table.insert( updatedContentLines, line )
+		end
+	end
+
+	return table.concat( updatedContentLines, '\n' )
+end
+
 local function generateContentRest( fullpagename )
 	return tostring(
 		mwHtmlCreate( 'div' )
@@ -77,13 +109,15 @@ end
 local function generateContentFirst( fullpagename, frame )
 	local success, content = pcall( transcludeSetList, fullpagename, frame )
 
+	local wikitextContent = success
+		and incrementHeaders( content )
+		or table.concat{ '[[', fullpagename, ']]' }
+
 	local ret = tostring(
 		mwHtmlCreate( 'div' )
 			:addClass( 'set-list-tab' )
 			:attr( 'data-page', fullpagename )
-			:wikitext( '\n', success and content or table.concat{
-				'[[', fullpagename, ']]'
-			} )
+			:wikitext( wikitextContent )
 	)
 
 	generateContent = generateContentRest
@@ -160,17 +194,21 @@ local function main( frame, regionsInput, setPagenameInput )
 	return tostring( listsContainer )
 end
 
-return setmetatable( {
-	main = function( frame )
-		local arguments = frame:getParent().args
+return setmetatable(
+	{
+		main = function( frame )
+			local arguments = frame:getParent().args
 
-		local regionsInput = UTIL.trim( arguments[ 1 ] )
+			local regionsInput = UTIL.trim( arguments[ 1 ] )
 
-		return main( frame, regionsInput or 'EN,FR,DE,IT,SP,JP,JA,KR' )
-	end
-}, {
-	__call = function( t, regionsInput, setPagenameInput )
-		return main( mw.getCurrentFrame(), regionsInput, setPagenameInput )
-	end,
-} )
+			-- TODO: validate if regionsInput exists?
+			return main( frame, regionsInput or 'EN,FR,DE,IT,SP,JP,JA,KR' )
+		end
+	},
+	{
+		__call = function( t, regionsInput, setPagenameInput )
+			return main( mw.getCurrentFrame(), regionsInput, setPagenameInput )
+		end,
+	}
+)
 -- </pre>
