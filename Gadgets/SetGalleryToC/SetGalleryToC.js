@@ -24,19 +24,24 @@
 			$contentSectionHeaders.each( function( index, element ) {
 				var $sectionTitle = $( element );
 
+				var sectionTitleId = $sectionTitle.attr( 'id' );
+
+				var sectionTitleHtml = $sectionTitle.html();
+
 				$tocList.append( function() {
-					var currentSectionTitleText = $( this )
+					var $currentSectionTitle = $( this )
 						.parents( '.set-gallery' )
 						.prevAll( ':header' )
 						.first()
-						.find( '.mw-headline' )
-						.text();
+						.find( '.mw-headline' );
+
+					var currentSectionTitleId = $currentSectionTitle.attr( 'id' );
 
 					return $( '<li>', {
 						'class': 'set-gallery__toc__entry',
-						html: $( currentSectionTitleText === $sectionTitle.text() ? '<strong>' : '<a>', {
-							href: '#' + $sectionTitle.attr( 'id' ),
-							html: $sectionTitle.html()
+						html: $( currentSectionTitleId === sectionTitleId ? '<strong>' : '<a>', {
+							href: '#' + sectionTitleId,
+							html: sectionTitleHtml
 						} )
 					} );
 				} );
