@@ -14,14 +14,20 @@
 		$content.find( '.mw-headline' ).each( function( index, element ) {
 			var $sectionTitle = $( element );
 
+			var sectionTitleId = $sectionTitle.attr( 'id' );
+
+			var sectionTitleHtml = $sectionTitle.html();
+
 			$toc.append( function() {
-				var sectionTitleText = $( this ).parent().parent().find( 'h2' ).text();
+				var $currentSectionTitle = $( this ).parent().parent().find( ':header .mw-headline' );
+
+				var currentSectionTitleId = $currentSectionTitle.attr( 'id' );
 
 				return $( '<li>', {
 					'class': 'card-gallery__toc__entry',
-					html: $( sectionTitleText === $sectionTitle.text() ? '<strong>' : '<a>', {
-						href: '#' + $sectionTitle.attr( 'id' ),
-						html: $sectionTitle.html()
+					html: $( currentSectionTitleId === sectionTitleId ? '<strong>' : '<a>', {
+						href: '#' + sectionTitleId,
+						html: sectionTitleHtml
 					} )
 				} );
 			} );
