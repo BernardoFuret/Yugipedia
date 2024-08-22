@@ -27,7 +27,7 @@
 				$tocList.append( function() {
 					var currentSectionTitleText = $( this )
 						.parents( '.set-gallery' )
-						.prevAll( 'h2' )
+						.prevAll( ':header' )
 						.first()
 						.find( '.mw-headline' )
 						.text();
