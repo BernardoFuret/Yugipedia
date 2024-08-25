@@ -10,7 +10,7 @@
 	var LAST_LOG = '~~~~~';
 
 	function newToc() {
-		return  $( '<ul>', {
+		return $( '<ul>', {
 			'class': 'set-gallery__toc__list'
 		} );
 	}
@@ -31,11 +31,11 @@
 				'class': 'set-gallery__toc__container'
 			} ).appendTo( $tocPlaceholder );
 
-			var $initialTocList = newToc().appendTo( $tocContainer )
+			var $initialTocList = newToc().appendTo( $tocContainer );
 
 			var tocsStack = [ $initialTocList ];
 
-			var headersStack = []
+			var headersStack = [];
 
 			$contentSectionsTitles.each( function( index, element ) {
 				var $currentSectionTitle = $( element );
@@ -59,7 +59,11 @@
 
 					if ( previousSectionHeaderLevel != null && currentSectionHeaderLevel !== null ) {
 						if ( currentSectionHeaderLevel > previousSectionHeaderLevel ) {
-							tocsStack.unshift( newToc().appendTo( tocsStack[ 0 ] ) );
+							var wrappers = tocsStack[ 0 ].map( function( index, element ) {
+								return $( element ).children().last();
+							} );
+
+							tocsStack.unshift( newToc().appendTo( wrappers ) );
 
 							headersStack.unshift( currentSectionHeaderTag );
 						}
@@ -81,11 +85,6 @@
 						.first()
 						.find( '.mw-headline' )
 						.attr( 'id' );
-
-					// Get previous element and compare tags:
-					// If greater level, then append classname that adds a ( to the ::before
-					// If lesser level, then prepend classname that adds a ) to the ::before
-					// If same, as it is now
 
 					return $( '<li>', {
 						'class': 'set-gallery__toc__entry',
