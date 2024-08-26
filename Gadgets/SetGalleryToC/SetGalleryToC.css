@@ -14,12 +14,12 @@
 	margin: 0;
 }
 
-.set-gallery__toc__list::before {
+:not(.set-gallery__toc__container) > .set-gallery__toc__list::before {
 	content: '(';
 	margin-left: 0.5em;
 }
 
-.set-gallery__toc__list::after {
+:not(.set-gallery__toc__container) > .set-gallery__toc__list::after {
 	 content: ')';
 }
 
