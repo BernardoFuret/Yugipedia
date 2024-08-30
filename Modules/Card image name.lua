@@ -14,7 +14,11 @@ local function getEnglishName( cardNameOrpagename )
 		mainlabel = '-'
 	} )
 
-	return ( ( query or {} )[ 1 ] or {} )[ 1 ] or cardNameOrpagename
+	local cardName = ( ( query or {} )[ 1 ] or {} )[ 1 ]
+
+	local decodedCardName = cardName and mw.text.decode( cardName ) or nil
+
+	return decodedCardName or cardNameOrpagename
 end
 
 local function removeDab( name )
@@ -22,7 +26,7 @@ local function removeDab( name )
 end
 
 local function processChars( name )
-	local normalizedName = name:gsub( '[ #–,%.:\'"%?!&@%%=%[%]<>/\\☆★・-]', '' )
+	local normalizedName = mw.ustring.gsub( name, '[ #–,%.:\'"%?!&@%%=%[%]<>/\\☆★・-]', '' )
 
 	-- Sending the result to a reference instead of returning right away
 	-- prevents returning multiple values (from `gsub`).
@@ -70,6 +74,11 @@ local function test()
 		{ 'CotH', 'CalloftheHaunted' },
 		{ 'Fiend&#39;s Hand', 'FiendsHand' },
 		{ 'This is not a card name', 'Thisisnotacardname' },
+		{ 'M∀LICE Pawn White Rabbit', 'M∀LICEPawnWhiteRabbit' },
+		{ 'M∀LICE <Pawn> White Rabbit', 'M∀LICEPawnWhiteRabbit' },
+		{ 'M∀LICE CODE GWC-06', 'M∀LICECODEGWC06' },
+		{ 'M∀LICE <CODE> GWC-06', 'M∀LICECODEGWC06' },
+		{ 'M∀LICE <&#67;ODE> GWC-06', 'M∀LICECODEGWC06' },
 	}
 
 	for i, testCase in ipairs( testCases ) do
