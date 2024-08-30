@@ -6,12 +6,12 @@
 @contact [[User talk:Becasita]]
 ]=]
 
-local function cleanCardName( cardNameOrpagename )
-	return cardNameOrpagename:gsub( '[#<>]', '' )
+local function cleanCardName( cardNameOrPagename )
+	return cardNameOrPagename:gsub( '[#<>]', '' )
 end
 
-local function getEnglishName( cardNameOrpagename )
-	local cleanedName = cleanCardName( cardNameOrpagename )
+local function getEnglishName( cardNameOrPagename )
+	local cleanedName = cleanCardName( cardNameOrPagename )
 
 	local query = mw.smw.ask( {
 		( '[[%s]]' ):format( cleanedName ),
@@ -24,7 +24,7 @@ local function getEnglishName( cardNameOrpagename )
 
 	local decodedCardName = cardName and mw.text.decode( cardName ) or nil
 
-	return decodedCardName or cardNameOrpagename
+	return decodedCardName or cardNameOrPagename
 end
 
 local function removeDab( name )
@@ -40,8 +40,8 @@ local function processChars( name )
 end
 
 
-local function getCardImageName( cardNameOrpagename )
-	local trimmedCardNameOrpagename = mw.text.trim( cardNameOrpagename or '' )
+local function getCardImageName( cardNameOrPagename )
+	local trimmedCardNameOrpagename = mw.text.trim( cardNameOrPagename or '' )
 
 	if trimmedCardNameOrpagename == '' then
 		return ''
@@ -113,8 +113,8 @@ return setmetatable(
 		test = test,
 	},
 	{
-		__call = function( self, cardNameOrpagename )
-			return getCardImageName( cardNameOrpagename )
+		__call = function( self, cardNameOrPagename )
+			return getCardImageName( cardNameOrPagename )
 		end,
 	}
 )
