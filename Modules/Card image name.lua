@@ -6,9 +6,15 @@
 @contact [[User talk:Becasita]]
 ]=]
 
+local function cleanCardName( cardNameOrpagename )
+	return cardNameOrpagename:gsub( '[#<>]', '' )
+end
+
 local function getEnglishName( cardNameOrpagename )
+	local cleanedName = cleanCardName( cardNameOrpagename )
+
 	local query = mw.smw.ask( {
-		( '[[%s]]' ):format( cardNameOrpagename:gsub( '#', '' ) ),
+		( '[[%s]]' ):format( cleanedName ),
 		'?English name=',
 		limit     = 1,
 		mainlabel = '-'
@@ -74,11 +80,12 @@ local function test()
 		{ 'CotH', 'CalloftheHaunted' },
 		{ 'Fiend&#39;s Hand', 'FiendsHand' },
 		{ 'This is not a card name', 'Thisisnotacardname' },
-		{ 'M∀LICE Pawn White Rabbit', 'M∀LICEPawnWhiteRabbit' },
-		{ 'M∀LICE <Pawn> White Rabbit', 'M∀LICEPawnWhiteRabbit' },
-		{ 'M∀LICE CODE GWC-06', 'M∀LICECODEGWC06' },
-		{ 'M∀LICE <CODE> GWC-06', 'M∀LICECODEGWC06' },
-		{ 'M∀LICE <&#67;ODE> GWC-06', 'M∀LICECODEGWC06' },
+		{ 'M∀LICE Pawn White Rabbit', 'MalissPWhiteRabbit' },
+		{ 'M∀LICE <Pawn> White Rabbit', 'MalissPWhiteRabbit' },
+		{ 'M∀LICE CODE GWC-06', 'MalissCGWC06' },
+		{ 'M∀LICE <CODE> GWC-06', 'MalissCGWC06' },
+		{ 'M∀LICE <&#67;ODE> GWC-06', 'MalissCGWC06' },
+		{ 'Maliss <Q> RED RANSOM', 'MalissQREDRANSOM' }
 	}
 
 	for i, testCase in ipairs( testCases ) do
