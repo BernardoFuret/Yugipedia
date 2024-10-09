@@ -282,7 +282,7 @@ function handlers:handleEntry( entry, globalData )
 		end
 
 		if entry.options[ 'force-SMW' ] then
-			local category = 'transclusions with force-SMW option'
+			local category = 'transclusions with force-SMW entry option'
 
 			self.reporter:addCategory( category )
 		end
@@ -317,7 +317,7 @@ function handlers:handleEntry( entry, globalData )
 	do
 		file.alt = UTIL.trim( entry.values[ valuesIndex ] )
 			or globalData.alt
-			or getCardImageName( file.alt )
+			or getCardImageName( file.alt, { bypassSmw = true } )
 
 		valuesIndex = valuesIndex + 1
 	end
