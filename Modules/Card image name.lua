@@ -24,7 +24,7 @@ local function getEnglishName( cardNameOrPagename )
 
 	local decodedCardName = cardName and mw.text.decode( cardName ) or nil
 
-	return decodedCardName or cardNameOrPagename
+	return decodedCardName
 end
 
 local function removeDab( name )
@@ -40,7 +40,9 @@ local function processChars( name )
 end
 
 
-local function getCardImageName( cardNameOrPagename )
+local function getCardImageName( cardNameOrPagename, options )
+	local bypassSmw = ( options or {} ).bypassSmw
+
 	local trimmedCardNameOrpagename = mw.text.trim( cardNameOrPagename or '' )
 
 	if trimmedCardNameOrpagename == '' then
@@ -49,7 +51,7 @@ local function getCardImageName( cardNameOrPagename )
 
 	local unencodedName = mw.text.decode( trimmedCardNameOrpagename )
 
-	local englishName = getEnglishName( unencodedName )
+	local englishName = not bypassSmw and getEnglishName( unencodedName )
 
 	local nameAfterDabProcessed = englishName or removeDab( unencodedName )
 
@@ -85,7 +87,10 @@ local function test()
 		{ 'M∀LICE CODE GWC-06', 'MalissCGWC06' },
 		{ 'M∀LICE <CODE> GWC-06', 'MalissCGWC06' },
 		{ 'M∀LICE <&#67;ODE> GWC-06', 'MalissCGWC06' },
-		{ 'Maliss <Q> RED RANSOM', 'MalissQREDRANSOM' }
+		{ 'Maliss <Q> RED RANSOM', 'MalissQREDRANSOM' },
+		{ 'side:Pride', 'sidePride', { bypassSmw = true } },
+		{ 'Red Nova (card)', 'RedNova', { bypassSmw = true } },
+		{ 'Red Nova (nonexistent dab)', 'RedNova', { bypassSmw = true } },
 	}
 
 	for i, testCase in ipairs( testCases ) do
@@ -93,7 +98,9 @@ local function test()
 
 		local expectedValue = testCase[ 2 ]
 
-		local result = getCardImageName( inputValue )
+		local options = testCase[ 3 ]
+
+		local result = getCardImageName( inputValue, options )
 
 		local testPassed = result == expectedValue
 
@@ -113,8 +120,8 @@ return setmetatable(
 		test = test,
 	},
 	{
-		__call = function( self, cardNameOrPagename )
-			return getCardImageName( cardNameOrPagename )
+		__call = function( self, cardNameOrPagename, options )
+			return getCardImageName( cardNameOrPagename, options )
 		end,
 	}
 )
