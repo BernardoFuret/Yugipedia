@@ -1,11 +1,12 @@
+// <pre>
 /**
- * Page format checker.
- * Original idea by User:Falzar.
+ * Add {{Talk header}} to non-user talk pages.
+ * Original idea by User:Falzar as a page format checker.
  * Adapted to gadget by Becasita.
  * @author Falzar, Becasita
  * @contact [[User talk:Becasita]]
  */
-( function _gadgetPageFormatChecker( window, $, mw, console ) {
+( function _gadgetAddTalkHeader( window, $, mw, console ) {
 	"use strict";
 
 	var LAST_LOG = '~~~~~';
@@ -19,7 +20,7 @@
 	/**
 	 * Checks if a page is eligible for {{Talk header}}.
 	 */
-	function isTalkHeaderPage() {
+	function checkIsEligibleTalkPage() {
 		var sectionQueryParam = mw.util.getParamValue( 'section' );
 
 		var actionQueryParam = mw.util.getParamValue( 'action' );
@@ -46,7 +47,6 @@
 	 * creating a scanner just for this task).
 	 */
 	function handleTalkHeader() {
-		// <pre>
 		var pageText = $textBox.val().replace( /^[ \t]*{{\s*talk[ \t]*header/gmi, '{{Talk header' );
 
 		if ( !/{{\s*Delete/.test( pageText ) && !/^[ \t]*{{Talk header/m.test( pageText ) ) {
@@ -54,12 +54,11 @@
 		} else {
 			$textBox.val( pageText );
 		}
-		// </pre>
 	}
 
 	function init() {
 		mw.loader.using( 'mediawiki.util' ).then( function() {
-			if ( isTalkHeaderPage() ) {
+			if ( checkIsEligibleTalkPage() ) {
 				handleTalkHeader();
 			}
 		} );
@@ -67,6 +66,7 @@
 
 	mw.hook( 'wikipage.editform' ).add( init );
 
-	console.log( '[Gadget] PageFormatChecker last updated at', LAST_LOG );
+	console.log( '[Gadget] AddTalkHeader last updated at', LAST_LOG );
 
 } )( window, window.jQuery, window.mediaWiki, window.console );
+// </pre>
