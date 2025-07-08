@@ -58,18 +58,18 @@ local function validateRarity( self, rawRaritiy, location )
 	return rarity
 end
 
-local function getRegion()
+local function getRegion( regionInput )
 	local index = PAGENAME:match( 'CG%-(%a+)%-?' )
 
-	local region = DATA.getRegion( index ) -- TODO: handle erroneous region (nil)?
+	local region = DATA.getRegion( regionInput or index ) -- TODO: handle erroneous region (nil)?
 
 	return region
 end
 
-local function getEdition()
+local function getEdition( editionInput )
 	local index = PAGENAME:match( 'CG%-%a+%-(%w+)' )
 
-	local edition = DATA.getEdition( index ) -- TODO: handle erroneous edition (nil)?
+	local edition = DATA.getEdition( editionInput or index ) -- TODO: handle erroneous edition (nil)?
 
 	return edition
 end
@@ -169,11 +169,11 @@ local handlers = {}
 function handlers:initData( globalData )
 	globalData.rarity = validateRarity( self, globalData.rarity, 'parameter `rarity`' )
 
-	globalData.region = getRegion()
+	globalData.region = getRegion( globalData.region )
 
 	globalData.language = DATA.getLanguage( globalData.region.index )
 
-	globalData.edition = getEdition()
+	globalData.edition = getEdition( globalData.edition )
 end
 
 function handlers:initStructure( globalData )

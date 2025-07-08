@@ -1,5 +1,9 @@
 -- <pre>
 return {
+	region = {},
+
+	edition = {},
+
 	abbr = {},
 
 	rarity = {},
