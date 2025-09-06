@@ -53,10 +53,7 @@ local function hasNoEdition( t )
 		or rg == 'JA'
 		or rg == 'TC'
 		or rg == 'SC'
-		or (
-			rg == 'KR'
-			and t.setAbbr:match( 'RD/' )
-		);
+		or t.setAbbr:match( 'RD/' )
 end
 
 -- @description Decides what kind of card backing to present.
