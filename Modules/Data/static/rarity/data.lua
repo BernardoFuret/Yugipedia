@@ -1,20 +1,20 @@
 -- <pre>
 local normalize = {
-	-- Standard non-foils:
+	-- Standard non-foil
 	['c']    = 'c',      ['common']          = 'c',  ['n'] = 'c',
 	['nr']   = 'nr',     ['normal']          = 'nr',
 	['sp']   = 'sp',     ['shortprint']      = 'sp',
 	['ssp']  = 'ssp',    ['supershortprint'] = 'ssp',
 	['r']    = 'r',      ['rare']            = 'r',
 
-	-- Standard foils:
+	-- Standard foil
 	['sr']   = 'sr',     ['super']       = 'sr',
 	['ur']   = 'ur',     ['ultra']       = 'ur',
 	['utr']  = 'utr',    ['ultimate']    = 'utr',
 	['gr']   = 'gr',     ['ghost']       = 'gr',
 	['hgr']  = 'hgr',    ['holographic'] = 'hgr',
 
-	-- Secrets:
+	-- Secret
 	['scr']   = 'scr',   ['secret']      = 'scr',
 	['pscr']  = 'pscr',  ['prismatic']   = 'pscr', ['prismaticsecret'] = 'pscr',
 	['uscr']  = 'uscr',  ['ultrasecret'] = 'uscr',
@@ -22,9 +22,10 @@ local normalize = {
 	['escr']  = 'escr',  ['extrasecret'] = 'escr',
 	['20scr'] = '20scr', ['20thsecret']  = '20scr',
 	['10000scr'] = '10000scr', ['10000secret'] = '10000scr',
+	['qcscr'] = 'qcscr', ['quartercenturysecret'] = 'qcscr',
 	['str']   = 'str',   ['starlight']   = 'str',  ['altr'] = 'str', ['alternate'] = 'str',
 
-	-- Precious:
+	-- Precious
 	['gur']   = 'gur',   ['gold']           = 'gur', ['goldultra'] = 'gur',
 	['gscr']  = 'gscr',  ['goldsecret']     = 'gscr',
 	['ggr']   = 'ggr',   ['ghostgold']      = 'ggr',
@@ -32,14 +33,14 @@ local normalize = {
 	['plr']   = 'plr',   ['platinum']       = 'plr',
 	['plscr'] = 'plscr', ['platinumsecret'] = 'plscr',
 
-	-- Millennium:
+	-- Millennium
 	['mlr']   = 'mlr',   ['millennium']       = 'mlr', ['mr'] = 'mlr',
 	['mlsr']  = 'mlsr',  ['millenniumsuper']  = 'mlsr',
 	['mlur']  = 'mlur',  ['millenniumultra']  = 'mlur',
 	['mlscr'] = 'mlscr', ['millenniumsecret'] = 'mlscr',
 	['mlgr']  = 'mlgr',  ['millenniumgold']   = 'mlgr', -- Why not MLGUR?
 
-	-- Parallel:
+	-- Parallel
 	['npr']   = 'npr',   ['normalparallel']      = 'npr',
 	['rpr']   = 'rpr',   ['rareparallel']        = 'rpr',
 	['spr']   = 'spr',   ['superparallel']       = 'spr',
@@ -48,7 +49,7 @@ local normalize = {
 	['escpr'] = 'escpr', ['extrasecretparallel'] = 'escpr',
 	['hgpr']  = 'hgpr' , ['holographicparallel'] = 'hgpr',
 
-	-- Duel terminal: (Why not removing the "parallel rare" part?)
+	-- Duel Terminal -- TODO: Simplify naming (maybe remove the "parallel rare" part)
 	['dnpr']  = 'dnpr',  ['duelterminalnormalparallel']     = 'dnpr', -- Duel Terminal Common
 	['dnrpr'] = 'dnrpr', ['duelterminalnormalrareparallel'] = 'dnrpr',
 	['drpr']  = 'drpr',  ['duelterminalrareparallel']       = 'drpr',
@@ -56,19 +57,30 @@ local normalize = {
 	['dupr']  = 'dupr',  ['duelterminalultraparallel']      = 'dupr',
 	['dscpr'] = 'dscpr', ['duelterminalsecretparallel']     = 'dscpr',
 
-	-- Kaiba's:
+	-- Kaiba
 	['kcc']  = 'kcc',  ['kaibacorporationcommon'] = 'kcc',
 	['kcn']  = 'kcc',  ['kaibacorporationnormal'] = 'kcc',  -- Yes, they are the same
 	['kcr']  = 'kcr',  ['kaibacorporation']       = 'kcr',
 	['kcsr'] = 'kcsr', ['kaibacorporationsuper']  = 'kcsr', ['kcs'] = 'kcsr',
 	['kcur'] = 'kcur', ['kaibacorporationultra']  = 'kcur', ['kcu'] = 'kcur',
 
-	-- Rush:
+	-- Rush
 	['rr']  = 'rr',  ['rush']     = 'rr',
 	['grr'] = 'grr', ['goldrush'] = 'grr',
 	['orr'] = 'orr', ['overrush'] = 'orr',
 
-	-- Other:
+	-- Colorful
+	['urblue']       = 'urblue',       ['ultrararespecialblueversion']                   = 'urblue',
+	['urpurple']     = 'urpurple',     ['ultrararespecialpurpleversion']                 = 'urpurple',
+	['urred']        = 'urred',        ['ultrararespecialredversion']                    = 'urred',
+	['scrblue']      = 'scrblue',      ['secretrarespecialblueversion']                  = 'scrblue',
+	['scrred']       = 'scrred',       ['secretrarespecialredversion']                   = 'scrred',
+	['rrred']        = 'rrred',        ['rushrarespecialredversion']                     = 'rrred',
+	['orrblack']     = 'orrblack',     ['overrushrarepremiumblackversion']               = 'orrblack',
+	['qcscrtdgreen'] = 'qcscrtdgreen', ['quartercenturysecretraretokyodomegreenversion'] = 'qcscrtdgreen',
+	['qcscrsv']      = 'qcscrsv',      ['quartercenturysecretrarespecialversion']        = 'qcscrsv',
+
+	-- Other
 	['hfr']  = 'hfr',  ['holofoil']      = 'hfr',
 	['sfr']  = 'sfr',  ['starfoil']      = 'sfr',
 	['msr']  = 'msr',  ['mosaic']        = 'msr',
@@ -78,31 +90,32 @@ local normalize = {
 }
 
 local main = {
-	-- Standard non-foils:
+	-- Standard non-foil
 	['c']   = { abbr = 'C',   full = 'Common'            },
 	['nr']  = { abbr = 'NR',  full = 'Normal Rare'       },
 	['sp']  = { abbr = 'SP',  full = 'Short Print'       },
 	['ssp'] = { abbr = 'SSP', full = 'Super Short Print' },
 	['r']   = { abbr = 'R',   full = 'Rare'              },
 
-	-- Standard foils:
+	-- Standard foil
 	['sr']  = { abbr = 'SR',  full = 'Super Rare'       },
 	['ur']  = { abbr = 'UR',  full = 'Ultra Rare'       },
 	['utr'] = { abbr = 'UtR', full = 'Ultimate Rare'    },
 	['gr']  = { abbr = 'GR',  full = 'Ghost Rare'       },
 	['hgr'] = { abbr = 'HGR', full = 'Holographic Rare' },
 
-	-- Secrets:
-	['scr']      = { abbr = 'ScR',      full = 'Secret Rare'           },
-	['pscr']     = { abbr = 'PScR',     full = 'Prismatic Secret Rare' },
-	['uscr']     = { abbr = 'UScR',     full = 'Ultra Secret Rare'     },
-	['scur']     = { abbr = 'ScUR',     full = 'Secret Ultra Rare'     },
-	['escr']     = { abbr = 'EScR',     full = 'Extra Secret Rare'     },
-	['20scr']    = { abbr = '20ScR',    full = '20th Secret Rare'      },
-	['10000scr'] = { abbr = '10000ScR', full = '10000 Secret Rare'     },
-	['str']      = { abbr = 'StR',      full = 'Starlight Rare'        },
+	-- Secret
+	['scr']      = { abbr = 'ScR',      full = 'Secret Rare'                 },
+	['pscr']     = { abbr = 'PScR',     full = 'Prismatic Secret Rare'       },
+	['uscr']     = { abbr = 'UScR',     full = 'Ultra Secret Rare'           },
+	['scur']     = { abbr = 'ScUR',     full = 'Secret Ultra Rare'           },
+	['escr']     = { abbr = 'EScR',     full = 'Extra Secret Rare'           },
+	['20scr']    = { abbr = '20ScR',    full = '20th Secret Rare'            },
+	['10000scr'] = { abbr = '10000ScR', full = '10000 Secret Rare'           },
+	['qcscr']    = { abbr = 'QCScR',    full = 'Quarter Century Secret Rare' },
+	['str']      = { abbr = 'StR',      full = 'Starlight Rare'              },
 
-	-- Precious:
+	-- Precious
 	['gur']   = { abbr = 'GUR',   full = 'Gold Rare'            },
 	['gscr']  = { abbr = 'GScR',  full = 'Gold Secret Rare'     },
 	['ggr']   = { abbr = 'GGR',   full = 'Ghost/Gold Rare'      },
@@ -110,14 +123,14 @@ local main = {
 	['plr']   = { abbr = 'PlR',   full = 'Platinum Rare'        },
 	['plscr'] = { abbr = 'PlScR', full = 'Platinum Secret Rare' },
 
-	-- Millennium:
+	-- Millennium
 	['mlr']   = { abbr = 'MLR',   full = 'Millennium Rare'        },
 	['mlsr']  = { abbr = 'MLSR',  full = 'Millennium Super Rare'  },
 	['mlur']  = { abbr = 'MLUR',  full = 'Millennium Ultra Rare'  },
 	['mlscr'] = { abbr = 'MLScR', full = 'Millennium Secret Rare' },
 	['mlgr']  = { abbr = 'MLGR',  full = 'Millennium Gold Rare'   },
 
-	-- Parallel:
+	-- Parallel
 	['npr'] = {
 		abbr = 'NPR',
 		full = 'Normal Parallel Rare',
@@ -153,7 +166,7 @@ local main = {
 		dbAbbr = 'P+HR',
 	},
 
-	-- Duel terminal:
+	-- Duel Terminal
 	['dnpr']  = { abbr = 'DNPR',  full = 'Duel Terminal Normal Parallel Rare'      },
 	['dnrpr'] = { abbr = 'DNRPR', full = 'Duel Terminal Normal Rare Parallel Rare' },
 	['drpr']  = { abbr = 'DRPR',  full = 'Duel Terminal Rare Parallel Rare'        },
@@ -161,24 +174,35 @@ local main = {
 	['dupr']  = { abbr = 'DUPR',  full = 'Duel Terminal Ultra Parallel Rare'       },
 	['dscpr'] = { abbr = 'DScPR', full = 'Duel Terminal Secret Parallel Rare'      },
 
-	-- Kaiba's:
+	-- Kaiba
 	['kcc']  = { abbr = 'KCC',  full = 'Kaiba Corporation Common'     },
 	['kcr']  = { abbr = 'KCR',  full = 'Kaiba Corporation Rare'       },
 	['kcsr'] = { abbr = 'KCSR', full = 'Kaiba Corporation Super Rare' },
 	['kcur'] = { abbr = 'KCUR', full = 'Kaiba Corporation Ultra Rare' },
 
-	-- Rush:
-	['rr']  = { abbr = 'RR',  full = 'Rush Rare' },
+	-- Rush
+	['rr']  = { abbr = 'RR',  full = 'Rush Rare'      },
 	['grr'] = { abbr = 'GRR', full = 'Gold Rush Rare' },
 	['orr'] = { abbr = 'ORR', full = 'Over Rush Rare' },
 
-	-- Other:
-	['hfr']  = { abbr = 'HFR',  full = 'Holofoil Rare'                },
-	['sfr']  = { abbr = 'SFR',  full = 'Starfoil Rare'                },
-	['msr']  = { abbr = 'MSR',  full = 'Mosaic Rare'                  },
-	['shr']  = { abbr = 'SHR',  full = 'Shatterfoil Rare'             },
-	['cr']   = { abbr = 'CR',   full = 'Collector\'s Rare'            },
-	['urpr'] = { abbr = 'URPR', full = 'Ultra Rare (Pharaoh\'s Rare)' },
+	-- Colorful
+	['urblue']       = { abbr = 'URBlue',       full = 'Ultra Rare (Special Blue Version)'                    },
+	['urpurple']     = { abbr = 'URPurple',     full = 'Ultra Rare (Special Purple Version)'                  },
+	['urred']        = { abbr = 'URRed',        full = 'Ultra Rare (Special Red Version)'                     },
+	['scrblue']      = { abbr = 'ScRBlue',      full = 'Secret Rare (Special Blue Version)'                   },
+	['scrred']       = { abbr = 'ScRRed',       full = 'Secret Rare (Special Red Version)'                    },
+	['rrred']        = { abbr = 'RRRed',        full = 'Rush Rare (Special Red Version)'                      },
+	['orrblack']     = { abbr = 'ORRBlack',     full = 'Over Rush Rare (Premium Black Version)'               },
+	['qcscrtdgreen'] = { abbr = 'QCScRTDGreen', full = 'Quarter Century Secret Rare Tokyo Dome Green Version' },
+	['qcscrsv']      = { abbr = 'QCScRSV',      full = 'Quarter Century Secret Rare (Special Version)'        },
+
+	-- Other
+	['hfr']  = { abbr = 'HFR',  full = 'Holofoil Rare'               },
+	['sfr']  = { abbr = 'SFR',  full = 'Starfoil Rare'               },
+	['msr']  = { abbr = 'MSR',  full = 'Mosaic Rare'                 },
+	['shr']  = { abbr = 'SHR',  full = 'Shatterfoil Rare'            },
+	['cr']   = { abbr = 'CR',   full = "Collector's Rare"            },
+	['urpr'] = { abbr = 'URPR', full = "Ultra Rare (Pharaoh's Rare)" },
 }
 
 return {
