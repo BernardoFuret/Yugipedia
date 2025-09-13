@@ -70,9 +70,17 @@ end
 function D.rarity( frame )
 	local full = UTIL.trim( getArg( frame, 'full' ) )
 
+	local dbAbbr = UTIL.trim( getArg( frame, 'dbAbbr' ) )
+
 	local rarity = getRarity( frame )
 
-	return ( full and rarity.full or rarity.abbr ) or ''
+	return ( full
+		and rarity.full
+		or ( dbAbbr
+			and ( rarity.dbAbbr or '' )
+			or rarity.abbr
+		)
+	) or ''
 end
 
 function D.vg( frame )

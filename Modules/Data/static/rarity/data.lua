@@ -118,13 +118,40 @@ local main = {
 	['mlgr']  = { abbr = 'MLGR',  full = 'Millennium Gold Rare'   },
 
 	-- Parallel:
-	['npr']   = { abbr = 'NPR',   full = 'Normal Parallel Rare'       },
-	['rpr']   = { abbr = 'RPR',   full = 'Rare Parallel Rare'         },
-	['spr']   = { abbr = 'SPR',   full = 'Super Parallel Rare'        },
-	['upr']   = { abbr = 'UPR',   full = 'Ultra Parallel Rare'        },
-	['scpr']  = { abbr = 'ScPR',  full = 'Secret Parallel Rare'       },
-	['escpr'] = { abbr = 'EScPR', full = 'Extra Secret Parallel Rare' },
-	['hgpr']  = { abbr = 'HGPR',  full = 'Holographic Parallel Rare'  },
+	['npr'] = {
+		abbr = 'NPR',
+		full = 'Normal Parallel Rare',
+	},
+	['rpr'] = {
+		abbr = 'RPR',
+		full = 'Rare Parallel Rare',
+		dbAbbr = 'P+R',
+	},
+	['spr'] = {
+		abbr = 'SPR',
+		full = 'Super Parallel Rare',
+		dbAbbr = 'P+SR',
+	},
+	['upr'] = {
+		abbr = 'UPR',
+		full = 'Ultra Parallel Rare',
+		dbAbbr = 'P+UR',
+	},
+	['scpr'] = {
+		abbr = 'ScPR',
+		full = 'Secret Parallel Rare',
+		dbAbbr = 'P+SE',
+	},
+	['escpr'] = {
+		abbr = 'EScPR',
+		full = 'Extra Secret Parallel Rare',
+		dbAbbr = 'P+EXSE',
+	},
+	['hgpr'] = {
+		abbr = 'HGPR',
+		full = 'Holographic Parallel Rare',
+		dbAbbr = 'P+HR',
+	},
 
 	-- Duel terminal:
 	['dnpr']  = { abbr = 'DNPR',  full = 'Duel Terminal Normal Parallel Rare'      },
