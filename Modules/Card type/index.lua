@@ -202,17 +202,20 @@ function _full( pendulum, monsterCardType, tuner, ability, effect )
 	return table.concat( cardType, ' ' ) -- @@@ [[Tuner Synchro]], unlink.
 end
 
+-- Handles Token Monsters
+function _token()
+	return _link( 'Monster Token', 'Token' );
+end
+
 --  Monster card function:
 --  Fetches monster card type, ability, Pendulum, Tuner, Token.
 --  Prints full card type.
 function _monster( card )
 	local primary = _show( card, 'Primary type' );
+
 	if not _trim( primary ) then
 		return card:match( '(original)' ) and _link( 'Monster Card' ) --  For Egyptian Gods.
 			or '';
-	end
-	if primary:match( 'Token' ) then
-		return _link( 'Monster Token', 'Token' );
 	end
 
 	--  Primary type:
@@ -260,12 +263,16 @@ end
 --  (where «other» can be Tip, Strategy, etc..)
 function _type( card )
 	local cardType = _show( card, 'Card type' );
+
 	if not _trim( cardType ) then
 		return _error( 'On «_type»; No card type available!' );
 	end
 
 	cardType = cardType:lower();
-	if cardType:match( 'monster' ) then
+
+	if cardType:match( 'token' ) then
+		return _token();
+	elseif cardType:match( 'monster' ) then
 		return _monster( card );
 	elseif cardType:match( 'spell' ) then
 		return _spellTrap( card, 'Spell' );
@@ -323,5 +330,12 @@ function CardType.main( frame )
 	return _main( args[1] );
 end
 
-return CardType;
+return setmetatable(
+	CardType,
+	{
+		__call = function( self, cardName )
+			return _main( cardName )
+		end,
+	}
+)
 --  </pre>
