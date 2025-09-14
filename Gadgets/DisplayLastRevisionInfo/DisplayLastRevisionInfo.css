@@ -1,0 +1,30 @@
+.gadget-display-last-revision-info {
+	display: flex;
+	justify-content: space-between;
+}
+
+.gadget-display-last-revision-info__content--tooltip {
+	display: inline-block;
+	position: relative;
+	cursor: help;
+	text-decoration: underline dotted;
+}
+
+.gadget-display-last-revision-info__content__indicator {
+	font-weight: bolder;
+}
+
+.gadget-display-last-revision-info__content--tooltip__content {
+	display: none;
+	position: absolute;
+	text-align: center;
+	padding: .25em;
+	top: 100%;
+	background-color: #5aa7c4;
+	color: white;
+	border-radius: .25em;
+}
+
+.gadget-display-last-revision-info__content--tooltip:hover .gadget-display-last-revision-info__content--tooltip__content {
+	display: block;
+}
