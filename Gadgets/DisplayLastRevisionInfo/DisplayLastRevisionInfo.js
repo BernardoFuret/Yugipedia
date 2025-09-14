@@ -12,12 +12,12 @@
 
 	function createTooltip($children, $content) {
 		var $tooltipWrapper = $('<div>', {
-			class: 'gadget-display-last-revision-info__content--tooltip',
+			'class': 'gadget-display-last-revision-info__content--tooltip'
 		});
 
 		var $tooltipContent = $('<div>', {
-			class: 'gadget-display-last-revision-info__content--tooltip__content',
-			html: $content,
+			'class': 'gadget-display-last-revision-info__content--tooltip__content',
+			html: $content
 		});
 
 		return $tooltipWrapper.append($children).append($tooltipContent);
@@ -32,7 +32,7 @@
 				rvprop: 'ids|user|timestamp|parsedcomment|flags',
 				redirects: false,
 				format: 'json',
-				formatversion: 2,
+				formatversion: 2
 			})
 			.then(function (response) {
 				return response.query.pages[0].revisions[0];
@@ -54,7 +54,7 @@
 		var $bodyContent = $('#bodyContent');
 
 		var $outerContainer = $('<div>', {
-			class: 'gadget-display-last-revision-info',
+			'class': 'gadget-display-last-revision-info'
 		});
 
 		$bodyContent.prepend($outerContainer);
@@ -62,28 +62,28 @@
 		var $userPageLink = $('<a>', {
 			target: '_blank',
 			href: '/wiki/User:' + encodeURIComponent(revisionData.user),
-			text: revisionData.user,
+			text: revisionData.user
 		});
 
 		var $diffLink = $('<a>', {
 			target: '_blank',
 			href: '/index.php?diff=' + revisionData.revid,
-			text: revisionData.revid,
+			text: revisionData.revid
 		});
 
 		// If it's a minor edit, `minor` is present
 		var isMinorEdit = 'minor' in revisionData;
 
 		var $minorIndicator = $('<sup>', {
-			class: 'gadget-display-last-revision-info__content__indicator',
+			'class': 'gadget-display-last-revision-info__content__indicator',
 			html: $('<abbr>', {
 				title: 'Minor edit',
-				text: 'M',
-			}),
+				text: 'M'
+			})
 		});
 
 		var $innerContainer = $('<div>', {
-			class: 'gadget-display-last-revision-info__content',
+			'class': 'gadget-display-last-revision-info__content',
 			html:
 				'Last edited at ' +
 				revisionData.timestamp +
@@ -92,7 +92,7 @@
 				' (' +
 				$diffLink.prop('outerHTML') +
 				')' +
-				(isMinorEdit ? $minorIndicator.prop('outerHTML') : ''),
+				(isMinorEdit ? $minorIndicator.prop('outerHTML') : '')
 		});
 
 		var $tooltip = createTooltip($innerContainer, revisionData.parsedcomment);
@@ -109,7 +109,7 @@
 			mw.loader.using('mediawiki.api').done(function () {
 				api = new mw.Api();
 
-				fetchPageLastRevision().then(updateUi).catch(handleError);
+				fetchPageLastRevision().then(updateUi)['catch'](handleError);
 			});
 		}
 	}
