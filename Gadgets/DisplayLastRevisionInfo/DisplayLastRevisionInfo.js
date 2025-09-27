@@ -35,7 +35,7 @@
 				formatversion: 2
 			})
 			.then(function (response) {
-				const isMissingPage = response.query.pages[0].missing
+				const isMissingPage = response.query.pages[0].missing;
 
 				return isMissingPage ? null : response.query.pages[0].revisions[0];
 			});
@@ -97,9 +97,11 @@
 				(isMinorEdit ? $minorIndicator.prop('outerHTML') : '')
 		});
 
-		var $tooltip = createTooltip($innerContainer, revisionData.parsedcomment);
+		var $revisionInfoElement = revisionData.parsedcomment
+			? createTooltip($innerContainer, revisionData.parsedcomment)
+			: $innerContainer;
 
-		$outerContainer.append($('#siteSub')).append($tooltip);
+		$outerContainer.append($('#siteSub')).append($revisionInfoElement);
 	}
 
 	function handleApiResponse(response) {
