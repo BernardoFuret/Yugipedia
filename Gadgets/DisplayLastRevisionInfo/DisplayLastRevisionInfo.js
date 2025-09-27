@@ -35,7 +35,9 @@
 				formatversion: 2
 			})
 			.then(function (response) {
-				return response.query.pages[0].revisions[0];
+				const isMissingPage = response.query.pages[0].missing
+
+				return isMissingPage ? null : response.query.pages[0].revisions[0];
 			});
 	}
 
@@ -100,6 +102,14 @@
 		$outerContainer.append($('#siteSub')).append($tooltip);
 	}
 
+	function handleApiResponse(response) {
+		if (response) {
+			return updateUi(response);
+		}
+
+		console.warn('[Gadget] DisplayLastRevisionInfo warning: No revisions data found');
+	}
+
 	function handleError(error) {
 		console.error('[Gadget] DisplayLastRevisionInfo error:', error);
 	}
@@ -109,7 +119,7 @@
 			mw.loader.using('mediawiki.api').done(function () {
 				api = new mw.Api();
 
-				fetchPageLastRevision().then(updateUi)['catch'](handleError);
+				fetchPageLastRevision().then(handleApiResponse)['catch'](handleError);
 			});
 		}
 	}
