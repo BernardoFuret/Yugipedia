@@ -1,0 +1,4 @@
+div[data-fuse="lhs_sidebar"] {
+	position: sticky;
+	top: 1em;
+}
