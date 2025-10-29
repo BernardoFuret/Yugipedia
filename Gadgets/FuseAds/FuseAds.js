@@ -10,7 +10,7 @@
 		 * The rest is handled via CSS.
 		 * Deprecates [[MediaWiki:Gadget-StickyMwPanelAd.js]]
 		 */
-		document.getElementById('mw-panel').height = document.documentElement.scrollHeight;
+		document.getElementById('mw-panel').style.height = document.documentElement.scrollHeight + 'px';
 	});
 
 	console.log('[Gadget] FuseAds last updated at', LAST_LOG);
