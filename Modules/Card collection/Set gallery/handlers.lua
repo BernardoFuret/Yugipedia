@@ -254,7 +254,7 @@ function handlers:handleEntry( entry, globalData )
 
 			file.name = cardNameDisplay
 
-			file.alt = tokenCardDab
+			file.alt = tokenCardDab ~= 'card' and tokenCardDab
 
 			caption.pagename = tokenCardNameToLink or cardNameInput
 
