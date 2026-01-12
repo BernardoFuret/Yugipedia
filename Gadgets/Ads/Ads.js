@@ -1,4 +1,4 @@
-(function _gadgetFuseAds() {
+(function _gadgetAds() {
 	"use strict";
 
 	var LAST_LOG = '~~~~~';
@@ -19,5 +19,5 @@
 		}
 	});
 
-	console.log('[Gadget] FuseAds last updated at', LAST_LOG);
+	console.log('[Gadget] Ads last updated at', LAST_LOG);
 })();
