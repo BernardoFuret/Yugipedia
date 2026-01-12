@@ -2,3 +2,9 @@ div[data-fuse="lhs_sidebar"] {
 	position: sticky;
 	top: 1em;
 }
+
+#nitro-ads-sidebar {
+	position: sticky !important;
+    top: 1.5em;
+    font-size: unset !important;
+}
