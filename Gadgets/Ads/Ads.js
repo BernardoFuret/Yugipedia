@@ -24,8 +24,8 @@
 			return;
 		}
 
-		document.querySelectorAll('.mw-headline').forEach(function (element, index) {
-			var parentH2 = element.closest('h2 > .mw-headline');
+		document.querySelectorAll('h2 > .mw-headline').forEach(function (element, index) {
+			var parentH2 = element.closest('h2');
 
 			if (!parentH2) {
 				return;
