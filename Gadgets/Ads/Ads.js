@@ -54,7 +54,11 @@
 		});
 	}
 
-	mw.hook('wikipage.content').add(setContentAds);
+	function init() {
+		mw.loader.using('mediawiki.user').then(setContentAds);
+	}
+
+	mw.hook('wikipage.content').add(init);
 
 	console.log('[Gadget] Ads last updated at', LAST_LOG);
 })();
