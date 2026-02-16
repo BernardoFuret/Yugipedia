@@ -24,6 +24,8 @@
 			return;
 		}
 
+		var contentBannerKey = 'nitro-content-banner';
+
 		document.querySelectorAll('h2 > .mw-headline').forEach(function (element, index) {
 			var parentH2 = element.closest('h2');
 
@@ -31,11 +33,13 @@
 				return;
 			}
 
-			var adPlacementId = 'content-banner-' + index.toString();
+			var adPlacementId = contentBannerKey + '-' + index.toString();
 
 			var adPlacement = document.createElement('div');
 
 			adPlacement.id = adPlacementId;
+
+			adPlacement.classList.add(contentBannerKey);
 
 			parentH2.insertAdjacentElement('beforebegin', adPlacement);
 
