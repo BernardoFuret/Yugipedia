@@ -9,6 +9,10 @@ div[data-fuse="lhs_sidebar"] {
 	font-size: unset !important;
 }
 
+.nitro-content-banner {
+	z-index: -1;
+}
+
 #nitro-ads-sidebar, .nitro-content-banner {
 	margin-top: 1.5rem;
 }
