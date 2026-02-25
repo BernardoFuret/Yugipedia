@@ -13,17 +13,7 @@
 		document.getElementById('mw-panel').style.height = document.documentElement.scrollHeight + 'px';
 	}
 
-	mw.loader.using('mediawiki.util').then(function () {
-		if (!mw.util.getParamValue('action')) {
-			updateSideBarHeight();
-		}
-	});
-
 	function setContentAds() {
-		if (!mw.user.isAnon()) {
-			return;
-		}
-
 		var contentBannerKey = 'nitro-content-banner';
 
 		document.querySelectorAll('h2 > .mw-headline').forEach(function (element, index) {
@@ -59,7 +49,19 @@
 	}
 
 	function init() {
-		mw.loader.using('mediawiki.user').then(setContentAds);
+		mw.loader.using('mediawiki.user').then(function () {
+			if (!mw.user.isAnon()) {
+				return;
+			}
+
+			setContentAds();
+
+			mw.loader.using('mediawiki.util').then(function () {
+				if (!mw.util.getParamValue('action')) {
+					updateSideBarHeight();
+				}
+			});
+		});
 	}
 
 	mw.hook('wikipage.content').add(init);
