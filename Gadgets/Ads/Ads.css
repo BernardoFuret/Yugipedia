@@ -25,3 +25,14 @@ div[data-fuse="lhs_sidebar"] {
 	display: inline-flex;
 	font-weight: bolder;
 }
+
+/* Hide large ads creating horizontal scroll on main page */
+@media screen and (min-width: 1201px) {
+	[data-grid-area="discord"] .nitro-content-banner,
+	[data-grid-area="latestanime"] .nitro-content-banner,
+	[data-grid-area="latestmanga"] .nitro-content-banner,
+	[data-grid-area="latestduellinks"] .nitro-content-banner,
+	[data-grid-area="externallinks"] .nitro-content-banner {
+		visibility: hidden;
+	}
+}
