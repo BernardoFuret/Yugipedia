@@ -24,11 +24,11 @@ div[data-fuse="lhs_sidebar"] {
 
 /* Hide large ads creating horizontal scroll on main page */
 @media screen and (min-width: 1201px) {
-	[data-grid-area="discord"] .nitro-content-banner > iframe,
-	[data-grid-area="latestanime"] .nitro-content-banner > iframe,
-	[data-grid-area="latestmanga"] .nitro-content-banner > iframe,
-	[data-grid-area="latestduellinks"] .nitro-content-banner > iframe,
-	[data-grid-area="externallinks"] .nitro-content-banner > iframe {
+	[data-grid-area="discord"] .nitro-content-banner > *,
+	[data-grid-area="latestanime"] .nitro-content-banner > *,
+	[data-grid-area="latestmanga"] .nitro-content-banner > *,
+	[data-grid-area="latestduellinks"] .nitro-content-banner > *,
+	[data-grid-area="externallinks"] .nitro-content-banner > * {
 		visibility: hidden;
 	}
 }
