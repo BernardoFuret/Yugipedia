@@ -21,15 +21,17 @@
 
 	var acceptedNamespacesForTemplatePreload = [ NS.CARD_GALLERY, NS.SET_CARD_GALLERIES ];
 
-	var missingArticleMmessage = mw.messages.get('red-link-title').replace('$1', '');
-
 	function getCardName( $thumb ) {
 		var cardPageLinkTitle = $thumb.siblings( '.gallerytext' )
 			.children( 'p' ).first()
 				.children( 'br' ).first()
 					.next( 'a' ).attr( 'title' );
 
-		return cardPageLinkTitle.replace(missingArticleMmessage, '');
+		// `red-link-title` must be evaluated here (at least after the
+		// `wikipage.content` has fired), to guarantee it is loaded.
+		var missingArticleMessage = mw.msg('red-link-title').replace('$1', '');
+
+		return cardPageLinkTitle.replace(missingArticleMessage, '');
 	}
 
 	function getTemplatePreload( $thumb ) {
