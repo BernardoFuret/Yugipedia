@@ -11,23 +11,23 @@
 	var config = mw.config.get( [
 		'wgNamespaceNumber',
 		'wgTitle',
-		'wgNamespaceIds',
+		'wgNamespaceIds'
 	] );
 
 	var NS = {
 		CARD_GALLERY: config.wgNamespaceIds.card_gallery,
-		SET_CARD_GALLERIES: config.wgNamespaceIds.set_card_galleries,
+		SET_CARD_GALLERIES: config.wgNamespaceIds.set_card_galleries
 	};
 
 	var acceptedNamespacesForTemplatePreload = [ NS.CARD_GALLERY, NS.SET_CARD_GALLERIES ];
 
 	function getCardName( $thumb ) {
-		const cardPageLinkTitle = $thumb.siblings( '.gallerytext' )
+		var cardPageLinkTitle = $thumb.siblings( '.gallerytext' )
 			.children( 'p' ).first()
 				.children( 'br' ).first()
 					.next( 'a' ).attr( 'title' );
 
-		const missingArticleMmessage = mw.message('red-link-title').text().replace('$1', '');
+		var missingArticleMmessage = mw.message('red-link-title').text().replace('$1', '');
 
 		return cardPageLinkTitle.replace(missingArticleMmessage, '');
 	}
@@ -56,13 +56,13 @@
 				var queryParams = new URLSearchParams( {
 					title: 'Special:Upload',
 					wpDestFile: missingFileName,
-					wpUploadDescription: getTemplatePreload( $thisThumb ),
+					wpUploadDescription: getTemplatePreload( $thisThumb )
 				} );
 
 				var $uploadLink = $( '<a>', {
 					'class': 'noFile',
 					href: '/index.php?' + queryParams.toString(),
-					text: missingFileName,
+					text: missingFileName
 				} );
 
 				$thisThumb.text( '' ).append( $uploadLink );
