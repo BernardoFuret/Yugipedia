@@ -21,13 +21,13 @@
 
 	var acceptedNamespacesForTemplatePreload = [ NS.CARD_GALLERY, NS.SET_CARD_GALLERIES ];
 
+	var missingArticleMmessage = mw.messages.get('red-link-title').replace('$1', '');
+
 	function getCardName( $thumb ) {
 		var cardPageLinkTitle = $thumb.siblings( '.gallerytext' )
 			.children( 'p' ).first()
 				.children( 'br' ).first()
 					.next( 'a' ).attr( 'title' );
-
-		var missingArticleMmessage = mw.message('red-link-title').text().replace('$1', '');
 
 		return cardPageLinkTitle.replace(missingArticleMmessage, '');
 	}
