@@ -22,10 +22,14 @@
 	var acceptedNamespacesForTemplatePreload = [ NS.CARD_GALLERY, NS.SET_CARD_GALLERIES ];
 
 	function getCardName( $thumb ) {
-		return $thumb.siblings( '.gallerytext' )
+		const cardPageLinkTitle = $thumb.siblings( '.gallerytext' )
 			.children( 'p' ).first()
 				.children( 'br' ).first()
 					.next( 'a' ).attr( 'title' );
+
+		const missingArticleMmessage = mw.message('red-link-title').text().replace('$1', '');
+
+		return cardPageLinkTitle.replace(missingArticleMmessage, '');
 	}
 
 	function getTemplatePreload( $thumb ) {
