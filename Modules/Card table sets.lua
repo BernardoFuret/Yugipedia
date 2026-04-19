@@ -416,6 +416,11 @@ return setmetatable( {
 		local arguments = frame:getParent().args
 
 		return main( frame, arguments[ 'region' ], arguments[ 1 ] )
+	end,
+	w = function( frame )
+		local arguments = frame.args
+
+		return main( frame, arguments[ 'region' ], arguments[ 1 ] )
 	end
 }, {
 	__call = function( t, rg, list )
