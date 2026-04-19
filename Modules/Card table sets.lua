@@ -27,6 +27,13 @@ local KEY_NAME = 'SET_NAME'
 
 local CONTROL_PROP = 'Modification date'
 
+local SET_NAMES_SPECIAL_CASES = {
+	[ '25th Anniversary Edition' ] = true,
+	[ 'All-Foil Edition' ] = true,
+	[ 'Obelisk the Tormentor' ] = true, -- 20th Anniversary Duel Set
+	[ 'Slifer the Sky Dragon' ] = true, -- 20th Anniversary Duel Set
+}
+
 local function formatCardNumber( cardNumber )
 	return cardNumber:match( '?' )
 		and cardNumber
@@ -275,7 +282,9 @@ local function createCell( id, text )
 end
 
 local function checkIsSetNameSpecialCase( setName )
-	return UTIL.getDab( setName ) == '25th Anniversary Edition'
+	local dab = UTIL.getDab( setName )
+
+	return SET_NAMES_SPECIAL_CASES[ dab ]
 end
 
 local function computeSetNameCellContent( setName )
