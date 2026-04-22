@@ -34,6 +34,7 @@
 			parentH2.insertAdjacentElement('beforebegin', adPlacement);
 
 			window.nitroAds.createAd(adPlacementId, {
+				renderVisibleOnly: true,
 				sizes: [
 					['728', '90'],
 					['320', '50']
