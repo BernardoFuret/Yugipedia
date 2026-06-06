@@ -75,22 +75,24 @@ local function linkLists( setPagename, region, medium )
 end
 
 local function makeGalleriesLink( edition )	
-	return function --[[linkGalleries]]( setPagename, region, medium )
+	return function --[[linkGalleries]]( setPagename, region, medium, setPagenameOverride )
 		return IS_REGION_WITHOUT_EDITION[ region.index ]
-			and ( '[[Set Card Galleries:%s (%s-%s)|%s]]' )
+			and ( setPagenameOverride and '[[Set Card Galleries:%s (%s-%s)|%s (%s)]]' or '[[Set Card Galleries:%s (%s-%s)|%s]]' )
 				:format(
 					setPagename,
 					medium.abbr,
 					region.index,
-					normalizeRegionFull( region )
+					normalizeRegionFull( region ),
+					setPagenameOverride
 				)
-			or ( '[[Set Card Galleries:%s (%s-%s-%s)|%s]]' )
+			or ( setPagenameOverride and '[[Set Card Galleries:%s (%s-%s-%s)|%s (%s)]]' or '[[Set Card Galleries:%s (%s-%s-%s)|%s]]' )
 				:format(
 					setPagename,
 					medium.abbr,
 					region.index,
 					edition.abbr,
-					normalizeRegionFull( region )
+					normalizeRegionFull( region ),
+					setPagenameOverride
 				)
 	end
 end
@@ -169,14 +171,20 @@ local function main( arguments )
 
 			dl:node( tostring( dt ) )
 
-			for rg in mwTextGsplit( entryArguments, '%s*,%s*' ) do
+			for rgEntry in mwTextGsplit( entryArguments, '%s*,%s*' ) do
+				local rg = UTIL.removeDab( rgEntry )
+
+				local setNameOverride = UTIL.getDab( rgEntry )
+
+				local normalizedSetNameOverride = UTIL.trim( setNameOverride ) and normalizeSetNameForLink( setNameOverride )
+
 				local region = regionCache[ rg ] or updateCache( regionCache, rg, DATA.getRegion( rg ) )
 
 				if region then
 					local medium = mediumCache[ rg ] or updateCache( mediumCache, rg, DATA.getMedium( region.index ) )
 
 					local dd = mwHtmlCreate( 'dd' )
-						:wikitext( entry.link( setNameForLink, region, medium ) )
+						:wikitext( entry.link( normalizedSetNameOverride or setNameForLink, region, medium, normalizedSetNameOverride ) )
 
 					dl:node( tostring( dd ) )
 				else
@@ -218,7 +226,7 @@ return setmetatable( {
 			[ 1 ] = 'Duelist Alliance',
 			[ 'lists' ] = 'EN,FR,DE,IT,PT,SP,JP,JA,KR',
 			[ '1e_galleries' ] = 'EN,FR,DE,IT,PT,SP,JP,WRONG,JA,KR',
-			[ 'ue_galleries' ] = 'EN,FR,DE,IT,PT,SP,JP,JA,  KR',
+			[ 'ue_galleries' ] = 'EN,NA (Magic Ruler),FR,DE,IT,PT,SP,JP,JA,  KR',
 			[ 'le_galleries' ] = ' EN  ,FR ,DE,IT,PT,SP,JP,JA,AE,KR  ',
 			[ 'dt_galleries' ] = 'EN,JP',
 			[ 'strategy' ] = 'EN,FR,DE,IT,PT,SP,KR',
