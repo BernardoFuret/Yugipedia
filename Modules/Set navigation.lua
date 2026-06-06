@@ -28,12 +28,15 @@ local function updateCache( cache, key, value )
 	return value
 end
 
-
 local SET_NAMES_SPECIAL_CASES = {
 	[ '2011' ] = true,
 	[ '2018' ] = true,
 	[ '2019' ] = true,
 	[ 'series' ] = true,
+	[ 'All-Foil Edition' ] = true,
+	[ 'Obelisk the Tormentor' ] = true, -- 20th Anniversary Duel Set
+	[ 'Slifer the Sky Dragon' ] = true, -- 20th Anniversary Duel Set
+	[ '25th Anniversary Edition' ] = true,
 }
 
 local REGION_JAPANESE = updateCache( regionCache, 'JP', DATA.getRegion( 'JP' ) )
@@ -106,6 +109,15 @@ local function linkStrategyGalleries( setPagename, region )
 		)
 end
 
+local function linkTipGalleries( setPagename, region )
+	return ( '[[Set Card Galleries:%s: Tip Cards (%s)|%s]]' )
+		:format(
+			setPagename,
+			normalizeRegionFull( region ),
+			normalizeRegionFull( region )
+		)
+end
+
 
 local ENTRIES = {
 	{
@@ -137,6 +149,11 @@ local ENTRIES = {
 		parameter = 'strategy',
 		title = 'Strategy cards galleries',
 		link = linkStrategyGalleries,
+	},
+	{
+		parameter = 'tip',
+		title = 'Tip cards galleries',
+		link = linkTipGalleries,
 	},
 }
 
@@ -230,6 +247,7 @@ return setmetatable( {
 			[ 'le_galleries' ] = ' EN  ,FR ,DE,IT,PT,SP,JP,JA,AE,KR  ',
 			[ 'dt_galleries' ] = 'EN,JP',
 			[ 'strategy' ] = 'EN,FR,DE,IT,PT,SP,KR',
+			[ 'tip' ] = 'EN,FR,DE,IT,PT,SP',
 		} )
 	end,
 } )
