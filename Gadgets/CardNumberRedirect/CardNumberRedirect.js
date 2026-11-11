@@ -122,7 +122,7 @@
 		if ( config.wgNamespaceNumber === 3006 ) {
 			var $button = $( '<li>', {
 				id: 'ca-redirect',
-				'class': 'collapsible',
+				'class': 'mw-list-item',
 				html: $( '<a>', {
 					href: '#',
 					title: 'Create card number redirects.',
@@ -137,12 +137,11 @@
 
 			$( '#p-cactions' )
 				.removeClass( 'emptyPortlet' )
-				.find( '.menu' )
-					.find( 'ul' )
-						.append( $button )
+				.find( '.vector-menu-content-list' )
+					.append( $button )
 			;
 
-			mw.loader.using( [ 'mediawiki.api', 'mediawiki.notify' ] ).done( function() {
+			mw.loader.using( [ 'mediawiki.api' ] ).done( function() {
 				api = new mw.Api();
 
 				$button
