@@ -24,11 +24,11 @@
 	function generateToC( $content ) {
 		var $tocPlaceholder = $content.find( '.set-gallery__toc' );
 
-		var $contentSectionsTitles = $content.find( '.mw-headline' );
+		var $contentSectionsTitles = $content.find( '.mw-headline, .mw-heading > :header' );
 
 		if ( $contentSectionsTitles.length >= 3 ) { // TODO: make configurable per user?
 			var $tocContainer = $( '<div>', {
-				'class': 'set-gallery__toc__container'
+				'class': 'toc hlist set-gallery__toc__container'
 			} ).appendTo( $tocPlaceholder );
 
 			var $initialTocList = newToc().appendTo( $tocContainer );
@@ -44,7 +44,9 @@
 
 				var currentSectionTitleHtml = $currentSectionTitle.html();
 
-				var $currentSectionHeader = $currentSectionTitle.parent( ':header' );
+				var $currentSectionHeader = $currentSectionTitle.is( ':header' )
+					? $currentSectionTitle
+					: $currentSectionTitle.parent( ':header' );
 
 				var currentSectionHeaderTag = $currentSectionHeader.prop( 'tagName' );
 
@@ -79,12 +81,22 @@
 				var $toc = tocsStack[ 0 ];
 
 				$toc.append( function() {
-					var tocSectionTitleId = $( this )
+					var $previousSectionHeader = $( this )
 						.parents( '.set-gallery' )
-						.prevAll( ':header' )
-						.first()
-						.find( '.mw-headline' )
-						.attr( 'id' );
+						.prevAll( '.mw-heading, :header' )
+						.first();
+
+					if ( !$previousSectionHeader.is( ':header' ) ) {
+						$previousSectionHeader = $previousSectionHeader.find( ':header' ).first();
+					}
+
+					var $previousSectionTitle = $previousSectionHeader.find( '.mw-headline' ).first();
+
+					if ( !$previousSectionTitle.length ) {
+						$previousSectionTitle = $previousSectionHeader;
+					}
+
+					var tocSectionTitleId = $previousSectionTitle.attr( 'id' );
 
 					return $( '<li>', {
 						'class': 'set-gallery__toc__entry',
