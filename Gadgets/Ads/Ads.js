@@ -8,9 +8,12 @@
 		 * To make the MW Panel ad sticky.
 		 * Set the height of the panel to fill the total height of the document.
 		 * The rest is handled via CSS.
+		 * For Vector (legacy) skin only.
 		 * Deprecates [[MediaWiki:Gadget-StickyMwPanelAd.js]]
 		 */
-		document.getElementById('mw-panel').style.height = document.documentElement.scrollHeight + 'px';
+		if (mw.config.get( 'skin' ) === 'vector') {
+			document.getElementById('mw-panel').style.height = document.documentElement.scrollHeight + 'px';
+		}
 	}
 
 	function setContentAds() {
