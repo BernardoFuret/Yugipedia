@@ -16,7 +16,7 @@
 	function setContentAds() {
 		var contentBannerKey = 'nitro-content-banner';
 
-		document.querySelectorAll('h2 > .mw-headline').forEach(function (element, index) {
+		document.querySelectorAll('h2 > .mw-headline, .mw-heading > h2').forEach(function (element, index) {
 			var parentH2 = element.closest('h2');
 
 			if (!parentH2) {
@@ -31,7 +31,9 @@
 
 			adPlacement.classList.add(contentBannerKey);
 
-			parentH2.insertAdjacentElement('beforebegin', adPlacement);
+			var anchor = parentH2.closest( '.mw-heading' ) || parentH2;
+			
+			anchor.insertAdjacentElement( 'beforebegin', adPlacement );
 
 			window.nitroAds.createAd(adPlacementId, {
 				renderVisibleOnly: true,
