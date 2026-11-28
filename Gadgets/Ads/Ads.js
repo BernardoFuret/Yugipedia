@@ -35,7 +35,7 @@
 			adPlacement.classList.add(contentBannerKey);
 
 			var anchor = parentH2.closest( '.mw-heading' ) || parentH2;
-			
+
 			anchor.insertAdjacentElement( 'beforebegin', adPlacement );
 
 			window.nitroAds.createAd(adPlacementId, {
@@ -54,9 +54,7 @@
 		});
 	}
 
-	function computeSideBarAdTopOffset() {
-		const [stickyTocContainer] = document.getElementsByClassName( 'vector-sticky-pinned-container' );
-
+	function computeSideBarAdTopOffset( stickyTocContainer ) {
 		if (!stickyTocContainer) {
 			return 0;
 		}
@@ -76,9 +74,15 @@
 				 return;
 			}
 
-			const sideBarAdTopOffset = computeSideBarAdTopOffset();
+			const [stickyTocContainer] = document.getElementsByClassName( 'vector-sticky-pinned-container' );
+
+			const sideBarAdTopOffset = computeSideBarAdTopOffset( stickyTocContainer );
 
 			const sideBarAdId = 'nitro-ads-sidebar-vector-2022';
+
+			const sideBarAdPlacement = document.createElement( 'div' );
+
+			sideBarAdPlacement.id = sideBarAdId;
 
 			const sideBarAdPlacementWrapper = document.createElement( 'div' );
 
@@ -86,13 +90,17 @@
 
 			sideBarAdPlacementWrapper.style.top = `${sideBarAdTopOffset}px`;
 
-			const sideBarAdPlacement = document.createElement( 'div' );
-
-			sideBarAdPlacement.id = sideBarAdId;
-
 			sideBarAdPlacementWrapper.appendChild( sideBarAdPlacement );
 
 			sideBar.insertAdjacentElement( 'beforeend', sideBarAdPlacementWrapper );
+
+			if (stickyTocContainer) {
+				new MutationObserver(() => {
+					const sideBarAdTopOffset = computeSideBarAdTopOffset( stickyTocContainer );
+
+					sideBarAdPlacementWrapper.style.top = `${sideBarAdTopOffset}px`;
+				}).observe(stickyTocContainer, { childList: true, subtree: true });
+			}
 
 			requestAnimationFrame(() => {
 				window.nitroAds.createAd(sideBarAdId, {
