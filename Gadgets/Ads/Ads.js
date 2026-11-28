@@ -54,6 +54,63 @@
 		});
 	}
 
+	function computeSideBarAdTopOffset() {
+		const [stickyTocContainer] = document.getElementsByClassName( 'vector-sticky-pinned-container' );
+
+		if (!stickyTocContainer) {
+			return 0;
+		}
+
+		const tocHeight = stickyTocContainer.getBoundingClientRect().height;
+
+		const tocTop = parseInt(window.getComputedStyle(stickyTocContainer).getPropertyValue('top') || 0);
+
+		return tocTop + tocHeight;
+	}
+
+	function setSideBarAd() {
+		if (mw.config.get( 'skin' ) === 'vector-2022') {
+			const [sideBar] = document.getElementsByClassName( 'vector-column-start' );
+
+			if (!sideBar) {
+				 return;
+			}
+
+			const sideBarAdTopOffset = computeSideBarAdTopOffset();
+
+			const sideBarAdId = 'nitro-ads-sidebar-vector-2022';
+
+			const sideBarAdPlacementWrapper = document.createElement( 'div' );
+
+			sideBarAdPlacementWrapper.classList.add( `${sideBarAdId}-wrapper` );
+
+			sideBarAdPlacementWrapper.style.top = `${sideBarAdTopOffset}px`;
+
+			const sideBarAdPlacement = document.createElement( 'div' );
+
+			sideBarAdPlacement.id = sideBarAdId;
+
+			sideBarAdPlacementWrapper.appendChild( sideBarAdPlacement );
+
+			sideBar.insertAdjacentElement( 'beforeend', sideBarAdPlacementWrapper );
+
+			requestAnimationFrame(() => {
+				window.nitroAds.createAd(sideBarAdId, {
+					renderVisibleOnly: true,
+					sizes: [
+						['160', '600']
+					],
+					report: {
+						enabled: true,
+						icon: true,
+						wording: 'Report Ad',
+						position: 'top-right'
+					}
+				});
+			});
+		}
+	}
+
 	function init() {
 		mw.loader.using('mediawiki.user').then(function () {
 			if (!mw.user.isAnon()) {
@@ -61,6 +118,8 @@
 			}
 
 			setContentAds();
+
+			setSideBarAd();
 
 			mw.loader.using('mediawiki.util').then(function () {
 				if (!mw.util.getParamValue('action')) {

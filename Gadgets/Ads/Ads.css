@@ -32,3 +32,7 @@ div[data-fuse="lhs_sidebar"] {
 		visibility: hidden;
 	}
 }
+
+.nitro-ads-sidebar-vector-2022-wrapper {
+	position: sticky;
+}
